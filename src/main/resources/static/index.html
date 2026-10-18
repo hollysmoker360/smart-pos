@@ -7,97 +7,148 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .navbar-brand { font-weight: bold; color: #198754 !important; }
-        .card { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .trolley-display { background-color: #1a252f; color: #00ffcc; font-family: monospace; padding: 15px; border-radius: 8px; }
-        .app-mobile-frame { border: 12px solid #2d3748; border-radius: 28px; background: #fff; min-height: 520px; padding: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        :root {
+            --trixx-primary: #12372A;
+            --trixx-secondary: #436850;
+            --trixx-accent: #E8B04A;
+            --trixx-light: #F4F6F3;
+            --trixx-dark: #0D1F18;
+        }
+        body { background-color: var(--trixx-light); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: #212529; }
+        .bg-trixx { background-color: var(--trixx-primary) !important; }
+        .text-trixx { color: var(--trixx-primary) !important; }
+        .btn-trixx { background-color: var(--trixx-primary); color: #fff; border: none; }
+        .btn-trixx:hover { background-color: #0d281e; color: #fff; }
+        .btn-accent { background-color: var(--trixx-accent); color: #000; border: none; font-weight: 600; }
+        .btn-accent:hover { background-color: #d69f39; color: #000; }
+        .navbar-brand { font-weight: 700; color: #ffffff !important; letter-spacing: 0.5px; }
+        .card { border-radius: 14px; border: none; box-shadow: 0 4px 16px rgba(18, 55, 42, 0.08); margin-bottom: 20px; background: #ffffff; }
+        .trolley-display { background-color: var(--trixx-dark); color: #00ffcc; font-family: 'Courier New', Courier, monospace; padding: 18px; border-radius: 10px; border-left: 5px solid var(--trixx-accent); }
+        .app-mobile-frame { border: 12px solid #2d3748; border-radius: 32px; background: #ffffff; min-height: 560px; padding: 18px; box-shadow: 0 12px 32px rgba(0,0,0,0.18); position: relative; }
+        .nav-pills .nav-link { color: var(--trixx-primary); font-weight: 600; border-radius: 8px; margin-right: 4px; }
+        .nav-pills .nav-link.active { background-color: var(--trixx-primary); color: #ffffff; }
+        .badge-trixx { background-color: var(--trixx-secondary); color: #ffffff; }
+        .item-card { border-left: 4px solid var(--trixx-primary); background: #fdfdfd; transition: all 0.2s ease-in-out; }
+        .item-card:hover { background: #f4f6f3; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <img src="/logo.png" alt="ScanFlow Logo" height="36" class="d-inline-block align-text-top rounded bg-white p-1">
-                <span>TRIXX SmartTrolley</span>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-trixx mb-4 shadow">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
+                <img src="/logo.png" alt="ScanFlow Logo" height="40" class="d-inline-block align-text-top rounded bg-white p-1 shadow-sm">
+                <span class="fs-4">TRIXX <small class="fw-light fs-6 text-warning">SmartTrolley</small></span>
             </a>
-            <span class="navbar-text text-light">Kenya Retail Innovation Platform</span>
+            <span class="navbar-text text-light opacity-75 d-none d-md-block">
+                <i class="bi bi-geo-alt-fill text-warning"></i> Kenya Retail Innovation Platform
+            </span>
         </div>
     </nav>
 
     <div class="container-fluid px-4">
-        <ul class="nav nav-pills mb-4 bg-white p-2 rounded shadow-sm" id="pills-tab" role="tablist">
+        <ul class="nav nav-pills mb-4 bg-white p-2 rounded-3 shadow-sm" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-customer-tab" data-bs-toggle="pill" data-bs-target="#pills-customer" type="button"><i class="bi bi-phone"></i> Customer App & Trolley</button>
+                <button class="nav-link active" id="pills-customer-tab" data-bs-toggle="pill" data-bs-target="#pills-customer" type="button">
+                    <i class="bi bi-phone me-1"></i> Customer App & Basket
+                </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-hardware-tab" data-bs-toggle="pill" data-bs-target="#pills-hardware" type="button"><i class="bi bi-upc-scan"></i> Trolley Scanner Simulator</button>
+                <button class="nav-link" id="pills-hardware-tab" data-bs-toggle="pill" data-bs-target="#pills-hardware" type="button">
+                    <i class="bi bi-upc-scan me-1"></i> Trolley Scanner Hardware
+                </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-exit-tab" data-bs-toggle="pill" data-bs-target="#pills-exit" type="button"><i class="bi bi-door-open"></i> Exit Pass Verification Station</button>
+                <button class="nav-link" id="pills-exit-tab" data-bs-toggle="pill" data-bs-target="#pills-exit" type="button">
+                    <i class="bi bi-door-open me-1"></i> Exit Pass Station
+                </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#pills-dashboard" type="button"><i class="bi bi-speedometer2"></i> Staff & Management Dashboard</button>
+                <button class="nav-link" id="pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#pills-dashboard" type="button" onclick="loadDashboard()">
+                    <i class="bi bi-speedometer2 me-1"></i> Management Dashboard
+                </button>
             </li>
         </ul>
 
         <div class="tab-content" id="pills-tabContent">
             <!-- 1. CUSTOMER APP TAB -->
             <div class="tab-pane fade show active" id="pills-customer" role="tabpanel">
-                <div class="row">
-                    <div class="col-md-5">
+                <div class="row g-4">
+                    <div class="col-lg-5 col-md-6">
                         <div class="app-mobile-frame">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div><i class="bi bi-wifi text-success"></i> <strong id="app-branch-name">Naivas Westlands</strong></div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div><i class="bi bi-wifi text-success me-1"></i> <strong id="app-branch-name">Naivas Westlands Branch</strong></div>
                                 <span class="badge bg-success" id="app-trolley-status">Connected: TRL-WEST-001</span>
                             </div>
-                            <hr>
-                            <h6 class="fw-bold"><i class="bi bi-basket2"></i> Active Basket</h6>
-                            <div id="basket-items-list" class="my-3" style="max-height: 250px; overflow-y: auto;">
-                                <p class="text-muted text-center py-4">Your trolley basket is currently empty.<br>Scan an item with the trolley hardware.</p>
+                            <hr class="my-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="fw-bold mb-0 text-trixx"><i class="bi bi-basket2-fill me-1"></i> Validated Shopping Basket</h6>
+                                <span class="badge bg-secondary" id="basket-version-badge">Version 0</span>
                             </div>
-                            <div class="bg-light p-3 rounded mb-3">
-                                <div class="d-flex justify-content-between mb-1"><span>Subtotal:</span><strong id="app-subtotal">KES 0.00</strong></div>
-                                <div class="d-flex justify-content-between mb-1"><span>VAT (16% included):</span><span id="app-tax">KES 0.00</span></div>
-                                <div class="d-flex justify-content-between fs-5 fw-bold text-success border-top pt-2"><span>Total:</span><span id="app-total">KES 0.00</span></div>
+
+                            <div id="basket-items-list" class="my-3" style="max-height: 280px; overflow-y: auto; padding-right: 4px;">
+                                <div class="text-center py-5 text-muted">
+                                    <i class="bi bi-cart-x fs-1 opacity-50"></i>
+                                    <p class="mt-2 mb-0">Your trolley basket is currently empty.<br>Scan an item using the hardware simulator tab.</p>
+                                </div>
                             </div>
-                            <button id="btn-checkout" class="btn btn-success w-100 py-2 fw-bold" onclick="startCheckout()" disabled><i class="bi bi-credit-card"></i> Proceed to M-Pesa Checkout</button>
+
+                            <div class="bg-light p-3 rounded-3 mb-3 border">
+                                <div class="d-flex justify-content-between mb-1 text-muted small"><span>Subtotal:</span><span id="app-subtotal" class="fw-semibold">KES 0.00</span></div>
+                                <div class="d-flex justify-content-between mb-1 text-muted small"><span>VAT (16% included):</span><span id="app-tax">KES 0.00</span></div>
+                                <div class="d-flex justify-content-between fs-5 fw-bold text-trixx border-top pt-2 mt-1"><span>Total Amount:</span><span id="app-total">KES 0.00</span></div>
+                            </div>
+                            <button id="btn-checkout" class="btn btn-trixx w-100 py-2 fw-bold shadow-sm" onclick="startCheckout()" disabled>
+                                <i class="bi bi-credit-card-2-front me-1"></i> Proceed to M-Pesa Checkout
+                            </button>
                         </div>
                     </div>
 
-                    <div class="col-md-7">
+                    <div class="col-lg-7 col-md-6">
                         <div class="card p-4">
-                            <h5><i class="bi bi-qr-code-scan"></i> Step 1: Connect Trolley</h5>
-                            <p class="text-muted">Scan the QR code printed on the physical trolley to start a shopping session.</p>
+                            <h5 class="fw-bold text-trixx mb-3"><i class="bi bi-qr-code-scan me-2"></i> Step 1: Claim Physical Trolley</h5>
+                            <p class="text-muted">Scan or enter the QR hash on the physical trolley to bind it to your mobile session.</p>
                             <div class="row g-2 align-items-center mb-3">
-                                <div class="col-auto">
-                                    <input type="text" id="qr-input" class="form-control" value="QR-TRL-WEST-001-HASH" placeholder="Trolley QR Hash">
+                                <div class="col-md-8">
+                                    <input type="text" id="qr-input" class="form-control form-control-lg" value="QR-TRL-WEST-001-HASH" placeholder="Trolley QR Hash">
                                 </div>
-                                <div class="col-auto">
-                                    <button class="btn btn-primary" onclick="claimTrolley()"><i class="bi bi-link-45deg"></i> Claim & Bind Trolley</button>
+                                <div class="col-md-4">
+                                    <button class="btn btn-trixx btn-lg w-100" onclick="claimTrolley()"><i class="bi bi-link-45deg me-1"></i> Claim Trolley</button>
                                 </div>
                             </div>
 
-                            <div id="checkout-modal" class="card bg-light p-3 mt-3 d-none">
-                                <h5 class="text-success"><i class="bi bi-phone-vibrate"></i> Step 2: Pay via M-Pesa STK Push</h5>
-                                <p>Order snapshot frozen on backend. Authorize payment using M-Pesa.</p>
-                                <div class="mb-2">
-                                    <label class="form-label">Customer Phone Number</label>
+                            <div id="checkout-modal" class="card border-success p-4 mt-3 d-none shadow-sm">
+                                <h5 class="text-success fw-bold"><i class="bi bi-phone-vibrate me-2"></i> Step 2: M-Pesa Payment</h5>
+                                <p class="text-muted small mb-3">Order snapshot is frozen authoritatively on the TRIXX backend. Enter your phone number to receive the STK push prompt.</p>
+                                <div class="bg-light p-3 rounded mb-3">
+                                    <div class="d-flex justify-content-between"><span>Order Number:</span><strong id="chk-order-num">--</strong></div>
+                                    <div class="d-flex justify-content-between"><span>Payable Amount:</span><strong id="chk-order-amount" class="text-success">KES 0.00</strong></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Customer M-Pesa Mobile Number</label>
                                     <input type="text" id="phone-input" class="form-control" value="+254712345678">
                                 </div>
-                                <button class="btn btn-success fw-bold" onclick="initiatePayment()"><i class="bi bi-send-check"></i> Send M-Pesa STK Prompt</button>
-                                <div id="payment-status-box" class="mt-2"></div>
+                                <button class="btn btn-success fw-bold py-2" onclick="initiatePayment()"><i class="bi bi-send-check me-1"></i> Send M-Pesa STK Prompt</button>
+                                <div id="payment-status-box" class="mt-3"></div>
                             </div>
 
-                            <div id="receipt-modal" class="card border-success p-3 mt-3 d-none">
-                                <h5 class="text-success"><i class="bi bi-receipt"></i> Verified Receipt & Exit Pass</h5>
-                                <p class="mb-1">Receipt #: <strong id="receipt-num"></strong></p>
-                                <p class="mb-1">Payment: <span class="badge bg-success">CONFIRMED (M-Pesa)</span></p>
-                                <div class="p-3 my-2 text-center bg-dark text-warning rounded">
-                                    <div class="small mb-1">SINGLE-USE EXIT TOKEN HASH</div>
-                                    <div id="exit-token-display" class="fw-bold text-break fs-6"></div>
+                            <div id="receipt-modal" class="card border-success p-4 mt-3 d-none shadow-sm">
+                                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                    <h5 class="text-success fw-bold mb-0"><i class="bi bi-receipt me-2"></i> Verified Digital Receipt</h5>
+                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> PAID</span>
                                 </div>
-                                <small class="text-muted"><i class="bi bi-info-circle"></i> Show this Exit Pass at the station scanner upon leaving.</small>
+                                <div class="row small mb-2">
+                                    <div class="col-6 text-muted">Receipt Number: <strong id="receipt-num" class="text-dark"></strong></div>
+                                    <div class="col-6 text-muted text-end">Payment Mode: <strong class="text-dark">M-Pesa STK</strong></div>
+                                </div>
+
+                                <div id="receipt-item-breakdown" class="my-2 p-2 bg-light rounded border small" style="max-height: 150px; overflow-y: auto;">
+                                </div>
+
+                                <div class="p-3 my-3 text-center bg-dark text-warning rounded-3 shadow-inner">
+                                    <div class="small fw-semibold mb-1 text-uppercase text-light opacity-75">Single-Use Exit Token Pass</div>
+                                    <div id="exit-token-display" class="fw-bold text-break fs-6 font-monospace"></div>
+                                </div>
+                                <small class="text-muted"><i class="bi bi-shield-check text-success me-1"></i> Present this digital pass at the exit verification station before leaving.</small>
                             </div>
                         </div>
                     </div>
@@ -106,46 +157,46 @@
 
             <!-- 2. TROLLEY HARDWARE TAB -->
             <div class="tab-pane fade" id="pills-hardware" role="tabpanel">
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="row g-4">
+                    <div class="col-lg-6">
                         <div class="card p-4">
-                            <h5><i class="bi bi-cpu"></i> Smart Trolley Hardware Interface (TRL-WEST-001)</h5>
-                            <div class="alert alert-warning py-2"><i class="bi bi-shield-lock"></i> <strong>Architectural Constraint:</strong> Hardware reads barcodes only. Prices & totals are never computed on device.</div>
+                            <h5 class="fw-bold text-trixx mb-2"><i class="bi bi-cpu me-2"></i> Smart Trolley Device (TRL-WEST-001)</h5>
+                            <div class="alert alert-warning py-2 mb-3 small"><i class="bi bi-shield-lock me-1"></i> <strong>Key Architecture:</strong> Scanner captures & transmits signed barcodes. Prices, totals, and rules are calculated solely by backend.</div>
 
                             <div class="trolley-display mb-3">
-                                <div>TROLLEY ID: TRL-WEST-001</div>
-                                <div>BATTERY: 95% | CONNECTIVITY: ONLINE (Wi-Fi)</div>
-                                <div>ACTIVE SESSION: <span id="hw-session-id">NOT_BOUND</span></div>
-                                <div>LAST SCAN: <span id="hw-last-scan">NONE</span></div>
+                                <div>DEVICE IDENTITY: TRL-WEST-001</div>
+                                <div>BATTERY: 98% | CONNECTION: Wi-Fi (ONLINE)</div>
+                                <div>ACTIVE SESSION: <span id="hw-session-id" class="text-warning">NOT_BOUND</span></div>
+                                <div>LAST BARCODE: <span id="hw-last-scan" class="text-info">NONE</span></div>
                             </div>
 
-                            <h6 class="fw-bold mb-2">Simulate Physical Barcode Scan</h6>
+                            <h6 class="fw-bold mb-2">Simulate Physical Barcode Scanning</h6>
                             <div class="list-group mb-3">
-                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="sendScan('6161100001011')">
-                                    <div><strong>Brookside Fresh Milk 1L</strong><br><small class="text-muted">Barcode: 6161100001011</small></div>
-                                    <span class="btn btn-sm btn-outline-success"><i class="bi bi-upc"></i> Scan Item</span>
+                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2" onclick="sendScan('6161100001011')">
+                                    <div><strong>Brookside Fresh Milk 1L</strong><br><small class="text-muted">Barcode: 6161100001011 | KES 120.00</small></div>
+                                    <span class="btn btn-sm btn-trixx"><i class="bi bi-upc"></i> Scan</span>
                                 </button>
-                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="sendScan('6161100002028')">
-                                    <div><strong>Festive Bread White 400g</strong><br><small class="text-muted">Barcode: 6161100002028</small></div>
-                                    <span class="btn btn-sm btn-outline-success"><i class="bi bi-upc"></i> Scan Item</span>
+                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2" onclick="sendScan('6161100002028')">
+                                    <div><strong>Festive Bread White 400g</strong><br><small class="text-muted">Barcode: 6161100002028 | KES 65.00</small></div>
+                                    <span class="btn btn-sm btn-trixx"><i class="bi bi-upc"></i> Scan</span>
                                 </button>
-                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="sendScan('6161100003035')">
-                                    <div><strong>Kabras Sugar 2kg</strong><br><small class="text-muted">Barcode: 6161100003035</small></div>
-                                    <span class="btn btn-sm btn-outline-success"><i class="bi bi-upc"></i> Scan Item</span>
+                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2" onclick="sendScan('6161100003035')">
+                                    <div><strong>Kabras Sugar 2kg</strong><br><small class="text-muted">Barcode: 6161100003035 | KES 310.00</small></div>
+                                    <span class="btn btn-sm btn-trixx"><i class="bi bi-upc"></i> Scan</span>
                                 </button>
-                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="sendScan('6161100005059')">
-                                    <div><strong>Elianto Corn Oil 2L</strong><br><small class="text-muted">Barcode: 6161100005059</small></div>
-                                    <span class="btn btn-sm btn-outline-success"><i class="bi bi-upc"></i> Scan Item</span>
+                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2" onclick="sendScan('6161100005059')">
+                                    <div><strong>Elianto Corn Oil 2L</strong><br><small class="text-muted">Barcode: 6161100005059 | KES 720.00</small></div>
+                                    <span class="btn btn-sm btn-trixx"><i class="bi bi-upc"></i> Scan</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         <div class="card p-4">
-                            <h5><i class="bi bi-journal-code"></i> Signed Device Event Log</h5>
-                            <div id="hardware-event-log" class="bg-dark text-light p-3 rounded" style="height: 380px; overflow-y: auto; font-family: monospace; font-size: 0.85rem;">
-                                <div class="text-secondary">[SYSTEM READY] Hardware initialized. Awaiting user interaction...</div>
+                            <h5 class="fw-bold text-trixx mb-3"><i class="bi bi-journal-code me-2"></i> Signed Hardware Event Stream</h5>
+                            <div id="hardware-event-log" class="bg-dark text-light p-3 rounded-3" style="height: 420px; overflow-y: auto; font-family: monospace; font-size: 0.85rem;">
+                                <div class="text-secondary">[SYSTEM INITIALIZED] Trolley controller online...</div>
                             </div>
                         </div>
                     </div>
@@ -154,54 +205,54 @@
 
             <!-- 3. EXIT PASS TAB -->
             <div class="tab-pane fade" id="pills-exit" role="tabpanel">
-                <div class="card p-4 max-w-600 mx-auto" style="max-width: 650px;">
-                    <h5 class="mb-3"><i class="bi bi-shield-check"></i> Exit Station Scanner Terminal</h5>
-                    <p class="text-muted">Validates single-use exit tokens against backend order authority.</p>
+                <div class="card p-4 mx-auto shadow-sm" style="max-width: 650px;">
+                    <h5 class="fw-bold text-trixx mb-3"><i class="bi bi-shield-check me-2"></i> Exit Station Scanner Terminal</h5>
+                    <p class="text-muted small">Verifies single-use exit tokens. The token is atomically invalidated upon checkout redemption.</p>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Scan or Paste Exit Token Hash</label>
-                        <input type="text" id="exit-hash-input" class="form-control" placeholder="Paste SHA-256 Exit Token Hash here">
+                        <label class="form-label fw-bold">Exit Token Pass Hash</label>
+                        <input type="text" id="exit-hash-input" class="form-control form-control-lg font-monospace" placeholder="Paste SHA-256 Exit Token Hash">
                     </div>
-                    <button class="btn btn-success py-2 fw-bold" onclick="redeemExitToken()"><i class="bi bi-box-arrow-right"></i> Verify Exit Authorization</button>
+                    <button class="btn btn-trixx btn-lg w-100 fw-bold" onclick="redeemExitToken()"><i class="bi bi-box-arrow-right me-1"></i> Verify Exit Authorization</button>
                     <div id="exit-verification-result" class="mt-4"></div>
                 </div>
             </div>
 
             <!-- 4. DASHBOARD TAB -->
             <div class="tab-pane fade" id="pills-dashboard" role="tabpanel">
-                <div class="row">
+                <div class="row g-3 mb-4">
                     <div class="col-md-3">
-                        <div class="card p-3 text-center bg-primary text-white">
-                            <h6>Total Sales (Naivas Westlands)</h6>
-                            <h3 id="dash-sales">KES 0.00</h3>
+                        <div class="card p-3 text-center bg-trixx text-white">
+                            <div class="text-uppercase small opacity-75 fw-bold">Total Branch Sales</div>
+                            <h3 id="dash-sales" class="fw-bold mb-0 text-warning">KES 0.00</h3>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card p-3 text-center bg-success text-white">
-                            <h6>Completed Orders</h6>
-                            <h3 id="dash-orders">0</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card p-3 text-center bg-info text-white">
-                            <h6>Active Trolleys</h6>
-                            <h3 id="dash-active-trolleys">0 / 3</h3>
+                            <div class="text-uppercase small opacity-75 fw-bold">Completed Orders</div>
+                            <h3 id="dash-orders" class="fw-bold mb-0">0</h3>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card p-3 text-center bg-dark text-white">
-                            <h6>System Health</h6>
-                            <h3><span class="badge bg-success">ALL ONLINE</span></h3>
+                            <div class="text-uppercase small opacity-75 fw-bold">Active Trolley Fleet</div>
+                            <h3 id="dash-active-trolleys" class="fw-bold mb-0 text-info">0 / 3</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-3 text-center bg-white border">
+                            <div class="text-uppercase small text-muted fw-bold">System Health</div>
+                            <h4 class="mb-0 mt-1"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> ONLINE</span></h4>
                         </div>
                     </div>
                 </div>
 
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5><i class="bi bi-building"></i> Branch Operational Control (Branch ID: 1)</h5>
-                        <button class="btn btn-sm btn-outline-primary" onclick="loadDashboard()"><i class="bi bi-arrow-repeat"></i> Refresh Metrics</button>
+                        <h5 class="fw-bold text-trixx mb-0"><i class="bi bi-building me-2"></i> Naivas Westlands Operational Metrics</h5>
+                        <button class="btn btn-sm btn-outline-success" onclick="loadDashboard()"><i class="bi bi-arrow-repeat me-1"></i> Refresh</button>
                     </div>
                     <div id="dashboard-details">
-                        <p class="text-muted">Click Refresh to load latest sales, trolley fleet, and audit ledger records.</p>
+                        <p class="text-muted">Loading live metrics...</p>
                     </div>
                 </div>
             </div>
@@ -213,6 +264,7 @@
         let currentSession = null;
         let currentOrder = null;
         let sequenceNumber = 1;
+        let lastBasketItems = [];
 
         async function claimTrolley() {
             const qrHash = document.getElementById('qr-input').value;
@@ -224,6 +276,7 @@
                 });
                 if (!res.ok) throw new Error(await res.text());
                 currentSession = await res.json();
+                window.currentSession = currentSession;
                 document.getElementById('hw-session-id').innerText = currentSession.id;
                 logHardwareEvent(`Trolley claimed successfully. Session ID: ${currentSession.id}`);
                 alert('Trolley connected successfully to session ' + currentSession.id);
@@ -231,6 +284,7 @@
                 alert('Error claiming trolley: ' + err.message);
             }
         }
+        window.claimTrolley = claimTrolley;
 
         async function sendScan(barcode) {
             if (!currentSession) {
@@ -264,16 +318,62 @@
             }
         }
 
+        async function removeItem(itemId) {
+            if (!currentSession) return;
+            try {
+                const res = await fetch(`/api/v1/shopping-sessions/${currentSession.id}/items/${itemId}`, {
+                    method: 'DELETE'
+                });
+                if (!res.ok) throw new Error(await res.text());
+                const basket = await res.json();
+                updateBasketUI(basket);
+                logHardwareEvent(`[ITEM REMOVED] Item ID: ${itemId}`);
+            } catch (err) {
+                alert('Failed to remove item: ' + err.message);
+            }
+        }
+
         function updateBasketUI(basket) {
             document.getElementById('app-subtotal').innerText = 'KES ' + basket.subtotal.toFixed(2);
             document.getElementById('app-tax').innerText = 'KES ' + basket.taxAmount.toFixed(2);
             document.getElementById('app-total').innerText = 'KES ' + basket.totalAmount.toFixed(2);
+            document.getElementById('basket-version-badge').innerText = 'Version ' + basket.version;
 
+            lastBasketItems = basket.items || [];
             const container = document.getElementById('basket-items-list');
-            container.innerHTML = `
-                <div class="alert alert-info py-2 small mb-2"><i class="bi bi-info-circle"></i> Basket validated by TRIXX backend</div>
-                <div class="fw-bold mb-2">Validated Basket Items (${basket.version} updates)</div>
-            `;
+
+            if (!basket.items || basket.items.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-cart-x fs-1 opacity-50"></i>
+                        <p class="mt-2 mb-0">Your trolley basket is currently empty.<br>Scan an item using the hardware simulator tab.</p>
+                    </div>
+                `;
+                document.getElementById('btn-checkout').disabled = true;
+                return;
+            }
+
+            let html = '';
+            basket.items.forEach(item => {
+                html += `
+                    <div class="card p-2 mb-2 item-card shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="text-trixx">${item.productName}</strong>
+                                <div class="small text-muted">Qty: ${item.quantity} × KES ${item.unitPrice.toFixed(2)}</div>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold text-success d-block">KES ${item.lineTotal.toFixed(2)}</span>
+                                <button class="btn btn-sm btn-outline-danger py-0 px-2 mt-1" onclick="removeItem(${item.id})">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
             document.getElementById('btn-checkout').disabled = false;
         }
 
@@ -283,8 +383,9 @@
                 const res = await fetch(`/api/v1/shopping-sessions/${currentSession.id}/checkout`, { method: 'POST' });
                 if (!res.ok) throw new Error(await res.text());
                 currentOrder = await res.json();
+                document.getElementById('chk-order-num').innerText = currentOrder.orderNumber;
+                document.getElementById('chk-order-amount').innerText = 'KES ' + currentOrder.totalAmount.toFixed(2);
                 document.getElementById('checkout-modal').classList.remove('d-none');
-                alert(`Checkout created! Order Number: ${currentOrder.orderNumber} Total: KES ${currentOrder.totalAmount}`);
             } catch (err) {
                 alert('Checkout failed: ' + err.message);
             }
@@ -294,7 +395,7 @@
             if (!currentOrder) return;
             const phone = document.getElementById('phone-input').value;
             const statusBox = document.getElementById('payment-status-box');
-            statusBox.innerHTML = '<div class="spinner-border spinner-border-sm text-success"></div> Sending M-Pesa STK push...';
+            statusBox.innerHTML = '<div class="spinner-border spinner-border-sm text-success me-2"></div> Sending M-Pesa STK push...';
 
             try {
                 const res = await fetch(`/api/v1/orders/${currentOrder.id}/payments/mpesa`, {
@@ -304,7 +405,7 @@
                 });
                 const attempt = await res.json();
 
-                statusBox.innerHTML = '<div class="text-primary mt-2"><i class="bi bi-hourglass-split"></i> STK Push Prompt sent to phone. Auto-confirming M-Pesa sandbox payment...</div>';
+                statusBox.innerHTML = '<div class="text-primary mt-2"><i class="bi bi-hourglass-split me-1"></i> STK Push Prompt sent. Processing payment callback...</div>';
 
                 setTimeout(async () => {
                     await fetch('/api/v1/webhooks/daraja/stk', {
@@ -317,11 +418,11 @@
                             mpesaReceiptNumber: "QKH7892301"
                         })
                     });
-                    statusBox.innerHTML = '<div class="alert alert-success mt-2"><i class="bi bi-check-circle-fill"></i> Payment Confirmed by M-Pesa!</div>';
+                    statusBox.innerHTML = '<div class="alert alert-success mt-2 mb-0"><i class="bi bi-check-circle-fill me-1"></i> Payment Confirmed by Safaricom M-Pesa!</div>';
                     loadReceiptAndExitToken();
-                }, 2000);
+                }, 1500);
             } catch (err) {
-                statusBox.innerHTML = `<div class="alert alert-danger mt-2">Payment error: ${err.message}</div>`;
+                statusBox.innerHTML = `<div class="alert alert-danger mt-2 mb-0">Payment error: ${err.message}</div>`;
             }
         }
 
@@ -335,6 +436,13 @@
             document.getElementById('receipt-num').innerText = receipt.receiptNumber;
             document.getElementById('exit-token-display').innerText = exitToken.tokenHash;
             document.getElementById('exit-hash-input').value = exitToken.tokenHash;
+
+            let breakdownHtml = '';
+            lastBasketItems.forEach(i => {
+                breakdownHtml += `<div class="d-flex justify-content-between"><span>${i.productName} (x${i.quantity})</span><span>KES ${i.lineTotal.toFixed(2)}</span></div>`;
+            });
+            document.getElementById('receipt-item-breakdown').innerHTML = breakdownHtml;
+
             document.getElementById('receipt-modal').classList.remove('d-none');
         }
 
@@ -349,12 +457,12 @@
                 });
                 const data = await res.json();
                 if (res.ok && data.verified) {
-                    resBox.innerHTML = '<div class="alert alert-success fs-5 text-center"><i class="bi bi-check-circle-fill"></i> EXIT AUTHORIZED<br><small>Pass verified and single-use exit token redeemed.</small></div>';
+                    resBox.innerHTML = '<div class="alert alert-success fs-5 text-center shadow-sm"><i class="bi bi-check-circle-fill me-2"></i> EXIT AUTHORIZED<br><small class="fs-6 opacity-75">Pass verified and single-use token atomically redeemed.</small></div>';
                 } else {
-                    resBox.innerHTML = `<div class="alert alert-danger text-center"><i class="bi bi-x-circle-fill"></i> EXIT DENIED: ${data.message || 'Invalid or expired token'}</div>`;
+                    resBox.innerHTML = `<div class="alert alert-danger text-center shadow-sm"><i class="bi bi-x-circle-fill me-2"></i> EXIT DENIED: ${data.message || 'Invalid or already used token'}</div>`;
                 }
             } catch (err) {
-                resBox.innerHTML = `<div class="alert alert-danger text-center"><i class="bi bi-x-circle-fill"></i> EXIT DENIED: ${err.message}</div>`;
+                resBox.innerHTML = `<div class="alert alert-danger text-center shadow-sm"><i class="bi bi-x-circle-fill me-2"></i> EXIT DENIED: ${err.message}</div>`;
             }
         }
 
@@ -365,10 +473,28 @@
                 document.getElementById('dash-sales').innerText = 'KES ' + data.totalSales.toFixed(2);
                 document.getElementById('dash-orders').innerText = data.completedOrders;
                 document.getElementById('dash-active-trolleys').innerText = `${data.activeTrolleys} / ${data.totalTrolleys}`;
+
+                document.getElementById('dashboard-details').innerHTML = `
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr><th>Metric</th><th>Current Value</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Active Trolley Devices</td><td>${data.activeTrolleys} devices bound</td><td><span class="badge bg-success">Normal</span></td></tr>
+                                <tr><td>Completed Checkout Transactions</td><td>${data.completedOrders} orders</td><td><span class="badge bg-success">Verified</span></td></tr>
+                                <tr><td>Total Revenue Captured</td><td>KES ${data.totalSales.toFixed(2)}</td><td><span class="badge bg-success">Reconciled</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
             } catch (e) {
                 console.error(e);
             }
         }
+
+        window.updateBasketUI = updateBasketUI;
+        window.sendScan = sendScan;
 
         function logHardwareEvent(msg) {
             const box = document.getElementById('hardware-event-log');

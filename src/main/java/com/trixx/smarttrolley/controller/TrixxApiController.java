@@ -43,22 +43,34 @@ public class TrixxApiController {
     }
 
     @PostMapping("/device-events/scans")
-    public ResponseEntity<ShoppingBasket> recordScan(@RequestBody ScanEventRequest req) {
+    public ResponseEntity<BasketDto> recordScan(@RequestBody ScanEventRequest req) {
         trolleyDeviceService.recordDeviceEvent(
                 req.eventId(), req.deviceCode(), req.sessionId(),
                 "SCAN", req.barcode(), req.sequenceNumber(), req.timestamp(), req.rawPayload()
         );
-        ShoppingBasket basket = sessionService.processScanEvent(req.sessionId(), req.barcode());
+        BasketDto basket = sessionService.processScanEvent(req.sessionId(), req.barcode());
         return ResponseEntity.ok(basket);
     }
 
     @PostMapping("/device-events/removals")
-    public ResponseEntity<ShoppingBasket> recordRemoval(@RequestBody RemovalEventRequest req) {
+    public ResponseEntity<BasketDto> recordRemoval(@RequestBody RemovalEventRequest req) {
         trolleyDeviceService.recordDeviceEvent(
                 req.eventId(), req.deviceCode(), req.sessionId(),
                 "REMOVAL", req.barcode(), req.sequenceNumber(), null, null
         );
-        ShoppingBasket basket = sessionService.processRemovalEvent(req.sessionId(), req.barcode());
+        BasketDto basket = sessionService.processRemovalEvent(req.sessionId(), req.barcode());
+        return ResponseEntity.ok(basket);
+    }
+
+    @GetMapping("/shopping-sessions/{sessionId}/basket")
+    public ResponseEntity<BasketDto> getBasket(@PathVariable("sessionId") Long sessionId) {
+        BasketDto basket = sessionService.getBasketDtoBySessionId(sessionId);
+        return ResponseEntity.ok(basket);
+    }
+
+    @DeleteMapping("/shopping-sessions/{sessionId}/items/{itemId}")
+    public ResponseEntity<BasketDto> removeItem(@PathVariable("sessionId") Long sessionId, @PathVariable("itemId") Long itemId) {
+        BasketDto basket = sessionService.removeBasketItemById(sessionId, itemId);
         return ResponseEntity.ok(basket);
     }
 

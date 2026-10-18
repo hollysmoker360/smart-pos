@@ -2,6 +2,7 @@ package com.trixx.smarttrolley.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ApiDtos {
 
@@ -52,6 +53,29 @@ public class ApiDtos {
     public record WeightVerificationRequest(
             Long basketId,
             BigDecimal measuredWeightGrams
+    ) {}
+
+    public record BasketItemDto(
+            Long id,
+            Long productId,
+            String productName,
+            String barcode,
+            Integer quantity,
+            BigDecimal unitPrice,
+            BigDecimal lineTotal
+    ) {}
+
+    public record BasketDto(
+            Long id,
+            Long sessionId,
+            Integer version,
+            BigDecimal subtotal,
+            BigDecimal taxAmount,
+            BigDecimal discountAmount,
+            BigDecimal totalAmount,
+            BigDecimal expectedTotalWeight,
+            String status,
+            List<BasketItemDto> items
     ) {}
 
     public record ErrorResponse(

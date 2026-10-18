@@ -1,6 +1,8 @@
 package com.trixx.smarttrolley.service;
 
 import com.trixx.smarttrolley.domain.*;
+import com.trixx.smarttrolley.dto.ApiDtos.BasketDto;
+import com.trixx.smarttrolley.dto.ApiDtos.BasketItemDto;
 import com.trixx.smarttrolley.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ShoppingSessionAndBasketService {
@@ -70,7 +73,7 @@ public class ShoppingSessionAndBasketService {
     }
 
     @Transactional
-    public ShoppingBasket processScanEvent(Long sessionId, String barcode) {
+    public BasketDto processScanEvent(Long sessionId, String barcode) {
         ShoppingSession session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("SESSION_EXPIRED: Shopping session not found or expired"));
 
@@ -105,11 +108,12 @@ public class ShoppingSessionAndBasketService {
         }
 
         recalculateBasket(basket);
-        return basketRepository.save(basket);
+        ShoppingBasket savedBasket = basketRepository.save(basket);
+        return toBasketDto(savedBasket);
     }
 
     @Transactional
-    public ShoppingBasket processRemovalEvent(Long sessionId, String barcode) {
+    public BasketDto processRemovalEvent(Long sessionId, String barcode) {
         ShoppingSession session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("SESSION_EXPIRED: Shopping session not found"));
 
@@ -132,7 +136,31 @@ public class ShoppingSessionAndBasketService {
         }
 
         recalculateBasket(basket);
-        return basketRepository.save(basket);
+        ShoppingBasket savedBasket = basketRepository.save(basket);
+        return toBasketDto(savedBasket);
+    }
+
+    @Transactional
+    public BasketDto removeBasketItemById(Long sessionId, Long itemId) {
+        ShoppingBasket basket = basketRepository.findBySessionId(sessionId)
+                .orElseThrow(() -> new IllegalStateException("BASKET_NOT_FOUND: Shopping basket not found"));
+
+        basketItemRepository.findById(itemId).ifPresent(item -> {
+            if (item.getBasket().getId().equals(basket.getId())) {
+                basketItemRepository.delete(item);
+            }
+        });
+
+        recalculateBasket(basket);
+        ShoppingBasket savedBasket = basketRepository.save(basket);
+        return toBasketDto(savedBasket);
+    }
+
+    @Transactional(readOnly = true)
+    public BasketDto getBasketDtoBySessionId(Long sessionId) {
+        ShoppingBasket basket = basketRepository.findBySessionId(sessionId)
+                .orElseThrow(() -> new IllegalStateException("BASKET_NOT_FOUND: Shopping basket not found"));
+        return toBasketDto(basket);
     }
 
     @Transactional
@@ -200,5 +228,31 @@ public class ShoppingSessionAndBasketService {
         basket.setTotalAmount(subtotal);
         basket.setExpectedTotalWeight(expectedWeight);
         basket.setUpdatedAt(LocalDateTime.now());
+    }
+
+    private BasketDto toBasketDto(ShoppingBasket basket) {
+        List<BasketItem> items = basketItemRepository.findByBasketId(basket.getId());
+        List<BasketItemDto> itemDtos = items.stream().map(i -> new BasketItemDto(
+                i.getId(),
+                i.getProduct().getId(),
+                i.getProduct().getName(),
+                i.getBarcode(),
+                i.getQuantity(),
+                i.getUnitPrice(),
+                i.getLineTotal()
+        )).collect(Collectors.toList());
+
+        return new BasketDto(
+                basket.getId(),
+                basket.getSession().getId(),
+                basket.getVersion(),
+                basket.getSubtotal(),
+                basket.getTaxAmount(),
+                basket.getDiscountAmount(),
+                basket.getTotalAmount(),
+                basket.getExpectedTotalWeight(),
+                basket.getStatus(),
+                itemDtos
+        );
     }
 }
