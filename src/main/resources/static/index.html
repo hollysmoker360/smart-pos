@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIXX SmartTrolley Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar-brand { font-weight: bold; color: #198754 !important; }
+        .card { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .trolley-display { background-color: #1a252f; color: #00ffcc; font-family: monospace; padding: 15px; border-radius: 8px; }
+        .app-mobile-frame { border: 12px solid #2d3748; border-radius: 28px; background: #fff; min-height: 520px; padding: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-cart3"></i> TRIXX SmartTrolley</a>
+            <span class="navbar-text text-light">Kenya Retail Innovation Platform</span>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4">
+        <ul class="nav nav-pills mb-4 bg-white p-2 rounded shadow-sm" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-customer-tab" data-bs-toggle="pill" data-bs-target="#pills-customer" type="button"><i class="bi bi-phone"></i> Customer App & Trolley</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-hardware-tab" data-bs-toggle="pill" data-bs-target="#pills-hardware" type="button"><i class="bi bi-upc-scan"></i> Trolley Scanner Simulator</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-exit-tab" data-bs-toggle="pill" data-bs-target="#pills-exit" type="button"><i class="bi bi-door-open"></i> Exit Pass Verification Station</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#pills-dashboard" type="button"><i class="bi bi-speedometer2"></i> Staff & Management Dashboard</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            <!-- 1. CUSTOMER APP TAB -->
+            <div class="tab-pane fade show active" id="pills-customer" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="app-mobile-frame">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div><i class="bi bi-wifi text-success"></i> <strong id="app-branch-name">Naivas Westlands</strong></div>
+                                <span class="badge bg-success" id="app-trolley-status">Connected: TRL-WEST-001</span>
+                            </div>
+                            <hr>
+                            <h6 class="fw-bold"><i class="bi bi-basket2"></i> Active Basket</h6>
+                            <div id="basket-items-list" class="my-3" style="max-height: 250px; overflow-y: auto;">
+                                <p class="text-muted text-center py-4">Your trolley basket is currently empty.<br>Scan an item with the trolley hardware.</p>
+                            </div>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <div class="d-flex justify-content-between mb-1"><span>Subtotal:</span><strong id="app-subtotal">KES 0.00</strong></div>
+                                <div class="d-flex justify-content-between mb-1"><span>VAT (16% included):</span><span id="app-tax">KES 0.00</span></div>
+                                <div class="d-flex justify-content-between fs-5 fw-bold text-success border-top pt-2"><span>Total:</span><span id="app-total">KES 0.00</span></div>
+                            </div>
+                            <button id="btn-checkout" class="btn btn-success w-100 py-2 fw-bold" onclick="startCheckout()" disabled><i class="bi bi-credit-card"></i> Proceed to M-Pesa Checkout</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="card p-4">
+                            <h5><i class="bi bi-qr-code-scan"></i> Step 1: Connect Trolley</h5>
+                            <p class="text-muted">Scan the QR code printed on the physical trolley to start a shopping session.</p>
+                            <div class="row g-2 align-items-center mb-3">
+                                <div class="col-auto">
+                                    <input type="text" id="qr-input" class="form-control" value="QR-TRL-WEST-001-HASH" placeholder="Trolley QR Hash">
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-primary" onclick="claimTrolley()"><i class="bi bi-link-45deg"></i> Claim & Bind Trolley</button>
+                                </div>
+                            </div>
+
+                            <div id="checkout-modal" class="card bg-light p-3 mt-3 d-none">
+                                <h5 class="text-success"><i class="bi bi-phone-vibrate"></i> Step 2: Pay via M-Pesa STK Push</h5>
+                                <p>Order snapshot frozen on backend. Authorize payment using M-Pesa.</p>
+                                <div class="mb-2">
+                                    <label class="form-label">Customer Phone Number</label>
+                                    <input type="text" id="phone-input" class="form-control" value="+254712345678">
+                                </div>
+                                <button class="btn btn-success fw-bold" onclick="initiatePayment()"><i class="bi bi-send-check"></i> Send M-Pesa STK Prompt</button>
+                                <div id="payment-status-box" class="mt-2"></div>
+                            </div>
+
+                            <div id="receipt-modal" class="card border-success p-3 mt-3 d-none">
+                                <h5 class="text-success"><i class="bi bi-receipt"></i> Verified Receipt & Exit Pass</h5>
+                                <p class="mb-1">Receipt #: <strong id="receipt-num"></strong></p>
+                                <p class="mb-1">Payment: <span class="badge bg-success">CONFIRMED (M-Pesa)</span></p>
+                                <div class="p-3 my-2 text-center bg-dark text-warning rounded">
+                                    <div class="small mb-1">SINGLE-USE EXIT TOKEN HASH</div>
+                                    <div id="exit-token-display" class="fw-bold text-break fs-6"></div>
+                                </div>
+                                <small class="text-muted"><i class="bi bi-info-circle"></i> Show this Exit Pass at the station scanner upon leaving.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. TROLLEY HARDWARE TAB -->
+            <div class="tab-pane fade" id="pills-hardware" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card p-4">
+                            <h5><i class="bi bi-cpu"></i> Smart Trolley Hardware Interface (TRL-WEST-001)</h5>
+                            <div class="alert alert-warning py-2"><i class="bi bi-shield-lock"></i> <strong>Architectural Constraint:</strong> Hardware reads barcodes only. Prices & totals are never computed on device.</div>
+
+                            <div class="trolley-display mb-3">
+                                <div>TROLLEY ID: TRL-WEST-001</div>
+                                <div>BATTERY: 95% | CONNECTIVITY: ONLINE (Wi-Fi)</div>
+                                <div>ACTIVE SESSION: <span id="hw-session-id">NOT_BOUND</span></div>
+                                <div>LAST SCAN: <span id="hw-last-scan">NONE</span></div>
+                            </div>
+
+                            <h6 class="fw-bold mb-2">Simulate Physical Barcode Scan</h6>
+                            <div class="list-group mb-3">
+                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="sendScan('6161100001011')">
+                                    <div><strong>Brookside Fresh Milk 1L</strong><br><small class="text-muted">Barcode: 6161100001011</small></div>
+                                    <span class="btn btn-sm btn-outline-success"><i class="bi bi-upc"></i> Scan Item</span>
+                                </button>
+                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="sendScan('6161100002028')">
+                                    <div><strong>Festive Bread White 400g</strong><br><small class="text-muted">Barcode: 6161100002028</small></div>
+                                    <span class="btn btn-sm btn-outline-success"><i class="bi bi-upc"></i> Scan Item</span>
+                                </button>
+                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="sendScan('6161100003035')">
+                                    <div><strong>Kabras Sugar 2kg</strong><br><small class="text-muted">Barcode: 6161100003035</small></div>
+                                    <span class="btn btn-sm btn-outline-success"><i class="bi bi-upc"></i> Scan Item</span>
+                                </button>
+                                <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" onclick="sendScan('6161100005059')">
+                                    <div><strong>Elianto Corn Oil 2L</strong><br><small class="text-muted">Barcode: 6161100005059</small></div>
+                                    <span class="btn btn-sm btn-outline-success"><i class="bi bi-upc"></i> Scan Item</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card p-4">
+                            <h5><i class="bi bi-journal-code"></i> Signed Device Event Log</h5>
+                            <div id="hardware-event-log" class="bg-dark text-light p-3 rounded" style="height: 380px; overflow-y: auto; font-family: monospace; font-size: 0.85rem;">
+                                <div class="text-secondary">[SYSTEM READY] Hardware initialized. Awaiting user interaction...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. EXIT PASS TAB -->
+            <div class="tab-pane fade" id="pills-exit" role="tabpanel">
+                <div class="card p-4 max-w-600 mx-auto" style="max-width: 650px;">
+                    <h5 class="mb-3"><i class="bi bi-shield-check"></i> Exit Station Scanner Terminal</h5>
+                    <p class="text-muted">Validates single-use exit tokens against backend order authority.</p>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Scan or Paste Exit Token Hash</label>
+                        <input type="text" id="exit-hash-input" class="form-control" placeholder="Paste SHA-256 Exit Token Hash here">
+                    </div>
+                    <button class="btn btn-success py-2 fw-bold" onclick="redeemExitToken()"><i class="bi bi-box-arrow-right"></i> Verify Exit Authorization</button>
+                    <div id="exit-verification-result" class="mt-4"></div>
+                </div>
+            </div>
+
+            <!-- 4. DASHBOARD TAB -->
+            <div class="tab-pane fade" id="pills-dashboard" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card p-3 text-center bg-primary text-white">
+                            <h6>Total Sales (Naivas Westlands)</h6>
+                            <h3 id="dash-sales">KES 0.00</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-3 text-center bg-success text-white">
+                            <h6>Completed Orders</h6>
+                            <h3 id="dash-orders">0</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-3 text-center bg-info text-white">
+                            <h6>Active Trolleys</h6>
+                            <h3 id="dash-active-trolleys">0 / 3</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-3 text-center bg-dark text-white">
+                            <h6>System Health</h6>
+                            <h3><span class="badge bg-success">ALL ONLINE</span></h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="bi bi-building"></i> Branch Operational Control (Branch ID: 1)</h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="loadDashboard()"><i class="bi bi-arrow-repeat"></i> Refresh Metrics</button>
+                    </div>
+                    <div id="dashboard-details">
+                        <p class="text-muted">Click Refresh to load latest sales, trolley fleet, and audit ledger records.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentSession = null;
+        let currentOrder = null;
+        let sequenceNumber = 1;
+
+        async function claimTrolley() {
+            const qrHash = document.getElementById('qr-input').value;
+            try {
+                const res = await fetch('/api/v1/trolleys/claim', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ qrCodeHash: qrHash, customerId: 6 })
+                });
+                if (!res.ok) throw new Error(await res.text());
+                currentSession = await res.json();
+                document.getElementById('hw-session-id').innerText = currentSession.id;
+                logHardwareEvent(`Trolley claimed successfully. Session ID: ${currentSession.id}`);
+                alert('Trolley connected successfully to session ' + currentSession.id);
+            } catch (err) {
+                alert('Error claiming trolley: ' + err.message);
+            }
+        }
+
+        async function sendScan(barcode) {
+            if (!currentSession) {
+                alert('Please claim/bind a trolley first!');
+                return;
+            }
+            const eventId = 'EVT-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            const payload = {
+                eventId: eventId,
+                deviceCode: 'TRL-WEST-001',
+                sessionId: currentSession.id,
+                barcode: barcode,
+                sequenceNumber: sequenceNumber++,
+                timestamp: new Date().toISOString()
+            };
+
+            logHardwareEvent(`[SCAN SENT] Barcode: ${barcode} | Seq: ${payload.sequenceNumber}`);
+            document.getElementById('hw-last-scan').innerText = barcode;
+
+            try {
+                const res = await fetch('/api/v1/device-events/scans', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error(await res.text());
+                const basket = await res.json();
+                updateBasketUI(basket);
+            } catch (err) {
+                logHardwareEvent(`[ERROR] Scan processing failed: ${err.message}`);
+            }
+        }
+
+        function updateBasketUI(basket) {
+            document.getElementById('app-subtotal').innerText = 'KES ' + basket.subtotal.toFixed(2);
+            document.getElementById('app-tax').innerText = 'KES ' + basket.taxAmount.toFixed(2);
+            document.getElementById('app-total').innerText = 'KES ' + basket.totalAmount.toFixed(2);
+
+            const container = document.getElementById('basket-items-list');
+            container.innerHTML = `
+                <div class="alert alert-info py-2 small mb-2"><i class="bi bi-info-circle"></i> Basket validated by TRIXX backend</div>
+                <div class="fw-bold mb-2">Validated Basket Items (${basket.version} updates)</div>
+            `;
+            document.getElementById('btn-checkout').disabled = false;
+        }
+
+        async function startCheckout() {
+            if (!currentSession) return;
+            try {
+                const res = await fetch(`/api/v1/shopping-sessions/${currentSession.id}/checkout`, { method: 'POST' });
+                if (!res.ok) throw new Error(await res.text());
+                currentOrder = await res.json();
+                document.getElementById('checkout-modal').classList.remove('d-none');
+                alert(`Checkout created! Order Number: ${currentOrder.orderNumber} Total: KES ${currentOrder.totalAmount}`);
+            } catch (err) {
+                alert('Checkout failed: ' + err.message);
+            }
+        }
+
+        async function initiatePayment() {
+            if (!currentOrder) return;
+            const phone = document.getElementById('phone-input').value;
+            const statusBox = document.getElementById('payment-status-box');
+            statusBox.innerHTML = '<div class="spinner-border spinner-border-sm text-success"></div> Sending M-Pesa STK push...';
+
+            try {
+                const res = await fetch(`/api/v1/orders/${currentOrder.id}/payments/mpesa`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ orderId: currentOrder.id, phoneNumber: phone })
+                });
+                const attempt = await res.json();
+
+                statusBox.innerHTML = '<div class="text-primary mt-2"><i class="bi bi-hourglass-split"></i> STK Push Prompt sent to phone. Auto-confirming M-Pesa sandbox payment...</div>';
+
+                setTimeout(async () => {
+                    await fetch('/api/v1/webhooks/daraja/stk', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            checkoutRequestId: attempt.checkoutRequestId,
+                            resultCode: 0,
+                            resultDesc: "The service request is processed successfully.",
+                            mpesaReceiptNumber: "QKH7892301"
+                        })
+                    });
+                    statusBox.innerHTML = '<div class="alert alert-success mt-2"><i class="bi bi-check-circle-fill"></i> Payment Confirmed by M-Pesa!</div>';
+                    loadReceiptAndExitToken();
+                }, 2000);
+            } catch (err) {
+                statusBox.innerHTML = `<div class="alert alert-danger mt-2">Payment error: ${err.message}</div>`;
+            }
+        }
+
+        async function loadReceiptAndExitToken() {
+            const rRes = await fetch(`/api/v1/orders/${currentOrder.id}/receipt`);
+            const receipt = await rRes.json();
+
+            const eRes = await fetch(`/api/v1/orders/${currentOrder.id}/exit-token`);
+            const exitToken = await eRes.json();
+
+            document.getElementById('receipt-num').innerText = receipt.receiptNumber;
+            document.getElementById('exit-token-display').innerText = exitToken.tokenHash;
+            document.getElementById('exit-hash-input').value = exitToken.tokenHash;
+            document.getElementById('receipt-modal').classList.remove('d-none');
+        }
+
+        async function redeemExitToken() {
+            const hash = document.getElementById('exit-hash-input').value;
+            const resBox = document.getElementById('exit-verification-result');
+            try {
+                const res = await fetch('/api/v1/exit/redeem', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ tokenHash: hash })
+                });
+                const data = await res.json();
+                if (res.ok && data.verified) {
+                    resBox.innerHTML = '<div class="alert alert-success fs-5 text-center"><i class="bi bi-check-circle-fill"></i> EXIT AUTHORIZED<br><small>Pass verified and single-use exit token redeemed.</small></div>';
+                } else {
+                    resBox.innerHTML = `<div class="alert alert-danger text-center"><i class="bi bi-x-circle-fill"></i> EXIT DENIED: ${data.message || 'Invalid or expired token'}</div>`;
+                }
+            } catch (err) {
+                resBox.innerHTML = `<div class="alert alert-danger text-center"><i class="bi bi-x-circle-fill"></i> EXIT DENIED: ${err.message}</div>`;
+            }
+        }
+
+        async function loadDashboard() {
+            try {
+                const res = await fetch('/api/v1/admin/branches/1/dashboard');
+                const data = await res.json();
+                document.getElementById('dash-sales').innerText = 'KES ' + data.totalSales.toFixed(2);
+                document.getElementById('dash-orders').innerText = data.completedOrders;
+                document.getElementById('dash-active-trolleys').innerText = `${data.activeTrolleys} / ${data.totalTrolleys}`;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function logHardwareEvent(msg) {
+            const box = document.getElementById('hardware-event-log');
+            const time = new Date().toLocaleTimeString();
+            box.innerHTML += `<div>[${time}] ${msg}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+    </script>
+</body>
+</html>
