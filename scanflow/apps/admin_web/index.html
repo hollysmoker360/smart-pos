@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRIXX SmartTrolley Platform</title>
+    <title>ScanFlow | Retail Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
@@ -30,6 +33,85 @@
         .badge-trixx { background-color: var(--trixx-secondary); color: #ffffff; }
         .item-card { border-left: 4px solid var(--trixx-primary); background: #fdfdfd; transition: all 0.2s ease-in-out; }
         .item-card:hover { background: #f4f6f3; }
+        :root {
+            --trixx-primary: #073b32;
+            --trixx-secondary: #087f5b;
+            --trixx-accent: #17a76b;
+            --trixx-light: #f3f7f5;
+            --trixx-dark: #062b25;
+            --line: #e1e9e5;
+            --muted: #6f7e78;
+        }
+        body { background: var(--trixx-light); color: #18332b; font-family: 'DM Sans', sans-serif; }
+        .navbar {
+            align-items: flex-start; background: var(--trixx-dark) !important; box-shadow: none !important;
+            height: 100vh; left: 0; margin: 0 !important; padding: 18px 12px; position: fixed; top: 0; width: 244px; z-index: 1030;
+        }
+        .navbar > .container-fluid { align-items: stretch; flex-direction: column; height: 100%; justify-content: flex-start; padding: 0 8px; }
+        .navbar-brand { font-size: 1.12rem; gap: 10px !important; letter-spacing: 0; }
+        .navbar-brand img { height: 36px; }
+        .navbar-brand small { color: #80d6ad !important; display: block; font-size: .7rem !important; }
+        .navbar-text { display: none !important; }
+        body > .container-fluid.px-4 { margin-left: 244px; padding: 28px !important; width: calc(100% - 244px); }
+        #pills-tab { align-items: stretch; background: transparent !important; bottom: 16px; box-shadow: none !important; flex-direction: column; left: 12px; overflow-y: auto; padding: 0 8px !important; position: fixed; top: 94px; width: 220px; z-index: 1031; }
+        #pills-tab .nav-item { width: 100%; }
+        #pills-tab .nav-link { border-radius: 6px; color: #c2d6ce; margin: 3px 0; padding: 11px 12px; text-align: left; width: 100%; }
+        #pills-tab .nav-link:hover { background: #14483d; color: #fff; }
+        #pills-tab .nav-link.active { background: #087f5b; color: #fff; }
+        .card { border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 8px rgba(5, 45, 35, .035); margin-bottom: 16px; }
+        .workspace-heading { align-items: center; display: flex; justify-content: space-between; margin: 0 0 24px; }
+        .workspace-heading h1 { color: #14362d; font-size: 1.55rem; font-weight: 700; margin: 0; }
+        .workspace-heading p { color: var(--muted); margin: 4px 0 0; }
+        .metric-card { height: 100%; min-height: 106px; text-align: left !important; }
+        .metric-card h3 { color: #12372a !important; font-size: 1.5rem; margin-top: 10px; }
+        .metric-card .text-warning, .metric-card .text-info { color: #087f5b !important; }
+        .metric-card.bg-trixx, .metric-card.bg-success, .metric-card.bg-dark { background: #fff !important; border: 1px solid var(--line); color: #17362d !important; }
+        .metric-card .opacity-75 { color: var(--muted); opacity: 1 !important; }
+        .pos-layout { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr) 340px; }
+        .pos-products { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .pos-product { align-items: flex-start; background: #fff; border: 1px solid var(--line); border-radius: 8px; color: #18332b; display: flex; flex-direction: column; min-height: 150px; padding: 14px; text-align: left; transition: border-color .15s, transform .15s; }
+        .pos-product:hover { border-color: #18a66c; transform: translateY(-2px); }
+        .pos-product .product-icon { align-items: center; background: #e8f5ef; border-radius: 6px; color: #087f5b; display: flex; height: 42px; justify-content: center; margin-bottom: 16px; width: 42px; }
+        .pos-product strong { font-size: .9rem; }
+        .pos-product small { color: var(--muted); margin-top: 4px; }
+        .pos-cart-line { align-items: center; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; padding: 12px 0; }
+        .pos-cart-line small { color: var(--muted); display: block; }
+        .pos-totals { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 14px; }
+        .pos-search { max-width: 420px; }
+        .btn-trixx { background: #087f5b; }
+        .btn-trixx:hover { background: #066c4e; }
+        .analytics-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.65fr) minmax(240px, 1fr); margin-bottom: 16px; }
+        .sales-bars { align-items: end; border-bottom: 1px solid var(--line); display: flex; gap: 14px; height: 176px; justify-content: space-around; padding: 14px 4px 0; }
+        .sales-day { align-items: center; color: var(--muted); display: flex; flex: 1; flex-direction: column; font-size: .72rem; gap: 8px; height: 100%; justify-content: end; }
+        .sales-bar { background: #56bd8e; border-radius: 4px 4px 0 0; min-height: 8px; width: min(28px, 70%); }
+        .sales-day:nth-child(4n) .sales-bar { background: #087f5b; }
+        .top-product { align-items: center; border-bottom: 1px solid var(--line); display: flex; gap: 10px; padding: 10px 0; }
+        .top-product:last-child { border-bottom: 0; }
+        .top-product .product-icon { align-items: center; background: #e8f5ef; border-radius: 6px; color: #087f5b; display: flex; flex: 0 0 34px; height: 34px; justify-content: center; }
+        .top-product small { color: var(--muted); display: block; }
+        .overview-bottom { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+        .alert-row { align-items: center; border-bottom: 1px solid var(--line); display: flex; gap: 10px; padding: 10px 0; }
+        .alert-row:last-child { border-bottom: 0; }
+        @media (max-width: 900px) {
+            .navbar { height: 62px; padding: 8px 14px; width: 100%; }
+            .navbar > .container-fluid { align-items: center; flex-direction: row; }
+            .navbar-brand img { height: 32px; }
+            body > .container-fluid.px-4 { margin-left: 0; padding: 132px 16px 20px !important; width: 100%; }
+            #pills-tab { background: #fff !important; border: 1px solid var(--line); border-radius: 8px; bottom: auto; flex-direction: row; height: 50px; left: 12px; overflow-x: auto; overflow-y: hidden; padding: 5px !important; top: 70px; width: calc(100% - 24px); }
+            #pills-tab .nav-item { flex: 0 0 auto; width: auto; }
+            #pills-tab .nav-link { color: #34534a; margin: 0 2px; padding: 8px 10px; white-space: nowrap; width: auto; }
+            #pills-tab .nav-link:hover { background: #eef6f1; color: #073b32; }
+            #pills-tab .nav-link.active { background: #087f5b; color: white; }
+            .pos-layout { grid-template-columns: 1fr; }
+            .analytics-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 560px) {
+            body > .container-fluid.px-4 { padding: 132px 12px 16px !important; }
+            .workspace-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+            .pos-products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .metric-card { min-height: 92px; }
+            .overview-bottom { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -37,7 +119,7 @@
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center gap-3" href="#">
                 <img src="/logo.png" alt="ScanFlow Logo" height="40" class="d-inline-block align-text-top rounded bg-white p-1 shadow-sm">
-                <span class="fs-4">TRIXX <small class="fw-light fs-6 text-warning">SmartTrolley</small></span>
+                <span class="fs-4">ScanFlow <small class="fw-light fs-6 text-warning">Retail workspace</small></span>
             </a>
             <span class="navbar-text text-light opacity-75 d-none d-md-block">
                 <i class="bi bi-geo-alt-fill text-warning"></i> Kenya Retail Innovation Platform
@@ -48,7 +130,7 @@
     <div class="container-fluid px-4">
         <ul class="nav nav-pills mb-4 bg-white p-2 rounded-3 shadow-sm" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-customer-tab" data-bs-toggle="pill" data-bs-target="#pills-customer" type="button">
+                <button class="nav-link" id="pills-customer-tab" data-bs-toggle="pill" data-bs-target="#pills-customer" type="button">
                     <i class="bi bi-phone me-1"></i> Customer App & Basket
                 </button>
             </li>
@@ -63,15 +145,20 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#pills-dashboard" type="button" onclick="loadDashboard()">
-                    <i class="bi bi-speedometer2 me-1"></i> Management Dashboard
+                <button class="nav-link active" id="pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#pills-dashboard" type="button" onclick="loadDashboard()">
+                    <i class="bi bi-speedometer2 me-1"></i> Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-pos-tab" data-bs-toggle="pill" data-bs-target="#pills-pos" type="button">
+                    <i class="bi bi-shop me-1"></i> Cashier POS
                 </button>
             </li>
         </ul>
 
         <div class="tab-content" id="pills-tabContent">
             <!-- 1. CUSTOMER APP TAB -->
-            <div class="tab-pane fade show active" id="pills-customer" role="tabpanel">
+            <div class="tab-pane fade" id="pills-customer" role="tabpanel">
                 <div class="row g-4">
                     <div class="col-lg-5 col-md-6">
                         <div class="app-mobile-frame">
@@ -104,6 +191,21 @@
                     </div>
 
                     <div class="col-lg-7 col-md-6">
+                        <div class="analytics-grid">
+                            <section class="card p-3 p-md-4 mb-0">
+                                <div class="d-flex justify-content-between align-items-start"><div><h5 class="fw-bold mb-1">Sales trend</h5><small class="text-muted">Daily sales · last 7 days</small></div><button class="btn btn-sm btn-outline-secondary" type="button">Last 7 days <i class="bi bi-chevron-down ms-1"></i></button></div>
+                                <div class="sales-bars" role="img" aria-label="Sales by day for the last seven days">
+                                    <div class="sales-day"><span class="sales-bar" style="height:40%"></span><span>Tue</span></div><div class="sales-day"><span class="sales-bar" style="height:62%"></span><span>Wed</span></div><div class="sales-day"><span class="sales-bar" style="height:48%"></span><span>Thu</span></div><div class="sales-day"><span class="sales-bar" style="height:76%"></span><span>Fri</span></div><div class="sales-day"><span class="sales-bar" style="height:58%"></span><span>Sat</span></div><div class="sales-day"><span class="sales-bar" style="height:90%"></span><span>Sun</span></div><div class="sales-day"><span class="sales-bar" style="height:69%"></span><span>Mon</span></div>
+                                </div>
+                            </section>
+                            <section class="card p-3 p-md-4 mb-0">
+                                <div class="d-flex justify-content-between align-items-start"><div><h5 class="fw-bold mb-1">Top-selling products</h5><small class="text-muted">Units sold this week</small></div><button class="btn btn-sm btn-link text-success p-0" type="button">View all</button></div>
+                                <div class="top-product"><span class="product-icon"><i class="bi bi-cup-hot"></i></span><div class="flex-grow-1"><strong>Green Tea 100g</strong><small>Beverages</small></div><strong>482</strong></div>
+                                <div class="top-product"><span class="product-icon"><i class="bi bi-basket2"></i></span><div class="flex-grow-1"><strong>White Bread 400g</strong><small>Bakery</small></div><strong>401</strong></div>
+                                <div class="top-product"><span class="product-icon"><i class="bi bi-droplet"></i></span><div class="flex-grow-1"><strong>Fresh Milk 1L</strong><small>Dairy</small></div><strong>356</strong></div>
+                                <div class="top-product"><span class="product-icon"><i class="bi bi-box-seam"></i></span><div class="flex-grow-1"><strong>Corn Flakes 500g</strong><small>Breakfast</small></div><strong>289</strong></div>
+                            </section>
+                        </div>
                         <div class="card p-4">
                             <h5 class="fw-bold text-trixx mb-3"><i class="bi bi-qr-code-scan me-2"></i> Step 1: Claim Physical Trolley</h5>
                             <p class="text-muted">Scan or enter the QR hash on the physical trolley to bind it to your mobile session.</p>
@@ -218,22 +320,26 @@
             </div>
 
             <!-- 4. DASHBOARD TAB -->
-            <div class="tab-pane fade" id="pills-dashboard" role="tabpanel">
+            <div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel">
+                <div class="workspace-heading">
+                    <div><h1>Retail overview</h1><p>Monday, 19 October 2026 <span class="mx-2">·</span> Nairobi branch</p></div>
+                    <button class="btn btn-outline-success btn-sm" type="button" onclick="loadDashboard()"><i class="bi bi-arrow-repeat me-1"></i> Refresh</button>
+                </div>
                 <div class="row g-3 mb-4">
                     <div class="col-md-3">
-                        <div class="card p-3 text-center bg-trixx text-white">
+                        <div class="card metric-card p-3 bg-trixx text-white">
                             <div class="text-uppercase small opacity-75 fw-bold">Total Branch Sales</div>
                             <h3 id="dash-sales" class="fw-bold mb-0 text-warning">KES 0.00</h3>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card p-3 text-center bg-success text-white">
+                        <div class="card metric-card p-3 bg-success text-white">
                             <div class="text-uppercase small opacity-75 fw-bold">Completed Orders</div>
                             <h3 id="dash-orders" class="fw-bold mb-0">0</h3>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card p-3 text-center bg-dark text-white">
+                        <div class="card metric-card p-3 bg-dark text-white">
                             <div class="text-uppercase small opacity-75 fw-bold">Active Trolley Fleet</div>
                             <h3 id="dash-active-trolleys" class="fw-bold mb-0 text-info">0 / 3</h3>
                         </div>
@@ -248,12 +354,48 @@
 
                 <div class="card p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold text-trixx mb-0"><i class="bi bi-building me-2"></i> Naivas Westlands Operational Metrics</h5>
+                        <h5 class="fw-bold text-trixx mb-0"><i class="bi bi-building me-2"></i> Main Branch Operational Metrics</h5>
                         <button class="btn btn-sm btn-outline-success" onclick="loadDashboard()"><i class="bi bi-arrow-repeat me-1"></i> Refresh</button>
                     </div>
                     <div id="dashboard-details">
                         <p class="text-muted">Loading live metrics...</p>
                     </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-pos" role="tabpanel">
+                <div class="workspace-heading">
+                    <div><h1>Cashier POS</h1><p>Counter 01 <span class="mx-2">·</span> Main Branch</p></div>
+                    <span class="badge text-bg-success"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i> Register open</span>
+                </div>
+                <div class="pos-layout">
+                    <section class="card p-3 p-md-4">
+                        <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-3">
+                            <div><h5 class="fw-bold mb-1">Product catalogue</h5><small class="text-muted">Select a product to add it to the sale.</small></div>
+                            <div class="input-group pos-search"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input class="form-control" id="pos-search" placeholder="Search name or SKU" oninput="filterPosProducts()"></div>
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap mb-3">
+                            <button class="btn btn-sm btn-success" type="button">All items</button><button class="btn btn-sm btn-outline-secondary" type="button">Groceries</button><button class="btn btn-sm btn-outline-secondary" type="button">Beverages</button><button class="btn btn-sm btn-outline-secondary" type="button">Household</button>
+                        </div>
+                        <div class="pos-products" id="pos-products">
+                            <button class="pos-product" data-search="green tea tea-100" onclick="addPosItem('Green Tea 100g','TEA-100',185)"><span class="product-icon"><i class="bi bi-cup-hot"></i></span><strong>Green Tea 100g</strong><small>TEA-100 · KES 185.00</small></button>
+                            <button class="pos-product" data-search="white bread brd-400" onclick="addPosItem('White Bread 400g','BRD-400',75)"><span class="product-icon"><i class="bi bi-basket2"></i></span><strong>White Bread 400g</strong><small>BRD-400 · KES 75.00</small></button>
+                            <button class="pos-product" data-search="fresh milk mlk-1" onclick="addPosItem('Fresh Milk 1L','MLK-1',145)"><span class="product-icon"><i class="bi bi-droplet"></i></span><strong>Fresh Milk 1L</strong><small>MLK-1 · KES 145.00</small></button>
+                            <button class="pos-product" data-search="corn flakes cereal cfl-500" onclick="addPosItem('Corn Flakes 500g','CFL-500',420)"><span class="product-icon"><i class="bi bi-box-seam"></i></span><strong>Corn Flakes 500g</strong><small>CFL-500 · KES 420.00</small></button>
+                            <button class="pos-product" data-search="cooking oil oil-1" onclick="addPosItem('Cooking Oil 1L','OIL-1',310)"><span class="product-icon"><i class="bi bi-droplet-half"></i></span><strong>Cooking Oil 1L</strong><small>OIL-1 · KES 310.00</small></button>
+                            <button class="pos-product" data-search="white sugar sug-2" onclick="addPosItem('White Sugar 2kg','SUG-2',295)"><span class="product-icon"><i class="bi bi-box"></i></span><strong>White Sugar 2kg</strong><small>SUG-2 · KES 295.00</small></button>
+                        </div>
+                    </section>
+                    <aside class="card p-3 p-md-4">
+                        <div class="d-flex justify-content-between align-items-center"><div><h5 class="fw-bold mb-1">Current sale</h5><small class="text-muted">Order #SF-00124</small></div><button class="btn btn-sm btn-outline-danger" type="button" onclick="clearPosCart()" aria-label="Clear sale"><i class="bi bi-trash"></i></button></div>
+                        <div id="pos-cart" class="my-3"><div class="text-muted small py-4 text-center">No items in this sale</div></div>
+                        <div class="pos-totals">
+                            <div class="d-flex justify-content-between text-muted small mb-2"><span>Subtotal</span><span id="pos-subtotal">KES 0.00</span></div>
+                            <div class="d-flex justify-content-between text-muted small mb-3"><span>VAT (16%)</span><span id="pos-tax">KES 0.00</span></div>
+                            <div class="d-flex justify-content-between fw-bold fs-5"><span>Total</span><span id="pos-total">KES 0.00</span></div>
+                            <button class="btn btn-trixx text-white w-100 mt-3 py-2" type="button" onclick="completePosSale()"><i class="bi bi-credit-card me-2"></i> Cash or card</button>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>

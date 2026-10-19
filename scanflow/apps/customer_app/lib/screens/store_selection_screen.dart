@@ -38,7 +38,7 @@ class _StoreSelectionScreenState extends State<StoreSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TRIXX SmartPOS - Select Supermarket'),
+        title: const Text('ScanFlow - Select a store'),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

@@ -36,7 +36,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TRIXX SaaS Super Admin'),
+        title: const Text('ScanFlow Platform Admin'),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

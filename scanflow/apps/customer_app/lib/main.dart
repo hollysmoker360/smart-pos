@@ -28,7 +28,7 @@ class TrixxApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TRIXX SmartPOS',
+      title: 'ScanFlow',
       debugShowCheckedModeBanner: false,
       theme: TrixxTheme.themeData,
       localizationsDelegates: const [

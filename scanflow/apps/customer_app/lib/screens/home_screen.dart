@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(provider.branchName ?? 'TRIXX SmartPOS'),
+        title: Text(provider.branchName ?? 'ScanFlow'),
         actions: [
           IconButton(
             icon: const Icon(Icons.storefront),
