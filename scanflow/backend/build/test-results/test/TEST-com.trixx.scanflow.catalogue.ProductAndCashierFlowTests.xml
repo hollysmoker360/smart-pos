@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-19T00:57:41.097Z" hostname="codespaces-15b442" time="0.291">
+  <properties/>
+  <testcase name="registerBusinessCreateProductAndCompleteCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.273"/>
+  <system-out><![CDATA[2026-10-19T00:57:41.100Z  INFO 50709 --- [scanflow-backend] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.trixx.scanflow.catalogue.ProductAndCashierFlowTests]: ProductAndCashierFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-19T00:57:41.110Z  INFO 50709 --- [scanflow-backend] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.catalogue.ProductAndCashierFlowTests
+2026-10-19T00:57:41.359Z  WARN 50709 --- [scanflow-backend] [    Test worker] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

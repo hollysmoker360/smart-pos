@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.trixx.scanflow.session.ShoppingSessionFlowTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-19T00:57:41.389Z" hostname="codespaces-15b442" time="0.232">
+  <properties/>
+  <testcase name="createSessionAddProductAndReadBasket()" classname="com.trixx.scanflow.session.ShoppingSessionFlowTests" time="0.205"/>
+  <system-out><![CDATA[2026-10-19T00:57:41.392Z  INFO 50709 --- [scanflow-backend] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.trixx.scanflow.session.ShoppingSessionFlowTests]: ShoppingSessionFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-19T00:57:41.412Z  INFO 50709 --- [scanflow-backend] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.session.ShoppingSessionFlowTests
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

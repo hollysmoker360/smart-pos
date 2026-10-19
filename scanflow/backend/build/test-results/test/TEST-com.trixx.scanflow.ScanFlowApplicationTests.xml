@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.trixx.scanflow.ScanFlowApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-19T00:57:28.026Z" hostname="codespaces-15b442" time="9.923">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.trixx.scanflow.ScanFlowApplicationTests" time="0.762"/>
+  <system-out><![CDATA[00:57:28.267 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.trixx.scanflow.ScanFlowApplicationTests]: ScanFlowApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+00:57:28.480 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.ScanFlowApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2026-10-19T00:57:29.167Z  INFO 50709 --- [scanflow-backend] [    Test worker] c.t.scanflow.ScanFlowApplicationTests    : Starting ScanFlowApplicationTests using Java 21.0.12.1 with PID 50709 (started by codespace in /workspaces/smart-pos/scanflow/backend)
+2026-10-19T00:57:29.169Z  INFO 50709 --- [scanflow-backend] [    Test worker] c.t.scanflow.ScanFlowApplicationTests    : No active profile set, falling back to 1 default profile: "default"
+2026-10-19T00:57:30.786Z  INFO 50709 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-19T00:57:30.893Z  INFO 50709 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 84 ms. Found 6 JPA repository interfaces.
+2026-10-19T00:57:31.912Z  INFO 50709 --- [scanflow-backend] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-19T00:57:31.974Z  INFO 50709 --- [scanflow-backend] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-10-19T00:57:32.007Z  INFO 50709 --- [scanflow-backend] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-19T00:57:32.328Z  INFO 50709 --- [scanflow-backend] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-19T00:57:32.359Z  INFO 50709 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-19T00:57:32.548Z  INFO 50709 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:scanflow user=SA
+2026-10-19T00:57:32.551Z  INFO 50709 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-19T00:57:32.580Z  WARN 50709 --- [scanflow-backend] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-10-19T00:57:34.063Z  INFO 50709 --- [scanflow-backend] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-19T00:57:34.159Z  INFO 50709 --- [scanflow-backend] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-19T00:57:35.278Z  INFO 50709 --- [scanflow-backend] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-10-19T00:57:36.059Z  INFO 50709 --- [scanflow-backend] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-10-19T00:57:37.045Z  INFO 50709 --- [scanflow-backend] [    Test worker] c.t.scanflow.ScanFlowApplicationTests    : Started ScanFlowApplicationTests in 8.314 seconds (process running for 10.028)
+]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/home/codespace/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.19/154da3a65b4f4a909d3e5bdec55d1b2b4cbb6ce1/byte-buddy-agent-1.14.19.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
