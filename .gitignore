@@ -1,3 +1,10 @@
 target/
 .mvn/
 *.log
+.dart_tool/
+.pub/
+.pub-cache/
+trixx_app/.dart_tool/
+trixx_app/.pub/
+trixx_app/.pub-cache/
+trixx_app/build/

@@ -6,17 +6,26 @@ import java.util.List;
 
 public class ApiDtos {
 
-    public record TrolleyClaimRequest(String qrCodeHash, Long customerId) {}
+    public record TrolleyClaimRequest(String qrCodeHash, String trolleyCode, Long customerId, String branchId) {
+        public String getEffectiveTrolleyCode() {
+            return trolleyCode != null && !trolleyCode.isBlank() ? trolleyCode : qrCodeHash;
+        }
+    }
 
     public record ScanEventRequest(
             String eventId,
             String deviceCode,
+            String deviceId,
             Long sessionId,
             String barcode,
             Long sequenceNumber,
             LocalDateTime timestamp,
             String rawPayload
-    ) {}
+    ) {
+        public String getEffectiveDeviceCode() {
+            return deviceCode != null && !deviceCode.isBlank() ? deviceCode : deviceId;
+        }
+    }
 
     public record RemovalEventRequest(
             String eventId,

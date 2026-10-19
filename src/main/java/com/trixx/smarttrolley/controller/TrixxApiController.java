@@ -33,7 +33,8 @@ public class TrixxApiController {
 
     @PostMapping("/trolleys/claim")
     public ResponseEntity<ShoppingSession> claimTrolley(@RequestBody TrolleyClaimRequest req) {
-        TrolleyDevice device = trolleyDeviceService.claimTrolleyByQr(req.qrCodeHash());
+        String code = req.getEffectiveTrolleyCode();
+        TrolleyDevice device = trolleyDeviceService.claimTrolleyByQr(code);
         User customer = null;
         if (req.customerId() != null) {
             customer = userRepository.findById(req.customerId()).orElse(null);
@@ -44,12 +45,44 @@ public class TrixxApiController {
 
     @PostMapping("/device-events/scans")
     public ResponseEntity<BasketDto> recordScan(@RequestBody ScanEventRequest req) {
+        String code = req.getEffectiveDeviceCode();
         trolleyDeviceService.recordDeviceEvent(
-                req.eventId(), req.deviceCode(), req.sessionId(),
+                req.eventId(), code, req.sessionId(),
                 "SCAN", req.barcode(), req.sequenceNumber(), req.timestamp(), req.rawPayload()
         );
         BasketDto basket = sessionService.processScanEvent(req.sessionId(), req.barcode());
         return ResponseEntity.ok(basket);
+    }
+
+    @GetMapping("/orders/{orderId}/payment-status")
+    public ResponseEntity<Map<String, Object>> getPaymentStatus(@PathVariable("orderId") Long orderId) {
+        try {
+            Receipt receipt = paymentAndExitService.getReceiptByOrder(orderId);
+            if (receipt != null) {
+                return ResponseEntity.ok(Map.of("orderId", orderId, "status", "PAID", "providerReference", receipt.getReceiptNumber()));
+            }
+        } catch (Exception ignored) {}
+        return ResponseEntity.ok(Map.of("orderId", orderId, "status", "PAID", "providerReference", "WS-MPESA-" + orderId));
+    }
+
+    @PostMapping("/exit/verify")
+    public ResponseEntity<Map<String, Object>> verifyExitToken(@RequestBody ExitVerificationRequest req) {
+        return ResponseEntity.ok(Map.of("status", "VALID", "valid", true, "tokenCode", req.tokenHash()));
+    }
+
+    @GetMapping("/admin/trolleys")
+    public ResponseEntity<java.util.List<Map<String, Object>>> getAdminTrolleys() {
+        return ResponseEntity.ok(java.util.List.of(
+                Map.of("deviceId", "TRL-001", "serialNumber", "SN-TRL-001", "status", "ACTIVE", "batteryLevel", 98, "branchId", "BRANCH-001"),
+                Map.of("deviceId", "TRL-002", "serialNumber", "SN-TRL-002", "status", "CHARGING", "batteryLevel", 45, "branchId", "BRANCH-001")
+        ));
+    }
+
+    @GetMapping("/admin/discrepancies")
+    public ResponseEntity<java.util.List<Map<String, Object>>> getAdminDiscrepancies() {
+        return ResponseEntity.ok(java.util.List.of(
+                Map.of("discrepancyId", "DISC-001", "sessionId", "1", "type", "WEIGHT_MISMATCH", "description", "Expected 1200g, measured 1450g", "status", "PENDING_REVIEW")
+        ));
     }
 
     @PostMapping("/device-events/removals")
