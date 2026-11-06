@@ -260,6 +260,12 @@ class AuthAndBusinessFlowTests {
                 .andReturn();
             String employeeToken = objectMapper.readTree(employeeAcceptedResult.getResponse().getContentAsString()).path("token").asText();
 
+            mockMvc.perform(get("/api/v1/pos/branches")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + employeeToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(assignedBranchId))
+                .andExpect(jsonPath("$.length()").value(1));
+
             mockMvc.perform(post("/api/v1/shopping-sessions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + employeeToken)
                 .contentType(MediaType.APPLICATION_JSON)

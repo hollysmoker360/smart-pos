@@ -42,6 +42,21 @@ public class ProductController {
         return ResponseEntity.ok(products.map(this::toResponse));
     }
 
+    @GetMapping("/products/lookup")
+    @PreAuthorize("hasAnyRole('OWNER', 'BUSINESS_ADMIN', 'BRANCH_MANAGER', 'CASHIER', 'INVENTORY_OFFICER', 'FINANCE_OFFICER', 'AUDITOR')")
+    public ResponseEntity<ProductResponse> lookupProduct(@AuthenticationPrincipal CustomUserPrincipal principal,
+                                                         @RequestParam String identifier) {
+        if (identifier == null || identifier.isBlank()) {
+            throw new IllegalArgumentException("Product identifier is required");
+        }
+        Business business = principal.getUser().getBusiness();
+        Product product = productCatalogService.findByBusinessAndIdentifier(business, identifier.trim());
+        if (!product.isActive()) {
+            throw new IllegalArgumentException("Product is not active");
+        }
+        return ResponseEntity.ok(toResponse(product));
+    }
+
     private ProductResponse toResponse(Product product) {
         return new ProductResponse(
                 product.getId().toString(),

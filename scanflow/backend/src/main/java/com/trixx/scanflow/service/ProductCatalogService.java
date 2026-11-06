@@ -52,6 +52,12 @@ public class ProductCatalogService {
                         .orElseThrow(() -> new IllegalArgumentException("Product not found for identifier: " + identifier)));
     }
 
+    public Product findByBusinessAndIdentifierForUpdate(Business business, String identifier) {
+        return productRepository.findByBusinessAndSkuForUpdate(business, identifier)
+                .orElseGet(() -> productRepository.findByBusinessAndBarcodeForUpdate(business, identifier)
+                        .orElseThrow(() -> new IllegalArgumentException("Product not found for identifier: " + identifier)));
+    }
+
     public record CreateProductRequest(String sku, String name, String description, String brand, String barcode,
                                       BigDecimal price, BigDecimal taxRate, Integer stock, String category) {}
 }

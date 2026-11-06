@@ -14,7 +14,7 @@
 <div class="tab-container">
 <ul class="tabLinks">
 <li>
-<a class="skippedGroup" href="#">Gradle Test Run :test</a>
+<a class="failureGroup" href="#">Gradle Test Run :test</a>
 </li>
 </ul>
 <div class="tab">
@@ -41,25 +41,25 @@
 <tr>
 <td>
 <div class="infoBox">
-<div class="counter">1</div>
+<div class="counter">6</div>
 <p>tests</p>
 </div>
 </td>
 <td>
 <div class="infoBox">
-<div class="counter">0</div>
+<div class="counter">3</div>
 <p>failures</p>
 </div>
 </td>
 <td>
 <div class="infoBox">
-<div class="counter">1</div>
+<div class="counter">0</div>
 <p>skipped</p>
 </div>
 </td>
 <td>
 <div class="infoBox duration">
-<div class="counter">5.453s</div>
+<div class="counter">1m5.81s</div>
 <p>duration</p>
 </div>
 </td>
@@ -68,14 +68,25 @@
 </div>
 </td>
 <td>
-<div class="infoBox skipped successRate">
-<div class="percent">100%</div>
+<div class="infoBox failures successRate">
+<div class="percent">50%</div>
 <p>successful</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="" href="#">Failed</a>
+</li>
+<li>
+<a class="" href="#">All</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Failed</h2>
 <table class="test-results sortable">
 <thead>
 <tr>
@@ -90,29 +101,114 @@
 </thead>
 <tbody>
 <tr>
-<td class="skipped">
+<td class="failures">
+<a href="com.trixx.scanflow.auth.AuthAndBusinessFlowTests/index.html">AuthAndBusinessFlowTests</a>
+</td>
+<td class="path">com.trixx.scanflow.auth.AuthAndBusinessFlowTests</td>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+<td data-sort-value="38853">38.853s</td>
+<td class="failures" data-sort-value="66">66%</td>
+</tr>
+<tr>
+<td class="failures">
+<a href="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests/index.html">ProductAndCashierFlowTests</a>
+</td>
+<td class="path">com.trixx.scanflow.catalogue.ProductAndCashierFlowTests</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td data-sort-value="1868">1.868s</td>
+<td class="failures" data-sort-value="50">50%</td>
+</tr>
+<tr>
+<td class="failures">
 <a href="com.trixx.scanflow.database.PostgreSqlMigrationTests/index.html">PostgreSqlMigrationTests</a>
 </td>
 <td class="path">com.trixx.scanflow.database.PostgreSqlMigrationTests</td>
 <td>1</td>
-<td>0</td>
 <td>1</td>
-<td data-sort-value="7">0.007s</td>
-<td class="skipped" data-sort-value="100">100%</td>
+<td>0</td>
+<td data-sort-value="14670">14.670s</td>
+<td class="failures" data-sort-value="0">0%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tab">
+<h2>All</h2>
+<table class="test-results sortable">
+<thead>
+<tr>
+<th>Child</th>
+<th>Name</th>
+<th data-sort-default="desc">Tests</th>
+<th data-sort-default="desc">Failures</th>
+<th data-sort-default="desc">Skipped</th>
+<th data-sort-default="desc">Duration</th>
+<th>Success rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="failures">
+<a href="com.trixx.scanflow.auth.AuthAndBusinessFlowTests/index.html">AuthAndBusinessFlowTests</a>
+</td>
+<td class="path">com.trixx.scanflow.auth.AuthAndBusinessFlowTests</td>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+<td data-sort-value="38853">38.853s</td>
+<td class="failures" data-sort-value="66">66%</td>
+</tr>
+<tr>
+<td class="failures">
+<a href="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests/index.html">ProductAndCashierFlowTests</a>
+</td>
+<td class="path">com.trixx.scanflow.catalogue.ProductAndCashierFlowTests</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td data-sort-value="1868">1.868s</td>
+<td class="failures" data-sort-value="50">50%</td>
+</tr>
+<tr>
+<td class="failures">
+<a href="com.trixx.scanflow.database.PostgreSqlMigrationTests/index.html">PostgreSqlMigrationTests</a>
+</td>
+<td class="path">com.trixx.scanflow.database.PostgreSqlMigrationTests</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td data-sort-value="14670">14.670s</td>
+<td class="failures" data-sort-value="0">0%</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+</div>
+</div>
 <div class="tab">
 <h2>standard output</h2>
 <span class="code">
-<pre id="root-0-test-stdout-Gradle Test Run :test">16:03:13.816 [Test worker] INFO org.testcontainers.dockerclient.DockerMachineClientProviderStrategy -- docker-machine executable was not found on PATH ([/vscode/bin/linux-x64/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/remote-cli, /home/codespace/.local/bin, /usr/local/rubies/current/bin, /home/codespace/.dotnet, /home/codespace/nvm/current/bin, /home/codespace/.php/current/bin, /home/codespace/.python/current/bin, /home/codespace/java/current/bin, /home/codespace/.ruby/current/bin, /usr/local/python/current/bin, /usr/local/py-utils/bin, /usr/local/jupyter, /usr/local/oryx, /usr/local/go/bin, /go/bin, /usr/local/sdkman/bin, /usr/local/sdkman/candidates/java/current/bin, /usr/local/sdkman/candidates/gradle/current/bin, /usr/local/sdkman/candidates/maven/current/bin, /usr/local/sdkman/candidates/ant/current/bin, /usr/local/share/rbenv/shims, /usr/local/share/rbenv/bin, /usr/local/php/current/bin, /opt/conda/bin, /usr/local/share/nvm/current/bin, /usr/local/share/nvm/versions/node/v24.22.2/bin, /usr/local/hugo/bin, /usr/local/sbin, /usr/local/bin, /usr/sbin, /usr/bin, /sbin, /bin, /usr/share/dotnet, /home/codespace/.dotnet/tools, /home/codespace/.vscode-remote/data/User/globalStorage/github.copilot-chat/debugCommand, /vscode/bin/linux-x64/c4453f8ea430795f941c1b2ff6c9321135a74a02/bin/copilot-shim, /home/codespace/.vscode-remote/extensions/vscjava.vscode-java-debug-0.60.0/bundled/scripts/noConfigScripts, /home/codespace/.cache/copilot/pkg/linux-x64/1.0.106/ripgrep/bin/linux-x64])
-16:03:13.830 [Test worker] ERROR org.testcontainers.dockerclient.DockerClientProviderStrategy -- Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
-	UnixSocketClientProviderStrategy: failed with exception BadRequestException (Status 400: {&quot;message&quot;:&quot;client version 1.32 is too old. Minimum supported API version is 1.40, please upgrade your client to a newer version&quot;}
-)
-	DockerDesktopClientProviderStrategy: failed with exception NullPointerException (Cannot invoke &quot;java.nio.file.Path.toString()&quot; because the return value of &quot;org.testcontainers.dockerclient.DockerDesktopClientProviderStrategy.getSocketPath()&quot; is null)As no valid configuration was found, execution cannot continue.
-See https://java.testcontainers.org/on_failure.html for more details.
+<pre id="root-0-test-stdout-Gradle Test Run :test">2026-11-06T16:17:02.745Z  INFO 38102 --- [scanflow-backend] [    Test worker] o.t.d.DockerClientProviderStrategy       : Loaded org.testcontainers.dockerclient.UnixSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+2026-11-06T16:17:04.588Z  INFO 38102 --- [scanflow-backend] [    Test worker] o.t.d.DockerClientProviderStrategy       : Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+2026-11-06T16:17:04.762Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.DockerClientFactory   : Docker host IP address is 172.17.0.1
+2026-11-06T16:17:04.795Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.DockerClientFactory   : Connected to docker: 
+  Server Version: 29.9.2-2
+  API Version: 1.56
+  Operating System: Ubuntu 24.04.5 LTS (containerized)
+  Total Memory: 7942 MB
+2026-11-06T16:17:04.822Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.images.PullPolicy     : Image pull policy will be performed by: DefaultPullPolicy()
+2026-11-06T16:17:04.825Z  INFO 38102 --- [scanflow-backend] [    Test worker] o.t.utility.ImageNameSubstitutor         : Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+2026-11-06T16:17:05.299Z  INFO 38102 --- [scanflow-backend] [    Test worker] tc.testcontainers/ryuk:0.7.0             : Creating container for image: testcontainers/ryuk:0.7.0
+2026-11-06T16:17:05.724Z  INFO 38102 --- [scanflow-backend] [    Test worker] tc.testcontainers/ryuk:0.7.0             : Container testcontainers/ryuk:0.7.0 is starting: 2f5d660c3e92457f68239c1cc85d1300ab51f9194664c13110369d97346e8467
+2026-11-06T16:17:06.785Z  INFO 38102 --- [scanflow-backend] [    Test worker] tc.testcontainers/ryuk:0.7.0             : Container testcontainers/ryuk:0.7.0 started in PT1.485984111S
+2026-11-06T16:17:06.812Z  INFO 38102 --- [scanflow-backend] [    Test worker] o.t.utility.RyukResourceReaper           : Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+2026-11-06T16:17:06.813Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.DockerClientFactory   : Checking the system...
+2026-11-06T16:17:06.818Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.DockerClientFactory   : ✔︎ Docker server version should be at least 1.6.0
 </pre>
 <button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-Gradle Test Run :test">Copy</button>
 </span>
@@ -127,7 +223,7 @@ See https://java.testcontainers.org/on_failure.html for more details.
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 4:03:14 PM</p>
+<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 4:17:21 PM</p>
 </div>
 </div>
 </body>

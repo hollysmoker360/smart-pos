@@ -4,6 +4,7 @@ import com.trixx.scanflow.domain.Branch;
 import com.trixx.scanflow.domain.Business;
 import com.trixx.scanflow.security.CustomUserPrincipal;
 import com.trixx.scanflow.repository.BranchRepository;
+import com.trixx.scanflow.repository.UserBranchAccessRepository;
 import com.trixx.scanflow.service.AuditLogService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -26,10 +27,14 @@ import java.util.Locale;
 @PreAuthorize("hasAnyRole('OWNER', 'BUSINESS_ADMIN')")
 public class BranchManagementController {
     private final BranchRepository branchRepository;
+    private final UserBranchAccessRepository branchAccessRepository;
     private final AuditLogService auditLogService;
 
-    public BranchManagementController(BranchRepository branchRepository, AuditLogService auditLogService) {
+    public BranchManagementController(BranchRepository branchRepository,
+                                      UserBranchAccessRepository branchAccessRepository,
+                                      AuditLogService auditLogService) {
         this.branchRepository = branchRepository;
+        this.branchAccessRepository = branchAccessRepository;
         this.auditLogService = auditLogService;
     }
 
@@ -37,6 +42,22 @@ public class BranchManagementController {
     public ResponseEntity<List<BranchResponse>> listBranches(@AuthenticationPrincipal CustomUserPrincipal principal) {
         Business business = requireBusiness(principal);
         return ResponseEntity.ok(branchRepository.findByBusiness(business).stream().map(BranchResponse::from).toList());
+    }
+
+    @GetMapping("/pos/branches")
+    @PreAuthorize("hasAnyRole('OWNER', 'BUSINESS_ADMIN', 'BRANCH_MANAGER', 'CASHIER')")
+    public ResponseEntity<List<BranchResponse>> listAuthorizedPosBranches(
+            @AuthenticationPrincipal CustomUserPrincipal principal) {
+        Business business = requireBusiness(principal);
+        List<Branch> branches = switch (principal.getUser().getRole()) {
+            case OWNER, BUSINESS_ADMIN -> branchRepository.findByBusiness(business).stream()
+                    .filter(Branch::isActive)
+                    .toList();
+            default -> branchAccessRepository.findActiveBranchesByUser(principal.getUser()).stream()
+                    .filter(branch -> branch.getBusiness().getId().equals(business.getId()))
+                    .toList();
+        };
+        return ResponseEntity.ok(branches.stream().map(BranchResponse::from).toList());
     }
 
     @PostMapping

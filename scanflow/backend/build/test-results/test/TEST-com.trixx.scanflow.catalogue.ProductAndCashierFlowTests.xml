@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" tests="2" skipped="0" failures="1" errors="0" timestamp="2026-11-06T16:16:59.467Z" hostname="codespaces-1d1260" time="1.868">
+  <properties/>
+  <testcase name="registerBusinessCreateProductAndCompleteCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="1.642"/>
+  <testcase name="customerCannotUseCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.082">
+    <failure message="java.lang.AssertionError: Status expected:&lt;403&gt; but was:&lt;400&gt;" type="java.lang.AssertionError">java.lang.AssertionError: Status expected:&lt;403&gt; but was:&lt;400&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.trixx.scanflow.catalogue.ProductAndCashierFlowTests.customerCannotUseCashierCheckout(ProductAndCashierFlowTests.java:47)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[2026-11-06T16:16:59.480Z  INFO 38102 --- [scanflow-backend] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.trixx.scanflow.catalogue.ProductAndCashierFlowTests]: ProductAndCashierFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-06T16:16:59.589Z  INFO 38102 --- [scanflow-backend] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.catalogue.ProductAndCashierFlowTests
+2026-11-06T16:17:01.210Z  WARN 38102 --- [scanflow-backend] [    Test worker] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
+
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/pos/checkouts
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"103"]
+             Body = {"branchId": "00000000-0000-0000-0000-000000000001", "items": [{"productId": "SKU-1", "quantity": 1}]}
+
+    Session Attrs = {}
+
+Handler:
+             Type = com.trixx.scanflow.web.PosController
+           Method = com.trixx.scanflow.web.PosController#checkout(CustomUserPrincipal, PosCheckoutRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.bind.MethodArgumentNotValidException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"message":"Invalid request"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

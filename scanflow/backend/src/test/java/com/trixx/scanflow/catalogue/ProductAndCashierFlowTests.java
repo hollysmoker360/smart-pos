@@ -1,6 +1,8 @@
 package com.trixx.scanflow.catalogue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.trixx.scanflow.repository.InventoryMovementRepository;
+import com.trixx.scanflow.repository.RetailOrderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,6 +29,12 @@ class ProductAndCashierFlowTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private RetailOrderRepository orderRepository;
+
+    @Autowired
+    private InventoryMovementRepository inventoryMovementRepository;
 
     @Test
     @WithMockUser(roles = "CUSTOMER")
@@ -84,22 +92,64 @@ class ProductAndCashierFlowTests {
             .andExpect(status().isOk())
             .andReturn();
         String branchId = objectMapper.readTree(branchesResult.getResponse().getContentAsString()).get(0).path("id").asText();
-        String checkoutRequest = objectMapper.writeValueAsString(java.util.Map.of(
-                "branchId", branchId,
-                "items", java.util.List.of(java.util.Map.of("productId", "MZ-001", "quantity", 2))));
+        java.util.Map<String, Object> checkoutBody = new java.util.HashMap<>();
+        checkoutBody.put("branchId", branchId);
+        checkoutBody.put("idempotencyKey", "freshmart-checkout-001");
+        checkoutBody.put("paymentMethod", "CASH");
+        checkoutBody.put("cashReceived", 500.00);
+        checkoutBody.put("items", java.util.List.of(java.util.Map.of("productId", "MZ-001", "quantity", 2)));
+        String checkoutRequest = objectMapper.writeValueAsString(checkoutBody);
 
-        mockMvc.perform(post("/api/v1/pos/checkouts")
+        mockMvc.perform(post("/api/v1/pos/quotes")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"branchId": "%s", "items": [{"productId": "MZ-001", "quantity": 2}]}
+                    """.formatted(branchId)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.subtotalAmount").value(360.0))
+            .andExpect(jsonPath("$.taxAmount").value(57.6))
+            .andExpect(jsonPath("$.totalAmount").value(417.6))
+            .andReturn();
+        long ordersBeforeCheckout = orderRepository.count();
+        long movementsBeforeCheckout = inventoryMovementRepository.count();
+        MvcResult firstCheckout = mockMvc.perform(post("/api/v1/pos/checkouts")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(checkoutRequest))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.items[0].quantity").value(2))
-            .andExpect(jsonPath("$.totalAmount").value(360.0));
+            .andExpect(jsonPath("$.orderStatus").value("PAID"))
+            .andExpect(jsonPath("$.paymentStatus").value("SUCCEEDED"))
+            .andExpect(jsonPath("$.totalAmount").value(417.6))
+            .andExpect(jsonPath("$.changeDue").value(82.4))
+            .andReturn();
+        String firstOrderId = objectMapper.readTree(firstCheckout.getResponse().getContentAsString())
+                .path("orderId").asText();
+
+        MvcResult duplicateCheckout = mockMvc.perform(post("/api/v1/pos/checkouts")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(checkoutRequest))
+                    .andExpect(status().isCreated())
+                    .andReturn();
+        org.junit.jupiter.api.Assertions.assertEquals(firstOrderId, objectMapper.readTree(
+                duplicateCheckout.getResponse().getContentAsString()).path("orderId").asText());
+
+        checkoutBody.put("cashReceived", 501.00);
+        mockMvc.perform(post("/api/v1/pos/checkouts")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(checkoutBody)))
+            .andExpect(status().isBadRequest());
+
+        org.junit.jupiter.api.Assertions.assertEquals(ordersBeforeCheckout + 1, orderRepository.count());
+        org.junit.jupiter.api.Assertions.assertEquals(movementsBeforeCheckout + 1, inventoryMovementRepository.count());
 
         mockMvc.perform(get("/api/v1/products")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
             .andExpect(status().isOk())
-          .andExpect(jsonPath("$.content[0].stock").value(25))
+          .andExpect(jsonPath("$.content[0].stock").value(23))
             .andExpect(jsonPath("$.content[0].sku").value("MZ-001"));
     }
 }
