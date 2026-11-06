@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ShoppingSessionDto {
   final String sessionId;
   final String customerId;

@@ -15,10 +15,10 @@ class TrixxProvider with ChangeNotifier {
   CheckoutSnapshotDto? _currentCheckout;
   PaymentStatusDto? _paymentStatus;
   ReceiptDto? _currentReceipt;
-  List<TrolleyDeviceDto> _trolleys = [];
-  List<DiscrepancyDto> _discrepancies = [];
+  final List<TrolleyDeviceDto> _trolleys = [];
+  final List<DiscrepancyDto> _discrepancies = [];
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   String? _errorMessage;
 
   ShoppingSessionDto? get currentSession => _currentSession;
@@ -31,11 +31,6 @@ class TrixxProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  void _setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
-  }
-
   void clearError() {
     _errorMessage = null;
     notifyListeners();
@@ -46,151 +41,68 @@ class TrixxProvider with ChangeNotifier {
     required String customerId,
     required String branchId,
   }) async {
-    _setLoading(true);
-    _errorMessage = null;
-    try {
-      _currentSession = await apiService.claimTrolley(
-        trolleyCode: trolleyCode,
-        customerId: customerId,
-        branchId: branchId,
-      );
-      await refreshBasket();
-      _setLoading(false);
-      return true;
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      _setLoading(false);
-      return false;
-    }
+    return _unsupported(
+      'Trolley enrollment is unavailable: the backend has no trolley-device '
+      'or customer-session API yet.',
+    );
   }
 
   Future<void> refreshBasket() async {
-    if (_currentSession == null) return;
-    try {
-      _currentBasket = await apiService.getBasket(_currentSession!.sessionId);
-      notifyListeners();
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      notifyListeners();
-    }
+    _errorMessage =
+        'A trolley session is required, but trolley enrollment is unavailable.';
+    notifyListeners();
   }
 
   Future<bool> sendScanEvent(String barcode) async {
-    if (_currentSession == null) return false;
-    _setLoading(true);
-    _errorMessage = null;
-    try {
-      _currentBasket = await apiService.sendScanEvent(
-        deviceId: _currentSession!.trolleyId,
-        sessionId: _currentSession!.sessionId,
-        barcode: barcode,
-      );
-      _setLoading(false);
-      return true;
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      _setLoading(false);
-      return false;
-    }
+    return _unsupported(
+      'Trolley barcode scans are unavailable: the backend has no device-scan '
+      'API yet.',
+    );
   }
 
   Future<bool> removeItem(String itemId) async {
-    if (_currentSession == null) return false;
-    _setLoading(true);
-    _errorMessage = null;
-    try {
-      _currentBasket = await apiService.removeItem(
-        sessionId: _currentSession!.sessionId,
-        itemId: itemId,
-      );
-      _setLoading(false);
-      return true;
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      _setLoading(false);
-      return false;
-    }
+    return _unsupported(
+      'Trolley basket updates are unavailable until device sessions are '
+      'supported by the backend.',
+    );
   }
 
   Future<bool> createCheckout() async {
-    if (_currentSession == null) return false;
-    _setLoading(true);
-    _errorMessage = null;
-    try {
-      _currentCheckout = await apiService.createCheckout(
-        _currentSession!.sessionId,
-      );
-      _setLoading(false);
-      return true;
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      _setLoading(false);
-      return false;
-    }
+    return _unsupported(
+      'Checkout is unavailable: the backend can calculate a quote but cannot '
+      'create an order.',
+    );
   }
 
   Future<bool> initiateMpesaPayment(String phoneNumber) async {
-    if (_currentCheckout == null) return false;
-    _setLoading(true);
-    _errorMessage = null;
-    try {
-      _paymentStatus = await apiService.initiateMpesaPayment(
-        orderId: _currentCheckout!.orderId,
-        phoneNumber: phoneNumber,
-      );
-      _setLoading(false);
-      return true;
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      _setLoading(false);
-      return false;
-    }
+    return _unsupported(
+      'M-Pesa payments are unavailable: no payment integration is configured.',
+    );
   }
 
   Future<void> pollPaymentStatus() async {
-    if (_currentCheckout == null) return;
-    try {
-      _paymentStatus = await apiService.getPaymentStatus(
-        _currentCheckout!.orderId,
-      );
-      if (_paymentStatus?.status == 'PAID') {
-        _currentReceipt = await apiService.getReceipt(
-          _currentCheckout!.orderId,
-        );
-      }
-      notifyListeners();
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      notifyListeners();
-    }
+    _errorMessage =
+        'Payment status is unavailable until payment processing is integrated.';
+    notifyListeners();
   }
 
   Future<bool> redeemExitToken(String tokenCode) async {
-    _setLoading(true);
-    _errorMessage = null;
-    try {
-      await apiService.redeemExitToken(
-        tokenCode: tokenCode,
-        stationId: 'EXIT_STATION_01',
-      );
-      _setLoading(false);
-      return true;
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      _setLoading(false);
-      return false;
-    }
+    return _unsupported(
+      'Exit-token verification is unavailable: the backend has no exit '
+      'verification API yet.',
+    );
   }
 
   Future<void> loadAdminData() async {
-    _setLoading(true);
-    try {
-      _trolleys = await apiService.getAdminTrolleys();
-      _discrepancies = await apiService.getAdminDiscrepancies();
-      _setLoading(false);
-    } catch (e) {
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      _setLoading(false);
-    }
+    _errorMessage =
+        'Fleet status and discrepancy reporting are unavailable: the backend '
+        'does not provide device-management or reporting APIs yet.';
+    notifyListeners();
+  }
+
+  Future<bool> _unsupported(String message) async {
+    _errorMessage = message;
+    notifyListeners();
+    return false;
   }
 }

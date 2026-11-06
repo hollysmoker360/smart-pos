@@ -155,7 +155,7 @@ class _LiveBasketScreenState extends ConsumerState<LiveBasketScreen> {
                       vertical: 8,
                     ),
                     itemCount: basket.items.length,
-                    separatorBuilder: (_, __) => const Divider(),
+                    separatorBuilder: (_, _) => const Divider(),
                     itemBuilder: (context, index) {
                       final item = basket.items[index];
                       return ListTile(
@@ -209,7 +209,7 @@ class _LiveBasketScreenState extends ConsumerState<LiveBasketScreen> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -4),
                 ),

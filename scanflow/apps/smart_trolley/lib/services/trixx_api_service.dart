@@ -105,7 +105,9 @@ class TrixxApiService {
     final response = await pending;
     final dynamic decoded;
     try {
-      decoded = response.body.isEmpty ? <String, dynamic>{} : jsonDecode(response.body);
+      decoded = response.body.isEmpty
+          ? <String, dynamic>{}
+          : jsonDecode(response.body);
     } on FormatException {
       throw TrixxApiException(response.statusCode, response.body);
     }

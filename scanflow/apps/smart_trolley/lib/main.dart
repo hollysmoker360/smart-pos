@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'providers/trixx_provider.dart';
 import 'screens/store_and_trolley_screen.dart';
 import 'screens/live_basket_screen.dart';
 import 'screens/checkout_screen.dart';
@@ -45,7 +44,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: const BoxDecoration(color: Color(0xFF06382E)),
+              decoration: BoxDecoration(color: Color(0xFF06382E)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
