@@ -30,7 +30,7 @@ public class ShoppingSessionController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('OWNER', 'BRANCH_MANAGER', 'CUSTOMER')")
+    @PreAuthorize("hasAnyRole('OWNER', 'BUSINESS_ADMIN', 'BRANCH_MANAGER', 'CASHIER', 'CUSTOMER')")
     public ResponseEntity<SessionResponse> createSession(
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @RequestBody ShoppingSessionService.CreateSessionRequest request) {
@@ -42,21 +42,21 @@ public class ShoppingSessionController {
     }
 
     @PostMapping("/{sessionId}/items")
-    @PreAuthorize("hasAnyRole('OWNER', 'BRANCH_MANAGER', 'CUSTOMER')")
+    @PreAuthorize("hasAnyRole('OWNER', 'BUSINESS_ADMIN', 'BRANCH_MANAGER', 'CASHIER', 'CUSTOMER')")
     public ResponseEntity<ShoppingSessionService.BasketResponse> addItem(
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @PathVariable UUID sessionId,
             @RequestBody ShoppingSessionService.AddBasketItemRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(shoppingSessionService.addItem(
-                principal.getUser().getBusiness(), sessionId, request));
+            principal.getUser().getBusiness(), principal.getUser(), sessionId, request));
     }
 
     @GetMapping("/{sessionId}/basket")
-    @PreAuthorize("hasAnyRole('OWNER', 'BRANCH_MANAGER', 'CUSTOMER')")
+    @PreAuthorize("hasAnyRole('OWNER', 'BUSINESS_ADMIN', 'BRANCH_MANAGER', 'CASHIER', 'CUSTOMER')")
     public ResponseEntity<ShoppingSessionService.BasketResponse> getBasket(
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @PathVariable UUID sessionId) {
-        return ResponseEntity.ok(shoppingSessionService.getBasket(principal.getUser().getBusiness(), sessionId));
+        return ResponseEntity.ok(shoppingSessionService.getBasket(principal.getUser().getBusiness(), principal.getUser(), sessionId));
     }
 
     public record SessionResponse(String id, String sessionType, String status, BigDecimal totalAmount,

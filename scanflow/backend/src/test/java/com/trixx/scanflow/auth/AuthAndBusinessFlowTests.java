@@ -167,14 +167,98 @@ class AuthAndBusinessFlowTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
 
-            mockMvc.perform(post("/api/v1/businesses/me/branches")
+            MvcResult branchResult = mockMvc.perform(post("/api/v1/businesses/me/branches")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ownerToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                     {"name": "Kilimani West", "currency": "KES", "timezone": "Africa/Nairobi"}
                     """))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Kilimani West"));
+                .andExpect(jsonPath("$.name").value("Kilimani West"))
+                .andReturn();
+            String assignedBranchId = objectMapper.readTree(branchResult.getResponse().getContentAsString()).path("id").asText();
+
+            mockMvc.perform(post("/api/v1/businesses/me/branches")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ownerToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"name": "Kilimani East", "currency": "KES", "timezone": "Africa/Nairobi"}
+                    """))
+                .andExpect(status().isCreated());
+
+            MvcResult foreignBusinessResult = mockMvc.perform(post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "businessName": "Foreign Market",
+                      "email": "foreign.owner@market.test",
+                      "phone": "254700000094",
+                      "ownerName": "Foreign Owner",
+                      "password": "ForeignOwnerPass123!"
+                    }
+                    """))
+                .andExpect(status().isCreated())
+                .andReturn();
+            String foreignOwnerToken = objectMapper.readTree(foreignBusinessResult.getResponse().getContentAsString())
+                .path("token").asText();
+            MvcResult foreignBranchesResult = mockMvc.perform(get("/api/v1/businesses/me/branches")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + foreignOwnerToken))
+                .andExpect(status().isOk())
+                .andReturn();
+            String foreignBranchId = objectMapper.readTree(foreignBranchesResult.getResponse().getContentAsString())
+                .get(0).path("id").asText();
+
+            mockMvc.perform(post("/api/v1/businesses/me/employee-invitations")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ownerToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(java.util.Map.of(
+                    "fullName", "Foreign Cashier",
+                    "email", "foreign.cashier@market.test",
+                    "phone", "254700000095",
+                    "role", "CASHIER",
+                    "branchIds", java.util.List.of(foreignBranchId)))))
+                .andExpect(status().isBadRequest());
+
+            MvcResult employeeInviteResult = mockMvc.perform(post("/api/v1/businesses/me/employee-invitations")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ownerToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(java.util.Map.of(
+                    "fullName", "Cashier One",
+                    "email", "cashier@kilimani.test",
+                    "phone", "254700000093",
+                    "role", "CASHIER",
+                    "branchIds", java.util.List.of(assignedBranchId)))))
+                .andExpect(status().isCreated())
+                .andReturn();
+            String employeeInviteUrl = objectMapper.readTree(employeeInviteResult.getResponse().getContentAsString())
+                .path("invitationUrl").asText();
+            String employeeInviteToken = employeeInviteUrl.substring(employeeInviteUrl.indexOf("token=") + "token=".length());
+
+            MvcResult employeeAcceptedResult = mockMvc.perform(post("/api/v1/auth/employee-invitations/accept")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(java.util.Map.of(
+                    "token", employeeInviteToken,
+                    "password", "CashierSecurePass123!"))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.user.role").value("CASHIER"))
+                .andReturn();
+            String employeeToken = objectMapper.readTree(employeeAcceptedResult.getResponse().getContentAsString()).path("token").asText();
+
+            mockMvc.perform(post("/api/v1/shopping-sessions")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + employeeToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"sessionType": "CASHIER", "branchName": "Kilimani West"}
+                    """))
+                .andExpect(status().isCreated());
+
+            mockMvc.perform(post("/api/v1/shopping-sessions")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + employeeToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"sessionType": "CASHIER", "branchName": "Kilimani East"}
+                    """))
+                .andExpect(status().isForbidden());
 
             mockMvc.perform(post("/api/v1/platform/business-invitations")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ownerToken)

@@ -23,15 +23,18 @@ public class ShoppingSessionService {
     private final BasketItemRepository basketItemRepository;
     private final BranchRepository branchRepository;
     private final ProductCatalogService productCatalogService;
+    private final BranchAccessService branchAccessService;
 
     public ShoppingSessionService(ShoppingSessionRepository sessionRepository,
                                   BasketItemRepository basketItemRepository,
                                   BranchRepository branchRepository,
-                                  ProductCatalogService productCatalogService) {
+                                  ProductCatalogService productCatalogService,
+                                  BranchAccessService branchAccessService) {
         this.sessionRepository = sessionRepository;
         this.basketItemRepository = basketItemRepository;
         this.branchRepository = branchRepository;
         this.productCatalogService = productCatalogService;
+        this.branchAccessService = branchAccessService;
     }
 
     @Transactional
@@ -42,6 +45,7 @@ public class ShoppingSessionService {
         if (branch == null || !branch.isActive()) {
             throw new IllegalArgumentException("Active branch not found");
         }
+        branchAccessService.requireBranchAccess(user, branch);
         if (request.sessionType() == null || request.sessionType().isBlank()) {
             throw new IllegalArgumentException("Session type is required");
         }
@@ -50,8 +54,8 @@ public class ShoppingSessionService {
     }
 
     @Transactional
-    public BasketResponse addItem(Business business, UUID sessionId, AddBasketItemRequest request) {
-        ShoppingSession session = getActiveSession(business, sessionId);
+    public BasketResponse addItem(Business business, User user, UUID sessionId, AddBasketItemRequest request) {
+        ShoppingSession session = getActiveSession(business, user, sessionId);
         if (request.quantity() == null || request.quantity() < 1) {
             throw new IllegalArgumentException("Quantity must be greater than zero");
         }
@@ -71,12 +75,12 @@ public class ShoppingSessionService {
         item.setUpdatedAt(Instant.now());
         basketItemRepository.save(item);
 
-        return getBasket(business, sessionId);
+        return getBasket(business, user, sessionId);
     }
 
     @Transactional(readOnly = true)
-    public BasketResponse getBasket(Business business, UUID sessionId) {
-        ShoppingSession session = getActiveSession(business, sessionId);
+    public BasketResponse getBasket(Business business, User user, UUID sessionId) {
+        ShoppingSession session = getActiveSession(business, user, sessionId);
         List<BasketLine> items = basketItemRepository.findBySession(session).stream()
                 .map(item -> new BasketLine(
                         item.getId().toString(),
@@ -94,10 +98,11 @@ public class ShoppingSessionService {
         return new BasketResponse(session.getId().toString(), items, totalAmount);
     }
 
-    private ShoppingSession getActiveSession(Business business, UUID sessionId) {
+    private ShoppingSession getActiveSession(Business business, User user, UUID sessionId) {
         ShoppingSession session = sessionRepository.findById(sessionId)
                 .filter(candidate -> candidate.getBusiness().getId().equals(business.getId()))
                 .orElseThrow(() -> new IllegalArgumentException("Shopping session not found"));
+        branchAccessService.requireSessionAccess(user, session);
         if (!"ACTIVE".equals(session.getStatus())) {
             throw new IllegalArgumentException("Shopping session is not active");
         }

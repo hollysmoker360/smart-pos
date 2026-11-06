@@ -36,12 +36,16 @@ class PostgreSqlMigrationTests {
 
     @Test
     void migrationsCreateTheSchemaExpectedByJpaAndContracts() {
-        assertEquals(5, jdbcTemplate.queryForObject(
+        assertEquals(6, jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success = TRUE", Integer.class));
         assertEquals(1, jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'products' AND column_name = 'stock_quantity'", Integer.class));
         assertEquals(1, jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'business_invitations'", Integer.class));
+        assertEquals(1, jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'employee_invitations'", Integer.class));
+        assertEquals(1, jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'user_branch_access'", Integer.class));
         assertEquals(1, jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM pg_indexes WHERE indexname = 'uq_users_email_normalized'", Integer.class));
     }

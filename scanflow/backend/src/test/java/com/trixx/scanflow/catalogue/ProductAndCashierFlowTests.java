@@ -34,7 +34,7 @@ class ProductAndCashierFlowTests {
       mockMvc.perform(post("/api/v1/pos/checkouts")
           .contentType(MediaType.APPLICATION_JSON)
           .content("""
-            {"items": [{"productId": "SKU-1", "quantity": 1}]}
+            {"branchId": "00000000-0000-0000-0000-000000000001", "items": [{"productId": "SKU-1", "quantity": 1}]}
             """))
         .andExpect(status().isForbidden());
     }
@@ -79,13 +79,14 @@ class ProductAndCashierFlowTests {
             .andExpect(jsonPath("$.sku").value("MZ-001"))
             .andExpect(jsonPath("$.name").value("Maize Flour 2kg"));
 
-        String checkoutRequest = """
-            {
-              "items": [
-                { "productId": "MZ-001", "quantity": 2 }
-              ]
-            }
-            """;
+        MvcResult branchesResult = mockMvc.perform(get("/api/v1/businesses/me/branches")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+            .andExpect(status().isOk())
+            .andReturn();
+        String branchId = objectMapper.readTree(branchesResult.getResponse().getContentAsString()).get(0).path("id").asText();
+        String checkoutRequest = objectMapper.writeValueAsString(java.util.Map.of(
+                "branchId", branchId,
+                "items", java.util.List.of(java.util.Map.of("productId", "MZ-001", "quantity", 2))));
 
         mockMvc.perform(post("/api/v1/pos/checkouts")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)

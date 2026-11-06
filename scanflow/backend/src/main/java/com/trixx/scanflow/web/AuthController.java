@@ -6,6 +6,7 @@ import com.trixx.scanflow.security.CustomUserPrincipal;
 import com.trixx.scanflow.security.JwtService;
 import com.trixx.scanflow.service.BusinessInvitationService;
 import com.trixx.scanflow.service.BusinessRegistrationService;
+import com.trixx.scanflow.service.EmployeeInvitationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,17 +29,20 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final BusinessInvitationService invitationService;
+    private final EmployeeInvitationService employeeInvitationService;
     private final boolean openRegistration;
 
     public AuthController(BusinessRegistrationService registrationService,
                           AuthenticationManager authenticationManager,
                           JwtService jwtService,
                           BusinessInvitationService invitationService,
+                          EmployeeInvitationService employeeInvitationService,
                           @Value("${app.registration.open:true}") boolean openRegistration) {
         this.registrationService = registrationService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.invitationService = invitationService;
+        this.employeeInvitationService = employeeInvitationService;
         this.openRegistration = openRegistration;
     }
 
@@ -58,6 +62,13 @@ public class AuthController {
     public ResponseEntity<AuthResponse> acceptInvitation(@Valid @RequestBody AcceptInvitationRequest request) {
         BusinessInvitationService.AcceptedInvitation accepted = invitationService.acceptInvitation(request.token(), request.password());
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(accepted.business(), accepted.owner(), accepted.token()));
+    }
+
+    @PostMapping("/employee-invitations/accept")
+    public ResponseEntity<AuthResponse> acceptEmployeeInvitation(@Valid @RequestBody AcceptInvitationRequest request) {
+        EmployeeInvitationService.AcceptedEmployee accepted = employeeInvitationService.acceptInvitation(request.token(), request.password());
+        User user = accepted.user();
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(user.getBusiness(), user, accepted.token()));
     }
 
     @PostMapping("/login")

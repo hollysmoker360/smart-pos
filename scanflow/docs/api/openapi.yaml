@@ -68,6 +68,25 @@ paths:
                 $ref: '#/components/schemas/AuthResponse'
         '400':
           description: Invalid, expired, or already-used invitation
+  /api/v1/auth/employee-invitations/accept:
+    post:
+      security: []
+      summary: Accept a single-use employee invitation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptInvitationRequest'
+      responses:
+        '201':
+          description: Employee account created with the invited business role and branch access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid, expired, or already-used invitation
   /api/v1/platform/business-invitations:
     post:
       summary: Create a one-time business-owner invitation
@@ -127,6 +146,27 @@ paths:
                 $ref: '#/components/schemas/Branch'
         '403':
           description: Caller is not a business owner
+  /api/v1/businesses/me/employee-invitations:
+    post:
+      summary: Invite an employee to selected branches
+      description: Requires OWNER or BUSINESS_ADMIN. Every branch ID must belong to the authenticated user's business; platform and owner roles cannot be assigned through this flow.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmployeeInvitationRequest'
+      responses:
+        '201':
+          description: Single-use invitation created; its raw token is returned only in the invitation URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedEmployeeInvitation'
+        '400':
+          description: Invalid role, input, or branch assignment
+        '403':
+          description: Caller is not authorized to invite employees
   /api/v1/products:
     get:
       summary: List products for the authenticated business
@@ -251,6 +291,30 @@ components:
         ownerName: { type: string, maxLength: 255 }
         ownerEmail: { type: string, format: email, maxLength: 255 }
         ownerPhone: { type: string, maxLength: 50 }
+    CreateEmployeeInvitationRequest:
+      type: object
+      required: [fullName, email, phone, role, branchIds]
+      properties:
+        fullName: { type: string, maxLength: 255 }
+        email: { type: string, format: email, maxLength: 255 }
+        phone: { type: string, maxLength: 50 }
+        role: { type: string, enum: [BUSINESS_ADMIN, BRANCH_MANAGER, CASHIER, INVENTORY_OFFICER, FINANCE_OFFICER, AUDITOR] }
+        branchIds:
+          type: array
+          minItems: 1
+          items: { type: string, format: uuid }
+    CreatedEmployeeInvitation:
+      type: object
+      required: [invitationId, email, role, invitationUrl, expiresAt, branchIds]
+      properties:
+        invitationId: { type: string, format: uuid }
+        email: { type: string, format: email }
+        role: { type: string }
+        invitationUrl: { type: string, format: uri }
+        expiresAt: { type: string, format: date-time }
+        branchIds:
+          type: array
+          items: { type: string, format: uuid }
     CreatedInvitation:
       type: object
       required: [invitationId, businessName, ownerEmail, invitationUrl, expiresAt]

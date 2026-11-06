@@ -29,7 +29,7 @@ public class PosController {
     public ResponseEntity<CheckoutResponse> checkout(@AuthenticationPrincipal CustomUserPrincipal principal,
                                                     @RequestBody PosCheckoutService.PosCheckoutRequest request) {
         Business business = principal.getUser().getBusiness();
-        PosCheckoutService.PosCheckoutResponse response = posCheckoutService.checkout(business, request);
+        PosCheckoutService.PosCheckoutResponse response = posCheckoutService.checkout(business, principal.getUser(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CheckoutResponse(
                 response.items().stream().map(item -> new CheckoutItemResponse(
                         item.productId(),
