@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/shopping_provider.dart';
+import 'code_scanner_screen.dart';
 
 class ScannerScreen extends ConsumerStatefulWidget {
   const ScannerScreen({super.key});
@@ -39,6 +40,17 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
     }
   }
 
+  Future<void> _scanWithCamera() async {
+    final barcode = await Navigator.of(context).push<String>(
+      MaterialPageRoute(
+        builder: (_) => const CodeScannerScreen(title: 'Scan a product'),
+      ),
+    );
+    if (!mounted || barcode == null) return;
+    _barcodeController.text = barcode;
+    await _addManualBarcode();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,62 +73,31 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                       fontWeight: FontWeight.w800,
                       color: Color(0xFF17352C))),
               const SizedBox(height: 14),
-              Container(
+              SizedBox(
                 height: 285,
-                decoration: BoxDecoration(
+                child: Container(
+                  decoration: BoxDecoration(
                     color: const Color(0xFF062B25),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Column(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Center(
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.center_focus_strong,
-                            color: Colors.white.withValues(alpha: 0.7),
-                            size: 48),
-                        const SizedBox(height: 12),
-                        const Text(
-                            'Camera scanning is not connected yet.\nEnter the barcode below.',
-                            textAlign: TextAlign.center,
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 13)),
+                        Icon(
+                          Icons.center_focus_strong,
+                          color: Colors.white70,
+                          size: 48,
+                        ),
+                        SizedBox(height: 12),
+                        Text(
+                          'Camera scanning is ready.\nTap Scan with camera below.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                        ),
                       ],
                     ),
-                    Container(
-                        width: 230,
-                        height: 118,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: const Color(0xFF44D895), width: 2),
-                            borderRadius: BorderRadius.circular(8))),
-                    Positioned(
-                        top: 14,
-                        left: 14,
-                        child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 9, vertical: 6),
-                            decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: const Row(children: [
-                              Icon(Icons.circle,
-                                  size: 7, color: Color(0xFF44D895)),
-                              SizedBox(width: 6),
-                              Text('MANUAL MODE',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700))
-                            ]))),
-                    const Positioned(
-                        bottom: 14,
-                        child: Text('EAN-13  ·  UPC-A  ·  CODE 128',
-                            style: TextStyle(
-                                color: Colors.white54,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600))),
-                  ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -133,6 +114,12 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                     hintText: 'Barcode number',
                     prefixIcon: Icon(Icons.qr_code_2)),
                 onSubmitted: (_) => _addManualBarcode(),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: _scanWithCamera,
+                icon: const Icon(Icons.camera_alt_outlined),
+                label: const Text('Scan with camera'),
               ),
               const SizedBox(height: 10),
               FilledButton.icon(

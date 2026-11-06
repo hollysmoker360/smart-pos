@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/shopping_provider.dart';
+import 'code_scanner_screen.dart';
 
 class StoreSelectionScreen extends ConsumerStatefulWidget {
   const StoreSelectionScreen({super.key});
@@ -65,6 +66,12 @@ class _StoreSelectionScreenState extends ConsumerState<StoreSelectionScreen> {
                 style: TextStyle(color: Color(0xFF72827B)),
               ),
               const SizedBox(height: 24),
+              OutlinedButton.icon(
+                onPressed: provider.isLoading ? null : _scanStoreCode,
+                icon: const Icon(Icons.qr_code_scanner),
+                label: const Text('Scan store QR code'),
+              ),
+              const SizedBox(height: 12),
               TextField(
                 key: const Key('branchId'),
                 controller: _branchIdController,
@@ -123,5 +130,16 @@ class _StoreSelectionScreenState extends ConsumerState<StoreSelectionScreen> {
     if (branchId.isEmpty) return;
     final joined = await ref.read(shoppingProvider).joinStore(branchId);
     if (mounted && joined) Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  Future<void> _scanStoreCode() async {
+    final branchId = await Navigator.of(context).push<String>(
+      MaterialPageRoute(
+        builder: (_) => const CodeScannerScreen(title: 'Scan store QR code'),
+      ),
+    );
+    if (!mounted || branchId == null) return;
+    _branchIdController.text = branchId;
+    await _joinStore();
   }
 }
