@@ -62,7 +62,7 @@
 </td>
 <td>
 <div class="infoBox duration">
-<div class="counter">52.568s</div>
+<div class="counter">20.611s</div>
 <p>duration</p>
 </div>
 </td>
@@ -93,14 +93,12 @@
 </thead>
 <tbody>
 <tr>
-<td class="success">
-<a href="migrationsCreateTheSchemaExpectedByJpaAndContracts().html">migrationsCreateTheSchemaExpectedByJpaAndContracts()</a>
-</td>
+<td class="success">migrationsCreateTheSchemaExpectedByJpaAndContracts()</td>
 <td class="path" hidden="">migrationsCreateTheSchemaExpectedByJpaAndContracts()</td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td data-sort-value="2670">2.670s</td>
+<td data-sort-value="230">0.230s</td>
 <td class="success" data-sort-value="100">100%</td>
 </tr>
 </tbody>
@@ -110,12 +108,12 @@
 <div class="tab">
 <h2>standard output</h2>
 <span class="code">
-<pre id="root-0-test-stdout-com.trixx.scanflow.database.PostgreSqlMigrationTests">16:22:53.730 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.trixx.scanflow.database.PostgreSqlMigrationTests]: PostgreSqlMigrationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-16:22:54.019 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.database.PostgreSqlMigrationTests
-16:22:54.647 [Test worker] INFO tc.postgres:16-alpine -- Creating container for image: postgres:16-alpine
-16:22:54.859 [Test worker] INFO tc.postgres:16-alpine -- Container postgres:16-alpine is starting: 5be8c7f6a1f2ad4a3a24819045e8725a0db379bfbf158c7491774426c8d3ab57
-16:23:00.815 [Test worker] INFO tc.postgres:16-alpine -- Container postgres:16-alpine started in PT6.167524873S
-16:23:00.816 [Test worker] INFO tc.postgres:16-alpine -- Container is started (JDBC URL: jdbc:postgresql://172.17.0.1:32775/scanflow?loggerLevel=OFF)
+<pre id="root-0-test-stdout-com.trixx.scanflow.database.PostgreSqlMigrationTests">2026-11-06T16:29:10.256Z  INFO 49731 --- [scanflow-backend] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.trixx.scanflow.database.PostgreSqlMigrationTests]: PostgreSqlMigrationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-06T16:29:10.286Z  INFO 49731 --- [scanflow-backend] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.database.PostgreSqlMigrationTests
+2026-11-06T16:29:10.300Z  INFO 49731 --- [scanflow-backend] [    Test worker] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-11-06T16:29:10.528Z  INFO 49731 --- [scanflow-backend] [    Test worker] tc.postgres:16-alpine                    : Container postgres:16-alpine is starting: 1f636e50ca4dc6fe0e93bc1f531ae94cb8c66f958835256b9b095c003ca176db
+2026-11-06T16:29:16.237Z  INFO 49731 --- [scanflow-backend] [    Test worker] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT5.936909009S
+2026-11-06T16:29:16.239Z  INFO 49731 --- [scanflow-backend] [    Test worker] tc.postgres:16-alpine                    : Container is started (JDBC URL: jdbc:postgresql://172.17.0.1:32777/scanflow?loggerLevel=OFF)
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -126,37 +124,35 @@
 
  :: Spring Boot ::                (v3.3.5)
 
-2026-11-06T16:23:02.319Z  INFO 45350 --- [scanflow-backend] [    Test worker] c.t.s.database.PostgreSqlMigrationTests  : Starting PostgreSqlMigrationTests using Java 21.0.13.0.2 with PID 45350 (started by codespace in /workspaces/smart-pos/scanflow/backend)
-2026-11-06T16:23:02.329Z  INFO 45350 --- [scanflow-backend] [    Test worker] c.t.s.database.PostgreSqlMigrationTests  : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2026-11-06T16:23:07.422Z  INFO 45350 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-11-06T16:23:08.049Z  INFO 45350 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 495 ms. Found 13 JPA repository interfaces.
-2026-11-06T16:23:12.763Z  INFO 45350 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-11-06T16:23:14.804Z  INFO 45350 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5764d421
-2026-11-06T16:23:14.811Z  INFO 45350 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-11-06T16:23:14.993Z  INFO 45350 --- [scanflow-backend] [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://172.17.0.1:32775/scanflow (PostgreSQL 16.15)
-2026-11-06T16:23:15.195Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table &quot;public&quot;.&quot;flyway_schema_history&quot; does not exist yet
-2026-11-06T16:23:15.210Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.107s)
-2026-11-06T16:23:15.288Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table &quot;public&quot;.&quot;flyway_schema_history&quot; ...
-2026-11-06T16:23:15.438Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema &quot;public&quot;: &lt;&lt; Empty Schema &gt;&gt;
-2026-11-06T16:23:15.527Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;1 - init schema&quot;
-2026-11-06T16:23:15.794Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;2 - add product stock quantity&quot;
-2026-11-06T16:23:15.942Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;3 - unique user email&quot;
-2026-11-06T16:23:16.001Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;4 - normalize branch currency&quot;
-2026-11-06T16:23:16.090Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;5 - business invitations and branch uniqueness&quot;
-2026-11-06T16:23:16.185Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;6 - employee invitations and branch access&quot;
-2026-11-06T16:23:16.272Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;7 - guest shopping session credentials&quot;
-2026-11-06T16:23:16.298Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;8 - persist pos orders and inventory movements&quot;
-2026-11-06T16:23:16.360Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema &quot;public&quot;, now at version v8 (execution time 00:00.468s)
-2026-11-06T16:23:16.863Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-11-06T16:23:17.320Z  INFO 45350 --- [scanflow-backend] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2026-11-06T16:23:17.469Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-11-06T16:23:18.624Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-11-06T16:23:24.472Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-11-06T16:23:24.734Z  INFO 45350 --- [scanflow-backend] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-11-06T16:23:27.870Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-11-06T16:23:32.703Z  INFO 45350 --- [scanflow-backend] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
-2026-11-06T16:23:36.032Z  INFO 45350 --- [scanflow-backend] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
-2026-11-06T16:23:39.658Z  INFO 45350 --- [scanflow-backend] [    Test worker] c.t.s.database.PostgreSqlMigrationTests  : Started PostgreSqlMigrationTests in 38.696 seconds (process running for 56.25)
+2026-11-06T16:29:16.329Z  INFO 49731 --- [scanflow-backend] [    Test worker] c.t.s.database.PostgreSqlMigrationTests  : Starting PostgreSqlMigrationTests using Java 21.0.13.0.2 with PID 49731 (started by codespace in /workspaces/smart-pos/scanflow/backend)
+2026-11-06T16:29:16.330Z  INFO 49731 --- [scanflow-backend] [    Test worker] c.t.s.database.PostgreSqlMigrationTests  : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2026-11-06T16:29:19.697Z  INFO 49731 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-06T16:29:19.781Z  INFO 49731 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 83 ms. Found 13 JPA repository interfaces.
+2026-11-06T16:29:20.310Z  INFO 49731 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-11-06T16:29:20.837Z  INFO 49731 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@4151251b
+2026-11-06T16:29:20.839Z  INFO 49731 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-11-06T16:29:20.906Z  INFO 49731 --- [scanflow-backend] [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://172.17.0.1:32777/scanflow (PostgreSQL 16.15)
+2026-11-06T16:29:21.191Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table &quot;public&quot;.&quot;flyway_schema_history&quot; does not exist yet
+2026-11-06T16:29:21.211Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.128s)
+2026-11-06T16:29:21.276Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table &quot;public&quot;.&quot;flyway_schema_history&quot; ...
+2026-11-06T16:29:21.411Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema &quot;public&quot;: &lt;&lt; Empty Schema &gt;&gt;
+2026-11-06T16:29:21.520Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;1 - init schema&quot;
+2026-11-06T16:29:21.889Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;2 - add product stock quantity&quot;
+2026-11-06T16:29:21.938Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;3 - unique user email&quot;
+2026-11-06T16:29:21.974Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;4 - normalize branch currency&quot;
+2026-11-06T16:29:22.005Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;5 - business invitations and branch uniqueness&quot;
+2026-11-06T16:29:22.090Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;6 - employee invitations and branch access&quot;
+2026-11-06T16:29:22.186Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;7 - guest shopping session credentials&quot;
+2026-11-06T16:29:22.236Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema &quot;public&quot; to version &quot;8 - persist pos orders and inventory movements&quot;
+2026-11-06T16:29:22.290Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema &quot;public&quot;, now at version v8 (execution time 00:00.525s)
+2026-11-06T16:29:22.470Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-11-06T16:29:22.496Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-11-06T16:29:22.543Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-06T16:29:23.879Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-06T16:29:24.038Z  INFO 49731 --- [scanflow-backend] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-06T16:29:26.341Z  INFO 49731 --- [scanflow-backend] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-11-06T16:29:27.679Z  INFO 49731 --- [scanflow-backend] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-11-06T16:29:29.271Z  INFO 49731 --- [scanflow-backend] [    Test worker] c.t.s.database.PostgreSqlMigrationTests  : Started PostgreSqlMigrationTests in 13.022 seconds (process running for 54.661)
 </pre>
 <button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-com.trixx.scanflow.database.PostgreSqlMigrationTests">Copy</button>
 </span>
@@ -171,7 +167,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 4:24:05 PM</p>
+<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 4:29:32 PM</p>
 </div>
 </div>
 </body>

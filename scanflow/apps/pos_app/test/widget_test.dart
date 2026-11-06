@@ -45,7 +45,10 @@ void main() {
     expect(find.text('KES 116.00'), findsOneWidget);
 
     await tester.enterText(find.byKey(const Key('cashReceived')), '200');
-    await tester.tap(find.byKey(const Key('completeCashSale')));
+    final completeSale = find.byKey(const Key('completeCashSale'));
+    await tester.ensureVisible(completeSale);
+    await tester.pumpAndSettle();
+    await tester.tap(completeSale);
     await tester.pumpAndSettle();
 
     expect(find.text('Sale complete'), findsOneWidget);
