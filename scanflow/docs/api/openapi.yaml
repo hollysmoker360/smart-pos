@@ -243,6 +243,118 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Basket'
+  /api/v1/public/branches/{branchId}:
+    get:
+      summary: Read public shopping capabilities for a branch
+      security: []
+      parameters:
+        - in: path
+          name: branchId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Active branch details suitable for the store QR entry flow
+  /api/v1/public/branches/{branchId}/shopping-sessions:
+    post:
+      summary: Start a guest phone-scanning session
+      security: []
+      parameters:
+        - in: path
+          name: branchId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '201':
+          description: Created session and one-time capability token
+  /api/v1/public/shopping-sessions/{sessionId}/items:
+    post:
+      summary: Add a product to a guest session
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - in: header
+          name: X-Shopping-Session-Token
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddBasketItemRequest'
+      responses:
+        '201':
+          description: Server-calculated basket snapshot
+        '403':
+          description: Session capability token is invalid
+  /api/v1/public/shopping-sessions/{sessionId}/items/{itemId}:
+    patch:
+      summary: Update guest basket item quantity
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - in: path
+          name: itemId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: X-Shopping-Session-Token
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Updated server-calculated basket
+    delete:
+      summary: Remove guest basket item
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - in: path
+          name: itemId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: X-Shopping-Session-Token
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Updated server-calculated basket
+  /api/v1/public/shopping-sessions/{sessionId}/basket:
+    get:
+      summary: Read guest basket snapshot
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - in: header
+          name: X-Shopping-Session-Token
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Backend-calculated basket
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+  /api/v1/public/shopping-sessions/{sessionId}/events:
+    get:
+      summary: Stream guest basket snapshots using Server-Sent Events
+      description: Events are sent as basket.snapshot after the initial snapshot and successful basket mutations. Guest session token must be supplied in X-Shopping-Session-Token.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - in: header
+          name: X-Shopping-Session-Token
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Server-Sent Event stream
+          content:
+            text/event-stream:
+              schema: { type: string }
   /api/v1/pos/checkouts:
     post:
       summary: Calculate a cashier checkout snapshot

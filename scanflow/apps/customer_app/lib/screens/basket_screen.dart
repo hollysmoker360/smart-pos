@@ -13,7 +13,27 @@ class BasketScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Shopping Basket'),
       ),
-      body: provider.basketItems.isEmpty
+      body: Column(
+        children: [
+          if (provider.errorMessage != null)
+            Material(
+              color: const Color(0xFFFCE9E7),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  children: [
+                    Expanded(child: Text(provider.errorMessage!)),
+                    IconButton(
+                      tooltip: 'Refresh basket',
+                      onPressed: provider.refreshBasket,
+                      icon: const Icon(Icons.refresh),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          Expanded(
+            child: provider.basketItems.isEmpty
           ? Center(
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Container(
@@ -98,10 +118,17 @@ class BasketScreen extends ConsumerWidget {
                                         const Icon(Icons.remove_circle_outline),
                                     color: const Color(0xFF087F5B),
                                     visualDensity: VisualDensity.compact,
-                                    onPressed: () {
-                                      if (item['quantity'] > 1)
-                                        provider.updateItemQuantity(
-                                            item['id'], item['quantity'] - 1);
+                                    onPressed: provider.isLoading
+                                        ? null
+                                        : () {
+                                            if (item['quantity'] > 1) {
+                                              provider.updateItemQuantity(
+                                                item['id'],
+                                                item['quantity'] - 1,
+                                              );
+                                            } else {
+                                              provider.removeItem(item['id']);
+                                            }
                                     },
                                   ),
                                   Text('${item['quantity']}',
@@ -112,9 +139,13 @@ class BasketScreen extends ConsumerWidget {
                                     icon: const Icon(Icons.add_circle_outline),
                                     color: const Color(0xFF087F5B),
                                     visualDensity: VisualDensity.compact,
-                                    onPressed: () {
-                                      provider.updateItemQuantity(
-                                          item['id'], item['quantity'] + 1);
+                                    onPressed: provider.isLoading
+                                        ? null
+                                        : () {
+                                            provider.updateItemQuantity(
+                                              item['id'],
+                                              item['quantity'] + 1,
+                                            );
                                     },
                                   ),
                                 ],
@@ -149,18 +180,19 @@ class BasketScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () async {
-                          await provider.performCheckout();
-                          if (context.mounted)
-                            Navigator.pushNamed(context, '/checkout');
-                        },
-                        child: const Text('Proceed to checkout  →'),
+                        onPressed: provider.basketItems.isEmpty
+                            ? null
+                            : () => Navigator.pushNamed(context, '/checkout'),
+                        child: const Text('Review checkout availability  →'),
                       )
                     ],
                   ),
                 )
               ],
             ),
+          ),
+        ],
+      ),
     );
   }
 }
