@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scanflow_design_system/scanflow_design_system.dart';
 import 'package:scanflow_admin/src/admin_api.dart';
 import 'package:scanflow_admin/src/admin_app.dart';
 import 'package:scanflow_admin/src/admin_controller.dart';
@@ -17,7 +18,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [adminControllerProvider.overrideWith((ref) => controller)],
-        child: const AdminApp(),
+        child: MaterialApp(theme: ScanFlowTheme.light, home: const AdminApp()),
       ),
     );
     await tester.pumpAndSettle();
@@ -34,6 +35,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Platform overview'), findsOneWidget);
 
+    await tester.ensureVisible(find.byKey(const Key('openBusinessInvitation')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('openBusinessInvitation')));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('businessName')), 'Market One');
@@ -69,7 +72,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [adminControllerProvider.overrideWith((ref) => controller)],
-        child: const AdminApp(),
+        child: MaterialApp(theme: ScanFlowTheme.light, home: const AdminApp()),
       ),
     );
     await tester.pumpAndSettle();

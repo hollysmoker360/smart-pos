@@ -52,11 +52,7 @@ class SecureAdminSessionStore implements AdminSessionStore {
 enum AdminStatus { initializing, signedOut, signedIn }
 
 class AdminController extends ChangeNotifier {
-  AdminController({
-    required AdminApi api,
-    required AdminSessionStore sessionStore,
-  }) : _api = api,
-       _sessionStore = sessionStore;
+  AdminController({required this._api, required this._sessionStore});
 
   final AdminApi _api;
   final AdminSessionStore _sessionStore;
@@ -180,8 +176,9 @@ class AdminController extends ChangeNotifier {
 
   String _errorText(Object error) {
     if (error is AdminApiException) return error.message;
-    if (error is FormatException)
+    if (error is FormatException) {
       return 'The server returned an invalid response.';
+    }
     return 'Could not reach ScanFlow. Check your connection and try again.';
   }
 }

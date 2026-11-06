@@ -60,66 +60,70 @@ class _AdminSignInScreenState extends ConsumerState<_AdminSignInScreen> {
               padding: const EdgeInsets.all(32),
               child: Form(
                 key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Icon(
-                      Icons.admin_panel_settings_outlined,
-                      size: 44,
-                      color: ScanFlowColors.emerald,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'ScanFlow Admin',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Sign in with a platform administrator account.',
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-                    if (controller.errorMessage != null) ...[
-                      _ErrorBanner(message: controller.errorMessage!),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Icon(
+                        Icons.admin_panel_settings_outlined,
+                        size: 44,
+                        color: ScanFlowColors.emerald,
+                      ),
                       const SizedBox(height: 16),
+                      Text(
+                        'ScanFlow Admin',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Sign in with a platform administrator account.',
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      if (controller.errorMessage != null) ...[
+                        _ErrorBanner(message: controller.errorMessage!),
+                        const SizedBox(height: 16),
+                      ],
+                      TextFormField(
+                        key: const Key('adminEmail'),
+                        controller: _email,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(labelText: 'Email'),
+                        validator: (value) =>
+                            value == null || !value.trim().contains('@')
+                            ? 'Enter a valid email address'
+                            : null,
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        key: const Key('adminPassword'),
+                        controller: _password,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                        ),
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Enter your password'
+                            : null,
+                        onFieldSubmitted: (_) => _signIn(),
+                      ),
+                      const SizedBox(height: 20),
+                      FilledButton(
+                        onPressed: controller.isBusy ? null : _signIn,
+                        child: controller.isBusy
+                            ? const SizedBox.square(
+                                dimension: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('Sign in'),
+                      ),
                     ],
-                    TextFormField(
-                      key: const Key('adminEmail'),
-                      controller: _email,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(labelText: 'Email'),
-                      validator: (value) =>
-                          value == null || !value.trim().contains('@')
-                          ? 'Enter a valid email address'
-                          : null,
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      key: const Key('adminPassword'),
-                      controller: _password,
-                      obscureText: true,
-                      decoration: const InputDecoration(labelText: 'Password'),
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Enter your password'
-                          : null,
-                      onFieldSubmitted: (_) => _signIn(),
-                    ),
-                    const SizedBox(height: 20),
-                    FilledButton(
-                      onPressed: controller.isBusy ? null : _signIn,
-                      child: controller.isBusy
-                          ? const SizedBox.square(
-                              dimension: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Text('Sign in'),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
