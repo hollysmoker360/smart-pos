@@ -26,11 +26,11 @@ class AdminUser {
   final String role;
 
   factory AdminUser.fromJson(Map<String, dynamic> json) => AdminUser(
-        id: _string(json, 'id'),
-        email: _string(json, 'email'),
-        fullName: _string(json, 'fullName'),
-        role: _string(json, 'role'),
-      );
+    id: _string(json, 'id'),
+    email: _string(json, 'email'),
+    fullName: _string(json, 'fullName'),
+    role: _string(json, 'role'),
+  );
 }
 
 class BusinessInvitation {
@@ -75,9 +75,9 @@ class AdminSession {
   final AdminUser user;
 
   factory AdminSession.fromJson(Map<String, dynamic> json) => AdminSession(
-        token: _string(json, 'token'),
-        user: AdminUser.fromJson(_object(json, 'user')),
-      );
+    token: _string(json, 'token'),
+    user: AdminUser.fromJson(_object(json, 'user')),
+  );
 }
 
 class HttpAdminApi implements AdminApi {
@@ -87,8 +87,8 @@ class HttpAdminApi implements AdminApi {
       'SCANFLOW_API_BASE_URL',
       defaultValue: 'http://localhost:8080/api/v1',
     ),
-  })  : _client = client ?? http.Client(),
-        _baseUrl = baseUrl.replaceFirst(RegExp(r'/$'), '');
+  }) : _client = client ?? http.Client(),
+       _baseUrl = baseUrl.replaceFirst(RegExp(r'/$'), '');
 
   final http.Client _client;
   final String _baseUrl;
@@ -149,12 +149,11 @@ class HttpAdminApi implements AdminApi {
     }
     if (token != null) request.headers['Authorization'] = 'Bearer $token';
 
-    final streamed = await _client.send(request).timeout(
-      const Duration(seconds: 15),
-    );
-    final response = await http.Response.fromStream(streamed).timeout(
-      const Duration(seconds: 15),
-    );
+    final streamed = await _client
+        .send(request)
+        .timeout(const Duration(seconds: 15));
+    final response = await http.Response.fromStream(streamed)
+        .timeout(const Duration(seconds: 15));
     final decoded = response.body.isEmpty
         ? <String, dynamic>{}
         : _decodeObject(response.body);

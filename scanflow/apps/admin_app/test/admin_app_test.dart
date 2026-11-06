@@ -6,8 +6,9 @@ import 'package:scanflow_admin/src/admin_app.dart';
 import 'package:scanflow_admin/src/admin_controller.dart';
 
 void main() {
-  testWidgets('platform admin creates and sees a business owner invitation',
-      (tester) async {
+  testWidgets('platform admin creates and sees a business owner invitation', (
+    tester,
+  ) async {
     final api = _FakeAdminApi();
     final sessionStore = _MemorySessionStore();
     final controller = AdminController(api: api, sessionStore: sessionStore);
@@ -15,9 +16,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          adminControllerProvider.overrideWith((ref) => controller),
-        ],
+        overrides: [adminControllerProvider.overrideWith((ref) => controller)],
         child: const AdminApp(),
       ),
     );
@@ -43,7 +42,10 @@ void main() {
       find.byKey(const Key('ownerEmail')),
       'owner@example.test',
     );
-    await tester.enterText(find.byKey(const Key('ownerPhone')), '+254712345678');
+    await tester.enterText(
+      find.byKey(const Key('ownerPhone')),
+      '+254712345678',
+    );
     await tester.tap(find.byKey(const Key('createInvitation')));
     await tester.pumpAndSettle();
 
@@ -66,9 +68,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          adminControllerProvider.overrideWith((ref) => controller),
-        ],
+        overrides: [adminControllerProvider.overrideWith((ref) => controller)],
         child: const AdminApp(),
       ),
     );
@@ -85,7 +85,10 @@ void main() {
     await tester.tap(find.text('Sign in'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('restricted to ScanFlow platform'), findsOneWidget);
+    expect(
+      find.textContaining('restricted to ScanFlow platform'),
+      findsOneWidget,
+    );
     expect(find.text('Platform overview'), findsNothing);
   });
 }
@@ -110,11 +113,11 @@ class _FakeAdminApi implements AdminApi {
   String? invitedOwnerEmail;
 
   AdminUser get _user => AdminUser(
-        id: 'admin-1',
-        email: 'admin@example.test',
-        fullName: 'Platform Admin',
-        role: role,
-      );
+    id: 'admin-1',
+    email: 'admin@example.test',
+    fullName: 'Platform Admin',
+    role: role,
+  );
 
   @override
   Future<AdminSession> login(String email, String password) async =>
