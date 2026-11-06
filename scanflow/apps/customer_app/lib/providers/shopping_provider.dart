@@ -11,7 +11,6 @@ final shoppingProvider = ChangeNotifierProvider<ShoppingProvider>((ref) {
     sessionStore: SecureShoppingSessionStore(),
   );
   unawaited(provider.restoreSession());
-  ref.onDispose(provider.dispose);
   return provider;
 });
 

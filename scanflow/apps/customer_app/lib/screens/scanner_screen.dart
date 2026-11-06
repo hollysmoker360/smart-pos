@@ -73,7 +73,8 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.center_focus_strong,
-                            color: Colors.white.withOpacity(0.7), size: 48),
+                            color: Colors.white.withValues(alpha: 0.7),
+                            size: 48),
                         const SizedBox(height: 12),
                         const Text(
                             'Camera scanning is not connected yet.\nEnter the barcode below.',
@@ -96,7 +97,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 9, vertical: 6),
                             decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.1),
+                                color: Colors.white.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(20)),
                             child: const Row(children: [
                               Icon(Icons.circle,

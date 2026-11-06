@@ -78,7 +78,7 @@ class HomeScreen extends ConsumerWidget {
                           width: 42,
                           height: 42,
                           decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
+                              color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8)),
                           child: const Icon(Icons.qr_code_scanner,
                               color: Color(0xFF44D895)),
