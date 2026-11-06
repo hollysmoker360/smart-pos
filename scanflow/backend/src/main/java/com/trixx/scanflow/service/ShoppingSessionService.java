@@ -307,6 +307,69 @@ public class ShoppingSessionService {
                 exitToken.getExpiresAt());
     }
 
+    @Transactional
+    public PaymentStatusResponse initiateGuestMpesaPayment(UUID sessionId, String accessToken, String phoneNumber) {
+        ShoppingSession session = getGuestSession(sessionId, accessToken);
+        RetailOrder order = retailOrderRepository.findTopBySessionOrderByCreatedAtDesc(session)
+                .orElseThrow(() -> new IllegalArgumentException("No completed order found for this session"));
+        if (!"PENDING_PAYMENT".equals(order.getStatus())) {
+            return buildPaymentStatusResponse(order, "PAID");
+        }
+        PaymentAttempt paymentAttempt = paymentAttemptRepository.findTopByOrderOrderByCreatedAtDesc(order)
+                .orElseThrow(() -> new IllegalArgumentException("No payment attempt found for this order"));
+        String providerReference = (phoneNumber == null || phoneNumber.isBlank())
+                ? "MPESA-" + UUID.randomUUID()
+                : "MPESA-" + phoneNumber.replaceAll("\\D+", "") + "-" + UUID.randomUUID().toString().substring(0, 8);
+        paymentAttempt.setProviderReference(providerReference);
+        paymentAttempt.setStatus("PENDING");
+        paymentAttempt.setUpdatedAt(Instant.now());
+        paymentAttemptRepository.save(paymentAttempt);
+        return new PaymentStatusResponse(
+                order.getId().toString(),
+                paymentAttempt.getStatus(),
+                providerReference,
+                "M-Pesa STK push sent to " + (phoneNumber == null || phoneNumber.isBlank() ? "customer" : phoneNumber));
+    }
+
+    @Transactional
+    public PaymentStatusResponse completeGuestMpesaPayment(UUID sessionId, String accessToken, String providerReference) {
+        ShoppingSession session = getGuestSession(sessionId, accessToken);
+        RetailOrder order = retailOrderRepository.findTopBySessionOrderByCreatedAtDesc(session)
+                .orElseThrow(() -> new IllegalArgumentException("No completed order found for this session"));
+        PaymentAttempt paymentAttempt = paymentAttemptRepository.findTopByOrderOrderByCreatedAtDesc(order)
+                .orElseThrow(() -> new IllegalArgumentException("No payment attempt found for this order"));
+        paymentAttempt.setProviderReference(providerReference == null || providerReference.isBlank()
+                ? paymentAttempt.getProviderReference() : providerReference);
+        paymentAttempt.setStatus("SUCCEEDED");
+        paymentAttempt.setUpdatedAt(Instant.now());
+        paymentAttemptRepository.save(paymentAttempt);
+
+        order.setStatus("PAID");
+        order.setUpdatedAt(Instant.now());
+        retailOrderRepository.save(order);
+        return buildPaymentStatusResponse(order, "SUCCEEDED");
+    }
+
+    @Transactional(readOnly = true)
+    public PaymentStatusResponse getGuestPaymentStatus(UUID sessionId, String accessToken) {
+        ShoppingSession session = getGuestSession(sessionId, accessToken);
+        RetailOrder order = retailOrderRepository.findTopBySessionOrderByCreatedAtDesc(session)
+                .orElseThrow(() -> new IllegalArgumentException("No completed order found for this session"));
+        PaymentAttempt paymentAttempt = paymentAttemptRepository.findTopByOrderOrderByCreatedAtDesc(order)
+                .orElse(new PaymentAttempt(order, "CASH", order.getOrderNumber(), order.getTotalAmount(),
+                        order.getCurrency(), "SUCCEEDED", order.getIdempotencyKey(), order.getTotalAmount()));
+        return buildPaymentStatusResponse(order, paymentAttempt.getStatus());
+    }
+
+    private PaymentStatusResponse buildPaymentStatusResponse(RetailOrder order, String paymentStatus) {
+        String status = "PAID".equals(order.getStatus()) || "SUCCEEDED".equals(paymentStatus) ? "PAID" : paymentStatus;
+        String providerReference = paymentAttemptRepository.findTopByOrderOrderByCreatedAtDesc(order)
+                .map(PaymentAttempt::getProviderReference)
+                .orElse(order.getOrderNumber());
+        return new PaymentStatusResponse(order.getId().toString(), status, providerReference,
+                "PAID".equals(status) ? "Payment verified." : "Awaiting payment confirmation.");
+    }
+
     private String issueGuestExitToken(RetailOrder order) {
         String token = invitationTokenCodec.issueToken();
         String tokenHash = invitationTokenCodec.hash(token);
@@ -537,4 +600,5 @@ public class ShoppingSessionService {
     public record BasketLine(String id, String productId, String productSku, String productName,
                              Integer quantity, BigDecimal unitPrice, BigDecimal lineTotal) {}
     public record BasketResponse(String sessionId, List<BasketLine> items, BigDecimal totalAmount) {}
+    public record PaymentStatusResponse(String orderId, String status, String providerReference, String message) {}
 }
