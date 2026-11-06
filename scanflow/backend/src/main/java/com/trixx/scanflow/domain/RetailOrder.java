@@ -26,6 +26,10 @@ public class RetailOrder {
     @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "session_id")
+    private ShoppingSession session;
+
     @Column(name = "order_number", nullable = false)
     private String orderNumber;
 
@@ -60,8 +64,15 @@ public class RetailOrder {
     public RetailOrder(Business business, Branch branch, String orderNumber, String status,
                        BigDecimal totalAmount, String currency, String idempotencyKey,
                        String requestFingerprint) {
+        this(business, branch, null, orderNumber, status, totalAmount, currency, idempotencyKey, requestFingerprint);
+    }
+
+    public RetailOrder(Business business, Branch branch, ShoppingSession session, String orderNumber, String status,
+                       BigDecimal totalAmount, String currency, String idempotencyKey,
+                       String requestFingerprint) {
         this.business = business;
         this.branch = branch;
+        this.session = session;
         this.orderNumber = orderNumber;
         this.status = status;
         this.totalAmount = totalAmount;
@@ -73,6 +84,7 @@ public class RetailOrder {
     public UUID getId() { return id; }
     public Business getBusiness() { return business; }
     public Branch getBranch() { return branch; }
+    public ShoppingSession getSession() { return session; }
     public String getOrderNumber() { return orderNumber; }
     public String getStatus() { return status; }
     public BigDecimal getTotalAmount() { return totalAmount; }

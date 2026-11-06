@@ -2,6 +2,7 @@ package com.trixx.scanflow.repository;
 
 import com.trixx.scanflow.domain.Business;
 import com.trixx.scanflow.domain.RetailOrder;
+import com.trixx.scanflow.domain.ShoppingSession;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 public interface RetailOrderRepository extends JpaRepository<RetailOrder, UUID> {
     Optional<RetailOrder> findByBusinessAndIdempotencyKey(Business business, String idempotencyKey);
+    Optional<RetailOrder> findTopBySessionOrderByCreatedAtDesc(ShoppingSession session);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select retailOrder from RetailOrder retailOrder where retailOrder.business = :business and retailOrder.idempotencyKey = :key")

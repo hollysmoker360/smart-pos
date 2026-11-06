@@ -101,6 +101,15 @@ class TrixxApiService {
     );
   }
 
+  Future<Map<String, dynamic>> verifyExitToken(String tokenCode) async {
+    return _request(
+      client.post(
+        Uri.parse('$baseUrl/public/exit-tokens/$tokenCode/verify'),
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
+  }
+
   Future<Map<String, dynamic>> _request(Future<http.Response> pending) async {
     final response = await pending;
     final dynamic decoded;

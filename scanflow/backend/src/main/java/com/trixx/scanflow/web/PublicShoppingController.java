@@ -46,6 +46,10 @@ public class PublicShoppingController {
                 branch.getName(),
                 branch.getCurrency(),
                 branch.isPhoneScanningEnabled(),
+                branch.isSmartTrolleyEnabled(),
+                branch.isManualBarcodeEntryEnabled(),
+                branch.isRequireStaffExitVerification(),
+                branch.isRequireCustomerSignIn(),
                 branch.isGuestCheckoutEnabled()));
     }
 
@@ -54,6 +58,34 @@ public class PublicShoppingController {
             @PathVariable UUID branchId) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(shoppingSessionService.createGuestSession(branchId));
+    }
+
+    @PostMapping("/shopping-sessions/{sessionId}/checkout")
+    public ResponseEntity<ShoppingSessionService.GuestCheckoutResponse> checkoutSession(
+            @PathVariable UUID sessionId,
+            @RequestHeader(name = SESSION_TOKEN_HEADER, required = false) String accessToken,
+            @Valid @RequestBody ShoppingSessionService.GuestCheckoutRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(shoppingSessionService.checkoutGuestSession(sessionId, accessToken, request));
+    }
+
+    @GetMapping("/shopping-sessions/{sessionId}/receipt")
+    public ResponseEntity<ShoppingSessionService.GuestReceiptResponse> getReceipt(
+            @PathVariable UUID sessionId,
+            @RequestHeader(name = SESSION_TOKEN_HEADER, required = false) String accessToken) {
+        return ResponseEntity.ok(shoppingSessionService.getGuestReceipt(sessionId, accessToken));
+    }
+
+    @PostMapping("/exit-tokens/{tokenCode}/verify")
+    public ResponseEntity<ShoppingSessionService.ExitVerificationResponse> verifyExitToken(
+            @PathVariable String tokenCode) {
+        return ResponseEntity.ok(shoppingSessionService.verifyGuestExitToken(tokenCode));
+    }
+
+    @PostMapping("/exit-tokens/verify")
+    public ResponseEntity<ShoppingSessionService.ExitVerificationResponse> verifyExitTokenBody(
+            @Valid @RequestBody VerifyExitTokenRequest request) {
+        return ResponseEntity.ok(shoppingSessionService.verifyGuestExitToken(request.tokenCode()));
     }
 
     @PostMapping("/shopping-sessions/{sessionId}/items")
@@ -103,6 +135,9 @@ public class PublicShoppingController {
 
     public record AddItemRequest(@NotBlank String productIdentifier, @NotNull @Positive Integer quantity) {}
     public record UpdateItemRequest(@NotNull @Positive Integer quantity) {}
+    public record VerifyExitTokenRequest(@NotBlank String tokenCode) {}
     public record PublicBranchResponse(String id, String name, String currency, boolean phoneScanningEnabled,
+                                       boolean smartTrolleyEnabled, boolean manualBarcodeEntryEnabled,
+                                       boolean requireStaffExitVerification, boolean requireCustomerSignIn,
                                        boolean guestCheckoutEnabled) {}
 }

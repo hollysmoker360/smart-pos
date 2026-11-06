@@ -357,6 +357,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Basket'
+  /api/v1/public/shopping-sessions/{sessionId}/checkout:
+    post:
+      summary: Complete a guest basket checkout with cash or queued digital payment
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - in: header
+          name: X-Shopping-Session-Token
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestCheckoutRequest'
+      responses:
+        '201':
+          description: Guest checkout created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestCheckoutResponse'
+  /api/v1/public/shopping-sessions/{sessionId}/receipt:
+    get:
+      summary: Read the latest guest receipt and exit-token metadata
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - in: header
+          name: X-Shopping-Session-Token
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Guest receipt
+  /api/v1/public/exit-tokens/{tokenCode}/verify:
+    post:
+      summary: Verify a guest exit token
+      security: []
+      parameters:
+        - in: path
+          name: tokenCode
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Exit token verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitVerificationResponse'
   /api/v1/public/shopping-sessions/{sessionId}/events:
     get:
       summary: Stream guest basket snapshots using Server-Sent Events
@@ -575,6 +627,37 @@ components:
               quantity: { type: integer }
               unitPrice: { type: number }
               lineTotal: { type: number }
+    GuestCheckoutRequest:
+      type: object
+      required: [paymentMethod]
+      properties:
+        paymentMethod: { type: string, enum: [CASH, M-PESA, CARD] }
+        cashReceived: { type: number, format: double }
+        customerName: { type: string }
+        phoneNumber: { type: string }
+        idempotencyKey: { type: string }
+    GuestCheckoutResponse:
+      type: object
+      required: [sessionId, orderId, orderNumber, orderStatus, paymentStatus, totalAmount, currency, receiptNumber]
+      properties:
+        sessionId: { type: string, format: uuid }
+        orderId: { type: string, format: uuid }
+        orderNumber: { type: string }
+        orderStatus: { type: string }
+        paymentStatus: { type: string }
+        totalAmount: { type: number, format: double }
+        currency: { type: string }
+        receiptNumber: { type: string }
+        exitTokenCode: { type: string, nullable: true }
+        changeDue: { type: number, format: double }
+    ExitVerificationResponse:
+      type: object
+      required: [tokenCode, orderId, status, expiresAt]
+      properties:
+        tokenCode: { type: string }
+        orderId: { type: string, format: uuid }
+        status: { type: string }
+        expiresAt: { type: string, format: date-time }
     PosCheckoutRequest:
       type: object
       required: [branchId, items, idempotencyKey, paymentMethod, cashReceived]
