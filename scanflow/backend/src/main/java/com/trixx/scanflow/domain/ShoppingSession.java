@@ -37,6 +37,9 @@ public class ShoppingSession {
     @Column(name = "expires_at")
     private Instant expiresAt;
 
+    @Column(name = "guest_access_token_hash", unique = true, length = 64)
+    private String guestAccessTokenHash;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
@@ -111,6 +114,14 @@ public class ShoppingSession {
 
     public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public String getGuestAccessTokenHash() {
+        return guestAccessTokenHash;
+    }
+
+    public void setGuestAccessTokenHash(String guestAccessTokenHash) {
+        this.guestAccessTokenHash = guestAccessTokenHash;
     }
 
     public Instant getCreatedAt() {

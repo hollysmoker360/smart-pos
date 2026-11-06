@@ -25,9 +25,6 @@
 <li>
 <a class="" href="#">summary</a>
 </li>
-<li>
-<a class="" href="#">standard output</a>
-</li>
 </ul>
 <div class="tab">
 <h2>summary</h2>
@@ -41,7 +38,7 @@
 <tr>
 <td>
 <div class="infoBox">
-<div class="counter">8</div>
+<div class="counter">2</div>
 <p>tests</p>
 </div>
 </td>
@@ -53,13 +50,13 @@
 </td>
 <td>
 <div class="infoBox">
-<div class="counter">1</div>
+<div class="counter">0</div>
 <p>skipped</p>
 </div>
 </td>
 <td>
 <div class="infoBox duration">
-<div class="counter">17.825s</div>
+<div class="counter">11.359s</div>
 <p>duration</p>
 </div>
 </td>
@@ -68,7 +65,7 @@
 </div>
 </td>
 <td>
-<div class="infoBox skipped successRate">
+<div class="infoBox success successRate">
 <div class="percent">100%</div>
 <p>successful</p>
 </div>
@@ -91,75 +88,18 @@
 <tbody>
 <tr>
 <td class="success">
-<a href="com.trixx.scanflow.auth.AuthAndBusinessFlowTests/index.html">AuthAndBusinessFlowTests</a>
-</td>
-<td class="path">com.trixx.scanflow.auth.AuthAndBusinessFlowTests</td>
-<td>3</td>
-<td>0</td>
-<td>0</td>
-<td data-sort-value="13469">13.469s</td>
-<td class="success" data-sort-value="100">100%</td>
-</tr>
-<tr>
-<td class="success">
-<a href="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests/index.html">ProductAndCashierFlowTests</a>
-</td>
-<td class="path">com.trixx.scanflow.catalogue.ProductAndCashierFlowTests</td>
-<td>2</td>
-<td>0</td>
-<td>0</td>
-<td data-sort-value="279">0.279s</td>
-<td class="success" data-sort-value="100">100%</td>
-</tr>
-<tr>
-<td class="skipped">
-<a href="com.trixx.scanflow.database.PostgreSqlMigrationTests/index.html">PostgreSqlMigrationTests</a>
-</td>
-<td class="path">com.trixx.scanflow.database.PostgreSqlMigrationTests</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td data-sort-value="0">0s</td>
-<td class="skipped" data-sort-value="100">100%</td>
-</tr>
-<tr>
-<td class="success">
-<a href="com.trixx.scanflow.ScanFlowApplicationTests/index.html">ScanFlowApplicationTests</a>
-</td>
-<td class="path">com.trixx.scanflow.ScanFlowApplicationTests</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td data-sort-value="1842">1.842s</td>
-<td class="success" data-sort-value="100">100%</td>
-</tr>
-<tr>
-<td class="success">
 <a href="com.trixx.scanflow.session.ShoppingSessionFlowTests/index.html">ShoppingSessionFlowTests</a>
 </td>
 <td class="path">com.trixx.scanflow.session.ShoppingSessionFlowTests</td>
-<td>1</td>
+<td>2</td>
 <td>0</td>
 <td>0</td>
-<td data-sort-value="202">0.202s</td>
+<td data-sort-value="10236">10.236s</td>
 <td class="success" data-sort-value="100">100%</td>
 </tr>
 </tbody>
 </table>
 </div>
-</div>
-<div class="tab">
-<h2>standard output</h2>
-<span class="code">
-<pre id="root-0-test-stdout-Gradle Test Run :test">2026-11-06T14:44:08.338Z  INFO 6870 --- [scanflow-backend] [    Test worker] .t.d.DockerMachineClientProviderStrategy : docker-machine executable was not found on PATH ([/home/codespace/.local/bin, /usr/local/rubies/current/bin, /home/codespace/.dotnet, /home/codespace/nvm/current/bin, /home/codespace/.php/current/bin, /home/codespace/.python/current/bin, /home/codespace/java/current/bin, /home/codespace/.ruby/current/bin, /usr/local/python/current/bin, /usr/local/py-utils/bin, /usr/local/jupyter, /usr/local/oryx, /usr/local/go/bin, /go/bin, /usr/local/sdkman/bin, /usr/local/sdkman/candidates/java/current/bin, /usr/local/sdkman/candidates/gradle/current/bin, /usr/local/sdkman/candidates/maven/current/bin, /usr/local/sdkman/candidates/ant/current/bin, /usr/local/share/rbenv/shims, /usr/local/share/rbenv/bin, /usr/local/php/current/bin, /opt/conda/bin, /usr/local/share/nvm/current/bin, /usr/local/hugo/bin, /usr/local/sbin, /usr/local/bin, /usr/sbin, /usr/bin, /sbin, /bin, /usr/share/dotnet, /home/codespace/.dotnet/tools, /vscode/bin/linux-x64/c4453f8ea430795f941c1b2ff6c9321135a74a02/node_modules/@vscode/ripgrep-universal/bin/linux-x64, /vscode/bin/linux-x64/c4453f8ea430795f941c1b2ff6c9321135a74a02/node_modules/@github/copilot-sdk-linux-x64/ripgrep/bin/linux-x64])
-2026-11-06T14:44:08.339Z ERROR 6870 --- [scanflow-backend] [    Test worker] o.t.d.DockerClientProviderStrategy       : Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
-	UnixSocketClientProviderStrategy: failed with exception BadRequestException (Status 400: {&quot;message&quot;:&quot;client version 1.32 is too old. Minimum supported API version is 1.40, please upgrade your client to a newer version&quot;}
-)
-	DockerDesktopClientProviderStrategy: failed with exception NullPointerException (Cannot invoke &quot;java.nio.file.Path.toString()&quot; because the return value of &quot;org.testcontainers.dockerclient.DockerDesktopClientProviderStrategy.getSocketPath()&quot; is null)As no valid configuration was found, execution cannot continue.
-See https://java.testcontainers.org/on_failure.html for more details.
-</pre>
-<button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-Gradle Test Run :test">Copy</button>
-</span>
 </div>
 </div>
 </div>
@@ -171,7 +111,7 @@ See https://java.testcontainers.org/on_failure.html for more details.
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 2:44:08 PM</p>
+<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 3:08:56 PM</p>
 </div>
 </div>
 </body>

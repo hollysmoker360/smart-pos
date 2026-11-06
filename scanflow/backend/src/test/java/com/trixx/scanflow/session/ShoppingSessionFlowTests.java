@@ -96,4 +96,78 @@ class ShoppingSessionFlowTests {
             .andExpect(jsonPath("$.items[0].productSku").value("TEA-100"))
             .andExpect(jsonPath("$.totalAmount").value(240.0));
     }
+
+    @Test
+    void guestPhoneSessionUsesCapabilityTokenAndExposesLiveBasketEndpoint() throws Exception {
+        MvcResult registerResult = mockMvc.perform(post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "businessName": "Guest Market",
+                      "email": "guest-owner@marketflow.co.ke",
+                      "phone": "254700000003",
+                      "ownerName": "Market Owner",
+                      "password": "StrongPass123!"
+                    }
+                    """))
+            .andExpect(status().isCreated())
+            .andReturn();
+        String ownerToken = objectMapper.readTree(registerResult.getResponse().getContentAsString())
+                .path("token").asText();
+
+        mockMvc.perform(post("/api/v1/products")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ownerToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "sku": "RICE-001",
+                      "name": "Rice 1kg",
+                      "barcode": "6160000000001",
+                      "price": 210.00,
+                      "taxRate": 0.16,
+                      "stock": 8,
+                      "category": "Groceries"
+                    }
+                    """))
+            .andExpect(status().isCreated());
+
+        String branchId = objectMapper.readTree(mockMvc.perform(get("/api/v1/businesses/me/branches")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ownerToken))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString())
+            .get(0).path("id").asText();
+
+        mockMvc.perform(get("/api/v1/public/branches/" + branchId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.phoneScanningEnabled").value(true));
+
+        MvcResult sessionResult = mockMvc.perform(post(
+                    "/api/v1/public/branches/" + branchId + "/shopping-sessions"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.branchName").value("Main Branch"))
+            .andExpect(jsonPath("$.accessToken").isNotEmpty())
+            .andReturn();
+        var session = objectMapper.readTree(sessionResult.getResponse().getContentAsString());
+        String sessionId = session.path("sessionId").asText();
+        String guestToken = session.path("accessToken").asText();
+
+        mockMvc.perform(post("/api/v1/public/shopping-sessions/" + sessionId + "/items")
+                .header("X-Shopping-Session-Token", guestToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"productIdentifier": "6160000000001", "quantity": 2}
+                    """))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.items[0].productName").value("Rice 1kg"))
+            .andExpect(jsonPath("$.totalAmount").value(420.0));
+
+        mockMvc.perform(get("/api/v1/public/shopping-sessions/" + sessionId + "/basket")
+                .header("X-Shopping-Session-Token", guestToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.items[0].quantity").value(2));
+
+        mockMvc.perform(get("/api/v1/public/shopping-sessions/" + sessionId + "/basket")
+                .header("X-Shopping-Session-Token", "invalid-token"))
+            .andExpect(status().isForbidden());
+    }
 }

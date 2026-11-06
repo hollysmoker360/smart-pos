@@ -36,7 +36,7 @@ class PostgreSqlMigrationTests {
 
     @Test
     void migrationsCreateTheSchemaExpectedByJpaAndContracts() {
-        assertEquals(6, jdbcTemplate.queryForObject(
+        assertEquals(7, jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success = TRUE", Integer.class));
         assertEquals(1, jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'products' AND column_name = 'stock_quantity'", Integer.class));
@@ -46,6 +46,8 @@ class PostgreSqlMigrationTests {
                 "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'employee_invitations'", Integer.class));
         assertEquals(1, jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'user_branch_access'", Integer.class));
+        assertEquals(1, jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'shopping_sessions' AND column_name = 'guest_access_token_hash'", Integer.class));
         assertEquals(1, jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM pg_indexes WHERE indexname = 'uq_users_email_normalized'", Integer.class));
     }
