@@ -19,7 +19,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
     super.dispose();
   }
 
-  void _addManualBarcode() async {
+  Future<void> _addManualBarcode() async {
     final barcode = _barcodeController.text.trim();
     if (barcode.isNotEmpty) {
       try {

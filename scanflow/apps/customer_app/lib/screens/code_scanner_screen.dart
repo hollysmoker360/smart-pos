@@ -33,7 +33,7 @@ class _CodeScannerScreenState extends State<CodeScannerScreen> {
               Expanded(
                 child: MobileScanner(
                   onDetect: _onDetect,
-                  errorBuilder: (context, error) => Center(
+                  errorBuilder: (context, error) => const Center(
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: Text(
