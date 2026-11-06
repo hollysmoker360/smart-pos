@@ -87,6 +87,20 @@ class AuthAndBusinessFlowTests {
         String token = objectMapper.readTree(response).path("token").asText();
 
         org.junit.jupiter.api.Assertions.assertEquals(auditLogCount + 2, auditLogRepository.count());
+        mockMvc.perform(post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "businessName": "Another Business",
+                      "email": "OWNER@ACMEGROCERY.CO.KE",
+                      "phone": "254700000096",
+                      "ownerName": "Duplicate Owner",
+                      "password": "AnotherStrongPass123!"
+                    }
+                    """))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("An account with that email already exists"));
+
         mockMvc.perform(get("/api/v1/businesses/me/branches")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
             .andExpect(status().isOk())
@@ -217,6 +231,15 @@ class AuthAndBusinessFlowTests {
                 .andReturn();
             String foreignOwnerToken = objectMapper.readTree(foreignBusinessResult.getResponse().getContentAsString())
                 .path("token").asText();
+            mockMvc.perform(post("/api/v1/shopping-sessions")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + foreignOwnerToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"sessionType": "CASHIER", "branchName": "Kilimani West"}
+                    """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Active branch not found"));
+
             MvcResult foreignBranchesResult = mockMvc.perform(get("/api/v1/businesses/me/branches")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + foreignOwnerToken))
                 .andExpect(status().isOk())

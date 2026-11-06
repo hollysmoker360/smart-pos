@@ -88,6 +88,21 @@ The repository is being migrated toward the target layout incrementally. Existin
 - Device integrations communicate through authenticated backend interfaces and cannot assert payment success or bypass server-side authorization.
 - Database changes are versioned and applied through the backend migration system. API contract changes are documented in `docs/api/openapi.yaml`.
 
+## Phase 1 vertical slice status
+
+The current backend supports the initial owner-to-employee workflow: owner
+registration or invitation acceptance, password login, business and branch
+access, branch creation, scoped employee invitations, and audit entries.
+Integration tests cover that workflow, duplicate email registration, and
+cross-business/unauthorized-branch access.
+
+This is a runnable foundation, not completion of all Phase 1 requirements.
+Buyer Google sign-in and phone OTP, MFA, refreshable/revocable user sessions,
+and membership of one identity in multiple businesses are not implemented yet.
+The current user model still stores a single business and role on each user;
+it must be migrated to business-scoped memberships before supporting multiple
+roles per person across businesses.
+
 ## Migration guidance
 
 Move an existing application or service only when its source, tests, manifests, scripts, and documentation can be updated together. Keep the current build paths working during each migration; do not create a second implementation of an existing app or service in the target tree.
