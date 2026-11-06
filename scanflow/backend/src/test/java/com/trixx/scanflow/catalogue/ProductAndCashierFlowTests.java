@@ -37,7 +37,7 @@ class ProductAndCashierFlowTests {
     private InventoryMovementRepository inventoryMovementRepository;
 
     @Test
-    void duplicateBarcodeIsRejectedBeforePersistingProduct() throws Exception {
+    void duplicateBarcodeAndSkuAreRejectedCaseInsensitivelyBeforePersistingProduct() throws Exception {
         String registerRequest = """
             {
               "businessName": "FreshMart Duplicate",
@@ -73,6 +73,23 @@ class ProductAndCashierFlowTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createProductRequest))
             .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/v1/products")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+            {
+              "sku": "dup-001",
+              "name": "Duplicate Product 2",
+              "barcode": "6401234500099",
+              "price": 140.00,
+              "taxRate": 0.16,
+              "stock": 6,
+              "category": "Groceries"
+            }
+            """))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("A product with this SKU already exists"));
 
         mockMvc.perform(post("/api/v1/products")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -213,5 +230,82 @@ class ProductAndCashierFlowTests {
             .andExpect(status().isOk())
           .andExpect(jsonPath("$.content[0].stock").value(23))
             .andExpect(jsonPath("$.content[0].sku").value("MZ-001"));
+    }
+
+    @Test
+    void guestCheckoutCreatesReceiptAndExitToken() throws Exception {
+        String registerRequest = """
+            {
+              "businessName": "Guest Mart",
+              "email": "guest@guestmart.co.ke",
+              "phone": "254700000020",
+              "ownerName": "Guest Owner",
+              "password": "StrongPass123!"
+            }
+            """;
+
+        MvcResult registerResult = mockMvc.perform(post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(registerRequest))
+            .andExpect(status().isCreated())
+            .andReturn();
+        String token = objectMapper.readTree(registerResult.getResponse().getContentAsString()).path("token").asText();
+
+        mockMvc.perform(post("/api/v1/products")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "sku": "GUEST-001",
+                      "name": "Guest Item",
+                      "barcode": "6401234500999",
+                      "price": 250.00,
+                      "taxRate": 0.16,
+                      "stock": 10,
+                      "category": "Groceries"
+                    }
+                    """))
+            .andExpect(status().isCreated());
+
+        MvcResult branchesResult = mockMvc.perform(get("/api/v1/businesses/me/branches")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+            .andExpect(status().isOk())
+            .andReturn();
+        String branchId = objectMapper.readTree(branchesResult.getResponse().getContentAsString()).get(0).path("id").asText();
+
+        MvcResult guestSession = mockMvc.perform(post("/api/v1/public/branches/{branchId}/shopping-sessions", branchId))
+            .andExpect(status().isCreated())
+            .andReturn();
+        String sessionId = objectMapper.readTree(guestSession.getResponse().getContentAsString()).path("sessionId").asText();
+        String guestToken = objectMapper.readTree(guestSession.getResponse().getContentAsString()).path("accessToken").asText();
+
+        mockMvc.perform(post("/api/v1/public/shopping-sessions/{sessionId}/items", sessionId)
+                .header("X-Shopping-Session-Token", guestToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productIdentifier\":\"GUEST-001\",\"quantity\":2}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.totalAmount").value(500.0));
+
+        MvcResult checkoutResult = mockMvc.perform(post("/api/v1/public/shopping-sessions/{sessionId}/checkout", sessionId)
+                .header("X-Shopping-Session-Token", guestToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "paymentMethod": "CASH",
+                      "cashReceived": 600.00,
+                      "idempotencyKey": "guest-checkout-1"
+                    }
+                    """))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.paymentStatus").value("SUCCEEDED"))
+            .andExpect(jsonPath("$.changeDue").value(100.0))
+            .andExpect(jsonPath("$.exitTokenCode").exists())
+            .andReturn();
+
+        String exitToken = objectMapper.readTree(checkoutResult.getResponse().getContentAsString()).path("exitTokenCode").asText();
+
+        mockMvc.perform(post("/api/v1/public/exit-tokens/{tokenCode}/verify", exitToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value("VERIFIED"));
     }
 }

@@ -40,6 +40,15 @@ public class Branch {
     @Column(name = "guest_checkout_enabled", nullable = false)
     private boolean guestCheckoutEnabled = true;
 
+    @Column(name = "manual_barcode_entry_enabled", nullable = false)
+    private boolean manualBarcodeEntryEnabled = false;
+
+    @Column(name = "require_staff_exit_verification", nullable = false)
+    private boolean requireStaffExitVerification = true;
+
+    @Column(name = "require_customer_sign_in", nullable = false)
+    private boolean requireCustomerSignIn = false;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
@@ -128,6 +137,30 @@ public class Branch {
 
     public void setGuestCheckoutEnabled(boolean guestCheckoutEnabled) {
         this.guestCheckoutEnabled = guestCheckoutEnabled;
+    }
+
+    public boolean isManualBarcodeEntryEnabled() {
+        return manualBarcodeEntryEnabled;
+    }
+
+    public void setManualBarcodeEntryEnabled(boolean manualBarcodeEntryEnabled) {
+        this.manualBarcodeEntryEnabled = manualBarcodeEntryEnabled;
+    }
+
+    public boolean isRequireStaffExitVerification() {
+        return requireStaffExitVerification;
+    }
+
+    public void setRequireStaffExitVerification(boolean requireStaffExitVerification) {
+        this.requireStaffExitVerification = requireStaffExitVerification;
+    }
+
+    public boolean isRequireCustomerSignIn() {
+        return requireCustomerSignIn;
+    }
+
+    public void setRequireCustomerSignIn(boolean requireCustomerSignIn) {
+        this.requireCustomerSignIn = requireCustomerSignIn;
     }
 
     public Instant getCreatedAt() {

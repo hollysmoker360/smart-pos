@@ -87,10 +87,31 @@ class TrixxProvider with ChangeNotifier {
   }
 
   Future<bool> redeemExitToken(String tokenCode) async {
-    return _unsupported(
-      'Exit-token verification is unavailable: the backend has no exit '
-      'verification API yet.',
-    );
+    if (tokenCode.trim().isEmpty) {
+      _errorMessage = 'Enter a valid exit token first.';
+      notifyListeners();
+      return false;
+    }
+
+    try {
+      final response = await apiService.verifyExitToken(tokenCode.trim());
+      final status = (response['status'] ?? '').toString();
+      final orderId = (response['orderId'] ?? '').toString();
+      _paymentStatus = PaymentStatusDto(
+        orderId: orderId,
+        status: status,
+        message: status == 'VERIFIED' ? 'Exit token verified successfully.' : null,
+      );
+      _errorMessage = status == 'VERIFIED'
+          ? 'Exit token verified successfully.'
+          : 'Exit token could not be verified.';
+      notifyListeners();
+      return status == 'VERIFIED';
+    } catch (error) {
+      _errorMessage = error.toString();
+      notifyListeners();
+      return false;
+    }
   }
 
   Future<void> loadAdminData() async {

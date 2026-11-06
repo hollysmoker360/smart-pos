@@ -103,6 +103,18 @@ The current user model still stores a single business and role on each user;
 it must be migrated to business-scoped memberships before supporting multiple
 roles per person across businesses.
 
+## Phase 2 guest shopping and branch settings status
+
+The system now includes a working guest phone-scanning flow: public branch
+lookup, capability-token creation, basket add/update/remove actions, live basket
+streaming, and business-owner branch settings control for enabled scanning modes.
+
+The current backend also enforces at least one active scanning method per store
+branch and preserves branch audit trails when checkout controls are changed.
+This is still a narrow operational slice rather than the full commerce platform;
+M-Pesa callbacks, exit verification workflows, and deeper inventory/procurement
+processes remain to be added in later phases.
+
 ## Migration guidance
 
 Move an existing application or service only when its source, tests, manifests, scripts, and documentation can be updated together. Keep the current build paths working during each migration; do not create a second implementation of an existing app or service in the target tree.

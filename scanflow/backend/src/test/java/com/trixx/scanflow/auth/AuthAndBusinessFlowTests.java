@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,6 +62,66 @@ class AuthAndBusinessFlowTests {
                         .andExpect(status().isBadRequest())
                         .andExpect(jsonPath("$.message").value("Invalid request"));
         }
+
+    @Test
+    void branchSettingsCanBeUpdatedAndValidateAtLeastOneScanningMethod() throws Exception {
+        String registerRequest = """
+            {
+              "businessName": "ScanFlow Settings Co",
+              "email": "settings@scanflow.test",
+              "phone": "254700000020",
+              "ownerName": "Test Owner",
+              "password": "StrongPass123!"
+            }
+            """;
+
+        MvcResult registerResult = mockMvc.perform(post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(registerRequest))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        String token = objectMapper.readTree(registerResult.getResponse().getContentAsString()).path("token").asText();
+        String branchId = objectMapper.readTree(mockMvc.perform(get("/api/v1/businesses/me/branches")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString()).get(0).path("id").asText();
+
+        mockMvc.perform(patch("/api/v1/businesses/me/branches/" + branchId + "/settings")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "phoneScanningEnabled": true,
+                      "smartTrolleyEnabled": false,
+                      "manualBarcodeEntryEnabled": true,
+                      "cashierPosEnabled": true,
+                      "guestCheckoutEnabled": true,
+                      "requireStaffExitVerification": true,
+                      "requireCustomerSignIn": false
+                    }
+                    """))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.phoneScanningEnabled").value(true))
+            .andExpect(jsonPath("$.manualBarcodeEntryEnabled").value(true));
+
+        mockMvc.perform(patch("/api/v1/businesses/me/branches/" + branchId + "/settings")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "phoneScanningEnabled": false,
+                      "smartTrolleyEnabled": false,
+                      "manualBarcodeEntryEnabled": false,
+                      "cashierPosEnabled": false,
+                      "guestCheckoutEnabled": false,
+                      "requireStaffExitVerification": true,
+                      "requireCustomerSignIn": false
+                    }
+                    """))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("At least one scanning method must remain enabled"));
+    }
 
     @Test
     void registerBusinessThenLoginAndFetchCurrentBusiness() throws Exception {

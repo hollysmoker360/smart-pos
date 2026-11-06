@@ -74,14 +74,16 @@ public class ProductCatalogService {
     }
 
     public Product findByBusinessAndIdentifier(Business business, String identifier) {
-        return productRepository.findByBusinessAndSku(business, identifier)
-                .orElseGet(() -> productRepository.findByBusinessAndBarcode(business, identifier)
+        String normalized = identifier == null ? "" : identifier.trim();
+        return productRepository.findByBusinessAndSkuIgnoreCase(business, normalized)
+                .orElseGet(() -> productRepository.findByBusinessAndBarcodeIgnoreCase(business, normalized)
                         .orElseThrow(() -> new IllegalArgumentException("Product not found for identifier: " + identifier)));
     }
 
     public Product findByBusinessAndIdentifierForUpdate(Business business, String identifier) {
-        return productRepository.findByBusinessAndSkuForUpdate(business, identifier)
-                .orElseGet(() -> productRepository.findByBusinessAndBarcodeForUpdate(business, identifier)
+        String normalized = identifier == null ? "" : identifier.trim();
+        return productRepository.findByBusinessAndSkuForUpdate(business, normalized)
+                .orElseGet(() -> productRepository.findByBusinessAndBarcodeForUpdate(business, normalized)
                         .orElseThrow(() -> new IllegalArgumentException("Product not found for identifier: " + identifier)));
     }
 
