@@ -14,9 +14,9 @@ SCANFLOW/
 │   ├── staff_app/
 │   ├── smart_trolley_app/
 │   └── shared/
-│       ├── authentication/
-│       ├── networking/
 │       ├── design_system/
+│       ├── networking/
+│       ├── authentication/
 │       ├── models/
 │       ├── permissions/
 │       └── utilities/
@@ -66,11 +66,14 @@ The repository is being migrated toward the target layout incrementally. Existin
 | Target area | Current location | Status |
 | --- | --- | --- |
 | Customer and shared customer experience | `apps/customer_app/` | Flutter application with shopping, scanning, basket, and checkout flows |
+| Business owner/admin experience | `apps/business_app/` | Flutter sign-in, invitation acceptance, live branch management, and scoped employee invitations |
 | SmartTrolley | `apps/smart_trolley/` | Flutter application with trolley, basket, checkout, and receipt flows |
 | Admin web | `apps/admin_web/` | Existing web interface |
 | POS application | `apps/pos_app/` | Reserved; implementation not yet present |
-| Business and staff applications | Not yet present | Planned role-specific experiences |
-| Shared Flutter packages | Not yet extracted | Avoid duplicating app code until package boundaries are established |
+| Staff application | Not yet present | Planned inventory, finance, procurement, and exit-attendant experience |
+| Flutter design system | `apps/shared/design_system/` | Shared theme, design tokens, and reusable empty-state widget used by customer, business, and SmartTrolley apps |
+| Flutter state management | `flutter_riverpod` in `apps/*` | Riverpod is the single frontend state-management approach |
+| Flutter networking/authentication packages | Not yet extracted | Business API client is currently app-scoped; extract shared API/session behavior with the next authenticated customer/device workflows |
 | Spring Boot API | `backend/` | Existing API, domain, security, service, repository, and database migration code |
 | Device and hardware services | `hardware/` | Protocol and controller-firmware placeholders; device services not yet implemented |
 | Infrastructure | `infra/` | Existing CI and Docker placeholders |

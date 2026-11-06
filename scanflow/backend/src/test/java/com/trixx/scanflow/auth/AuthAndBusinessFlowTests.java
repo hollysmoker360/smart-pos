@@ -114,6 +114,15 @@ class AuthAndBusinessFlowTests {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("Acme Groceries"));
+
+        mockMvc.perform(get("/api/v1/auth/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.user.role").value("OWNER"))
+            .andExpect(jsonPath("$.business.id").isNotEmpty());
+
+        mockMvc.perform(get("/api/v1/auth/me"))
+            .andExpect(status().isUnauthorized());
     }
 
             @Test

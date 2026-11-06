@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - registerBusinessThenLoginAndFetchCurrentBusiness()</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<div class="breadcrumbs">
+<a class="breadcrumb" href="../index.html">all</a> &gt; 
+<a class="breadcrumb" href="index.html">com.trixx.scanflow.auth.AuthAndBusinessFlowTests</a> &gt; 
+<span class="breadcrumb">registerBusinessThenLoginAndFetchCurrentBusiness()</span>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="failureGroup" href="#">Gradle Test Run :test</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Gradle Test Run :test</h2>
+<h1>registerBusinessThenLoginAndFetchCurrentBusiness()</h1>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="" href="#">summary</a>
+</li>
+<li>
+<a class="" href="#">standard output</a>
+</li>
+<li>
+<a class="" href="#">error output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>summary</h2>
+<div>
+<div class="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox">
+<div class="counter">1</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox">
+<div class="counter">0</div>
+<p>skipped</p>
+</div>
+</td>
+<td>
+<div class="infoBox duration">
+<div class="counter">3.831s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox failures successRate">
+<div class="percent">0%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="result-details">
+<h3>Failure details</h3>
+<span class="code">
+<pre id="root-0-test-failure-registerBusinessThenLoginAndFetchCurrentBusiness()">java.lang.AssertionError: Status expected:&lt;401&gt; but was:&lt;403&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.trixx.scanflow.auth.AuthAndBusinessFlowTests.registerBusinessThenLoginAndFetchCurrentBusiness(AuthAndBusinessFlowTests.java:125)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</pre>
+<button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-failure-registerBusinessThenLoginAndFetchCurrentBusiness()">Copy</button>
+</span>
+</div>
+</div>
+</div>
+<div class="tab">
+<h2>standard output</h2>
+<span class="code">
+<pre id="root-0-test-stdout-registerBusinessThenLoginAndFetchCurrentBusiness()">
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/auth/register
+       Parameters = {}
+          Headers = [Content-Type:&quot;application/json;charset=UTF-8&quot;, Content-Length:&quot;163&quot;]
+             Body = {
+  &quot;businessName&quot;: &quot;Acme Groceries&quot;,
+  &quot;email&quot;: &quot;owner@acmegrocery.co.ke&quot;,
+  &quot;phone&quot;: &quot;254712345678&quot;,
+  &quot;ownerName&quot;: &quot;Jane Doe&quot;,
+  &quot;password&quot;: &quot;StrongPass123!&quot;
+}
+
+    Session Attrs = {}
+
+Handler:
+             Type = com.trixx.scanflow.web.AuthController
+           Method = com.trixx.scanflow.web.AuthController#register(RegisterRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [Content-Type:&quot;application/json&quot;, X-Content-Type-Options:&quot;nosniff&quot;, X-XSS-Protection:&quot;0&quot;, Cache-Control:&quot;no-cache, no-store, max-age=0, must-revalidate&quot;, Pragma:&quot;no-cache&quot;, Expires:&quot;0&quot;, X-Frame-Options:&quot;DENY&quot;]
+     Content type = application/json
+             Body = {&quot;business&quot;:{&quot;id&quot;:&quot;7edb1e77-cd4f-481c-a4e1-d83fbfd62d24&quot;,&quot;name&quot;:&quot;Acme Groceries&quot;,&quot;email&quot;:&quot;owner@acmegrocery.co.ke&quot;,&quot;phone&quot;:&quot;254712345678&quot;,&quot;status&quot;:&quot;ACTIVE&quot;},&quot;user&quot;:{&quot;id&quot;:&quot;4841ed3f-2ee1-4348-bf40-ef670a1fa8f7&quot;,&quot;email&quot;:&quot;owner@acmegrocery.co.ke&quot;,&quot;fullName&quot;:&quot;Jane Doe&quot;,&quot;role&quot;:&quot;OWNER&quot;},&quot;token&quot;:&quot;eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvd25lckBhY21lZ3JvY2VyeS5jby5rZSIsInVzZXJJZCI6IjQ4NDFlZDNmLTJlZTEtNDM0OC1iZjQwLWVmNjcwYTFmYThmNyIsInJvbGUiOiJPV05FUiIsImlhdCI6MTc5Mzk3NDUwNywiZXhwIjoxNzkzOTc4MTA3fQ.wefAySrk43MOejsIitaEdK46NPoaefBZwQDNNgz94s4&quot;}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/auth/login
+       Parameters = {}
+          Headers = [Content-Type:&quot;application/json;charset=UTF-8&quot;, Content-Length:&quot;73&quot;]
+             Body = {
+  &quot;email&quot;: &quot;OWNER@ACMEGROCERY.CO.KE&quot;,
+  &quot;password&quot;: &quot;StrongPass123!&quot;
+}
+
+    Session Attrs = {}
+
+Handler:
+             Type = com.trixx.scanflow.web.AuthController
+           Method = com.trixx.scanflow.web.AuthController#login(LoginRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:&quot;application/json&quot;, X-Content-Type-Options:&quot;nosniff&quot;, X-XSS-Protection:&quot;0&quot;, Cache-Control:&quot;no-cache, no-store, max-age=0, must-revalidate&quot;, Pragma:&quot;no-cache&quot;, Expires:&quot;0&quot;, X-Frame-Options:&quot;DENY&quot;]
+     Content type = application/json
+             Body = {&quot;business&quot;:{&quot;id&quot;:&quot;7edb1e77-cd4f-481c-a4e1-d83fbfd62d24&quot;,&quot;name&quot;:&quot;Acme Groceries&quot;,&quot;email&quot;:&quot;owner@acmegrocery.co.ke&quot;,&quot;phone&quot;:&quot;254712345678&quot;,&quot;status&quot;:&quot;ACTIVE&quot;},&quot;user&quot;:{&quot;id&quot;:&quot;4841ed3f-2ee1-4348-bf40-ef670a1fa8f7&quot;,&quot;email&quot;:&quot;owner@acmegrocery.co.ke&quot;,&quot;fullName&quot;:&quot;Jane Doe&quot;,&quot;role&quot;:&quot;OWNER&quot;},&quot;token&quot;:&quot;eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvd25lckBhY21lZ3JvY2VyeS5jby5rZSIsInVzZXJJZCI6IjQ4NDFlZDNmLTJlZTEtNDM0OC1iZjQwLWVmNjcwYTFmYThmNyIsInJvbGUiOiJPV05FUiIsImlhdCI6MTc5Mzk3NDUwOCwiZXhwIjoxNzkzOTc4MTA4fQ.D3NWAIHPCwRWaKL__Td_5tsm9twBREiVNV0vflCzDDM&quot;}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/auth/login
+       Parameters = {}
+          Headers = [Content-Type:&quot;application/json;charset=UTF-8&quot;, Content-Length:&quot;77&quot;]
+             Body = {
+  &quot;email&quot;: &quot;owner@acmegrocery.co.ke&quot;,
+  &quot;password&quot;: &quot;incorrect-password&quot;
+}
+
+    Session Attrs = {}
+
+Handler:
+             Type = com.trixx.scanflow.web.AuthController
+           Method = com.trixx.scanflow.web.AuthController#login(LoginRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = null
+          Headers = [Content-Type:&quot;application/json&quot;, X-Content-Type-Options:&quot;nosniff&quot;, X-XSS-Protection:&quot;0&quot;, Cache-Control:&quot;no-cache, no-store, max-age=0, must-revalidate&quot;, Pragma:&quot;no-cache&quot;, Expires:&quot;0&quot;, X-Frame-Options:&quot;DENY&quot;]
+     Content type = application/json
+             Body = {&quot;message&quot;:&quot;Invalid email or password&quot;}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/v1/businesses/me
+       Parameters = {}
+          Headers = [Authorization:&quot;Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvd25lckBhY21lZ3JvY2VyeS5jby5rZSIsInVzZXJJZCI6IjQ4NDFlZDNmLTJlZTEtNDM0OC1iZjQwLWVmNjcwYTFmYThmNyIsInJvbGUiOiJPV05FUiIsImlhdCI6MTc5Mzk3NDUwOCwiZXhwIjoxNzkzOTc4MTA4fQ.D3NWAIHPCwRWaKL__Td_5tsm9twBREiVNV0vflCzDDM&quot;]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = com.trixx.scanflow.web.BusinessController
+           Method = com.trixx.scanflow.web.BusinessController#getCurrentBusiness(CustomUserPrincipal)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:&quot;application/json&quot;, X-Content-Type-Options:&quot;nosniff&quot;, X-XSS-Protection:&quot;0&quot;, Cache-Control:&quot;no-cache, no-store, max-age=0, must-revalidate&quot;, Pragma:&quot;no-cache&quot;, Expires:&quot;0&quot;, X-Frame-Options:&quot;DENY&quot;]
+     Content type = application/json
+             Body = {&quot;id&quot;:&quot;7edb1e77-cd4f-481c-a4e1-d83fbfd62d24&quot;,&quot;name&quot;:&quot;Acme Groceries&quot;,&quot;email&quot;:&quot;owner@acmegrocery.co.ke&quot;,&quot;phone&quot;:&quot;254712345678&quot;,&quot;status&quot;:&quot;ACTIVE&quot;}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/v1/auth/me
+       Parameters = {}
+          Headers = [Authorization:&quot;Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvd25lckBhY21lZ3JvY2VyeS5jby5rZSIsInVzZXJJZCI6IjQ4NDFlZDNmLTJlZTEtNDM0OC1iZjQwLWVmNjcwYTFmYThmNyIsInJvbGUiOiJPV05FUiIsImlhdCI6MTc5Mzk3NDUwOCwiZXhwIjoxNzkzOTc4MTA4fQ.D3NWAIHPCwRWaKL__Td_5tsm9twBREiVNV0vflCzDDM&quot;]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = com.trixx.scanflow.web.AuthController
+           Method = com.trixx.scanflow.web.AuthController#currentUser(CustomUserPrincipal)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Content-Type:&quot;application/json&quot;, X-Content-Type-Options:&quot;nosniff&quot;, X-XSS-Protection:&quot;0&quot;, Cache-Control:&quot;no-cache, no-store, max-age=0, must-revalidate&quot;, Pragma:&quot;no-cache&quot;, Expires:&quot;0&quot;, X-Frame-Options:&quot;DENY&quot;]
+     Content type = application/json
+             Body = {&quot;business&quot;:{&quot;id&quot;:&quot;7edb1e77-cd4f-481c-a4e1-d83fbfd62d24&quot;,&quot;name&quot;:&quot;Acme Groceries&quot;,&quot;email&quot;:&quot;owner@acmegrocery.co.ke&quot;,&quot;phone&quot;:&quot;254712345678&quot;,&quot;status&quot;:&quot;ACTIVE&quot;},&quot;user&quot;:{&quot;id&quot;:&quot;4841ed3f-2ee1-4348-bf40-ef670a1fa8f7&quot;,&quot;email&quot;:&quot;owner@acmegrocery.co.ke&quot;,&quot;fullName&quot;:&quot;Jane Doe&quot;,&quot;role&quot;:&quot;OWNER&quot;}}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/v1/auth/me
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 403
+    Error message = Access Denied
+          Headers = [X-Content-Type-Options:&quot;nosniff&quot;, X-XSS-Protection:&quot;0&quot;, Cache-Control:&quot;no-cache, no-store, max-age=0, must-revalidate&quot;, Pragma:&quot;no-cache&quot;, Expires:&quot;0&quot;, X-Frame-Options:&quot;DENY&quot;]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+</pre>
+<button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-registerBusinessThenLoginAndFetchCurrentBusiness()">Copy</button>
+</span>
+</div>
+<div class="tab">
+<h2>error output</h2>
+<span class="code">
+<pre id="root-0-test-stderr-registerBusinessThenLoginAndFetchCurrentBusiness()">WARNING: A Java agent has been loaded dynamically (/home/codespace/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.19/154da3a65b4f4a909d3e5bdec55d1b2b4cbb6ce1/byte-buddy-agent-1.14.19.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+</pre>
+<button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stderr-registerBusinessThenLoginAndFetchCurrentBusiness()">Copy</button>
+</span>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 2:15:09 PM</p>
+</div>
+</div>
+</body>
+</html>

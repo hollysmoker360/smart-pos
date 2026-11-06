@@ -94,8 +94,13 @@ class ShoppingBasketDto {
       items: itemsList.map((i) => BasketItemDto.fromJson(i)).toList(),
       subtotal: (json['subtotal'] as num?)?.toDouble() ?? 0.0,
       taxes: (json['taxes'] ?? json['taxAmount'] as num?)?.toDouble() ?? 0.0,
-      totalDiscounts: (json['totalDiscounts'] ?? json['discountAmount'] as num?)?.toDouble() ?? 0.0,
-      estimatedTotal: (json['estimatedTotal'] ?? json['totalAmount'] as num?)?.toDouble() ?? 0.0,
+      totalDiscounts:
+          (json['totalDiscounts'] ?? json['discountAmount'] as num?)
+              ?.toDouble() ??
+          0.0,
+      estimatedTotal:
+          (json['estimatedTotal'] ?? json['totalAmount'] as num?)?.toDouble() ??
+          0.0,
     );
   }
 }
@@ -117,7 +122,8 @@ class CheckoutSnapshotDto {
 
   factory CheckoutSnapshotDto.fromJson(Map<String, dynamic> json) {
     return CheckoutSnapshotDto(
-      orderId: (json['orderId'] ?? json['id'] ?? json['orderNumber'] ?? '').toString(),
+      orderId: (json['orderId'] ?? json['id'] ?? json['orderNumber'] ?? '')
+          .toString(),
       sessionId: (json['sessionId'] ?? '').toString(),
       totalAmount: (json['totalAmount'] as num?)?.toDouble() ?? 0.0,
       status: (json['status'] ?? '').toString(),
@@ -178,9 +184,11 @@ class ReceiptDto {
       branchName: (json['branchName'] ?? 'TRIXX Supermarket').toString(),
       customerName: (json['customerName'] ?? 'Customer').toString(),
       issueTimestamp: (json['issueTimestamp'] ?? '').toString(),
-      totalPaid: (json['totalPaid'] ?? json['amountPaid'] as num?)?.toDouble() ?? 0.0,
+      totalPaid:
+          (json['totalPaid'] ?? json['amountPaid'] as num?)?.toDouble() ?? 0.0,
       items: itemsList.map((i) => BasketItemDto.fromJson(i)).toList(),
-      exitTokenCode: (json['exitTokenCode'] ?? json['receiptNumber'] ?? '').toString(),
+      exitTokenCode: (json['exitTokenCode'] ?? json['receiptNumber'] ?? '')
+          .toString(),
     );
   }
 }

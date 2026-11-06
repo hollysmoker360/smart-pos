@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/trixx_provider.dart';
 import '../theme.dart';
 
-class StaffDashboardScreen extends StatefulWidget {
+class StaffDashboardScreen extends ConsumerStatefulWidget {
   const StaffDashboardScreen({super.key});
 
   @override
-  State<StaffDashboardScreen> createState() => _StaffDashboardScreenState();
+  ConsumerState<StaffDashboardScreen> createState() =>
+      _StaffDashboardScreenState();
 }
 
-class _StaffDashboardScreenState extends State<StaffDashboardScreen> with SingleTickerProviderStateMixin {
+class _StaffDashboardScreenState extends ConsumerState<StaffDashboardScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _verifyTokenController = TextEditingController();
   String? _verificationResult;
@@ -20,7 +22,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     Future.microtask(() {
-      Provider.of<TrixxProvider>(context, listen: false).loadAdminData();
+      ref.read(trixxProvider).loadAdminData();
     });
   }
 
@@ -33,7 +35,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TrixxProvider>(context);
+    final provider = ref.watch(trixxProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -66,7 +68,10 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
                     padding: EdgeInsets.all(16.0),
                     child: Text(
                       'Loss Prevention / Exit Gate Terminal',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -91,9 +96,12 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
                     final code = _verifyTokenController.text.trim();
                     if (code.isNotEmpty) {
                       try {
-                        final res = await provider.apiService.verifyExitToken(code);
+                        final res = await provider.apiService.verifyExitToken(
+                          code,
+                        );
                         setState(() {
-                          _verificationResult = 'Status: ${res['status']} | Valid: ${res['valid']}';
+                          _verificationResult =
+                              'Status: ${res['status']} | Valid: ${res['valid']}';
                         });
                       } catch (e) {
                         setState(() {
@@ -114,7 +122,13 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: TrolleyTheme.emerald),
                     ),
-                    child: Text(_verificationResult!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      _verificationResult!,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ],
@@ -123,7 +137,9 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
 
           // Trolley Fleet Status Tab
           provider.isLoading
-              ? const Center(child: CircularProgressIndicator(color: TrolleyTheme.emerald))
+              ? const Center(
+                  child: CircularProgressIndicator(color: TrolleyTheme.emerald),
+                )
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: provider.trolleys.length,
@@ -136,7 +152,9 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
                         child: Icon(Icons.shopping_cart, color: Colors.white),
                       ),
                       title: Text('Trolley ${t.deviceId} (${t.serialNumber})'),
-                      subtitle: Text('Status: ${t.status} | Branch: ${t.branchId}'),
+                      subtitle: Text(
+                        'Status: ${t.status} | Branch: ${t.branchId}',
+                      ),
                       trailing: Chip(
                         label: Text('${t.batteryLevel}%'),
                         avatar: const Icon(Icons.battery_full, size: 16),
@@ -147,7 +165,9 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
 
           // Loss Prevention Discrepancies Tab
           provider.isLoading
-              ? const Center(child: CircularProgressIndicator(color: TrolleyTheme.emerald))
+              ? const Center(
+                  child: CircularProgressIndicator(color: TrolleyTheme.emerald),
+                )
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: provider.discrepancies.length,
@@ -156,7 +176,11 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
                     final d = provider.discrepancies[index];
                     return Card(
                       child: ListTile(
-                        leading: const Icon(Icons.report_problem, color: Colors.amber, size: 32),
+                        leading: const Icon(
+                          Icons.report_problem,
+                          color: Colors.amber,
+                          size: 32,
+                        ),
                         title: Text('${d.type} - Session: ${d.sessionId}'),
                         subtitle: Text(d.description),
                         trailing: Chip(

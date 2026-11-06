@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/api_service.dart';
+
+final shoppingProvider = ChangeNotifierProvider<ShoppingProvider>(
+  (ref) => ShoppingProvider(),
+);
 
 class ShoppingProvider extends ChangeNotifier {
   String? tenantId;
@@ -37,7 +42,8 @@ class ShoppingProvider extends ChangeNotifier {
 
   Future<void> initSession(String guestPhone) async {
     if (tenantId == null || branchId == null) return;
-    final res = await ApiService.createShoppingSession(tenantId!, branchId!, guestPhone);
+    final res = await ApiService.createShoppingSession(
+        tenantId!, branchId!, guestPhone);
     sessionId = res['id'];
     basketItems = res['items'] ?? [];
     notifyListeners();
@@ -52,7 +58,8 @@ class ShoppingProvider extends ChangeNotifier {
 
   Future<void> updateItemQuantity(String itemId, int quantity) async {
     if (sessionId == null) return;
-    final res = await ApiService.updateItemQuantity(sessionId!, itemId, quantity);
+    final res =
+        await ApiService.updateItemQuantity(sessionId!, itemId, quantity);
     basketItems = res['items'] ?? [];
     notifyListeners();
   }
@@ -66,9 +73,13 @@ class ShoppingProvider extends ChangeNotifier {
 
   Future<void> payWithMpesa(String phone) async {
     if (currentOrder == null) return;
-    final res = await ApiService.initiateMpesaPayment(currentOrder!['id'], phone);
+    final res =
+        await ApiService.initiateMpesaPayment(currentOrder!['id'], phone);
     final paymentStatus = res['status']?.toString().toUpperCase();
-    currentOrder = {...currentOrder!, 'paymentStatus': paymentStatus ?? 'PENDING'};
+    currentOrder = {
+      ...currentOrder!,
+      'paymentStatus': paymentStatus ?? 'PENDING'
+    };
     if (paymentStatus == 'PAID') {
       currentReceipt = await ApiService.getReceipt(currentOrder!['id']);
       currentExitToken = await ApiService.getExitToken(currentOrder!['id']);

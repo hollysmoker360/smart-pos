@@ -9,6 +9,19 @@ servers:
 security:
   - bearerAuth: []
 paths:
+  /api/v1/auth/me:
+    get:
+      summary: Return the current authenticated user and business context
+      description: Requires a valid user access token. The result is loaded from the current user record, so disabled users and changed roles are not taken from stale client state.
+      responses:
+        '200':
+          description: Current user and their business
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+        '401':
+          description: Authentication is required
   /api/v1/auth/register:
     post:
       security: []
@@ -334,6 +347,14 @@ components:
           nullable: true
         user: { $ref: '#/components/schemas/UserSummary' }
         token: { type: string }
+    CurrentUser:
+      type: object
+      required: [user, business]
+      properties:
+        business:
+          $ref: '#/components/schemas/Business'
+        user:
+          $ref: '#/components/schemas/UserSummary'
     UserSummary:
       type: object
       required: [id, email, fullName, role]

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'providers/trixx_provider.dart';
 import 'screens/store_and_trolley_screen.dart';
 import 'screens/live_basket_screen.dart';
@@ -9,7 +9,7 @@ import 'screens/staff_dashboard_screen.dart';
 import 'theme.dart';
 
 void main() {
-  runApp(const TrixxApp());
+  runApp(const ProviderScope(child: TrixxApp()));
 }
 
 class TrixxApp extends StatelessWidget {
@@ -17,16 +17,11 @@ class TrixxApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TrixxProvider()),
-      ],
-      child: MaterialApp(
-        title: 'TRIXX SmartTrolley',
-        debugShowCheckedModeBanner: false,
-        theme: TrolleyTheme.themeData,
-        home: const MainNavigationWrapper(),
-      ),
+    return MaterialApp(
+      title: 'TRIXX SmartTrolley',
+      debugShowCheckedModeBanner: false,
+      theme: TrolleyTheme.themeData,
+      home: const MainNavigationWrapper(),
     );
   }
 }
@@ -55,10 +50,24 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.shopping_cart_checkout, size: 48, color: Color(0xFF44D895)),
+                  Icon(
+                    Icons.shopping_cart_checkout,
+                    size: 48,
+                    color: Color(0xFF44D895),
+                  ),
                   SizedBox(height: 8),
-                  Text('TRIXX SmartTrolley', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('Smart Retail Platform', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                  Text(
+                    'TRIXX SmartTrolley',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Smart Retail Platform',
+                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                  ),
                 ],
               ),
             ),

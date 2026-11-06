@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/trixx_provider.dart';
 import '../theme.dart';
 
-class LiveBasketScreen extends StatefulWidget {
+class LiveBasketScreen extends ConsumerStatefulWidget {
   final VoidCallback onProceedToCheckout;
 
   const LiveBasketScreen({super.key, required this.onProceedToCheckout});
 
   @override
-  State<LiveBasketScreen> createState() => _LiveBasketScreenState();
+  ConsumerState<LiveBasketScreen> createState() => _LiveBasketScreenState();
 }
 
-class _LiveBasketScreenState extends State<LiveBasketScreen> {
+class _LiveBasketScreenState extends ConsumerState<LiveBasketScreen> {
   final _barcodeController = TextEditingController(text: '6001234567890');
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TrixxProvider>(context);
+    final provider = ref.watch(trixxProvider);
     final basket = provider.currentBasket;
     final session = provider.currentSession;
 
@@ -42,12 +42,20 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Chip(
-                  avatar: const Icon(Icons.check_circle, color: Colors.green, size: 18),
+                  avatar: const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 18,
+                  ),
                   label: Text('Session: ${session?.sessionId ?? ""}'),
                   backgroundColor: Colors.white,
                 ),
                 Chip(
-                  avatar: const Icon(Icons.battery_charging_full, color: TrolleyTheme.emerald, size: 18),
+                  avatar: const Icon(
+                    Icons.battery_charging_full,
+                    color: TrolleyTheme.emerald,
+                    size: 18,
+                  ),
                   label: const Text('Battery: 98%'),
                   backgroundColor: Colors.white,
                 ),
@@ -59,7 +67,9 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               elevation: 2,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -81,7 +91,10 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: TrolleyTheme.emerald,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 12,
+                        ),
                       ),
                       onPressed: provider.isLoading
                           ? null
@@ -105,7 +118,10 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 provider.errorMessage!,
-                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
 
@@ -116,15 +132,28 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.shopping_basket_outlined, size: 64, color: Colors.grey),
+                        Icon(
+                          Icons.shopping_basket_outlined,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
                         SizedBox(height: 12),
-                        Text('Your basket is currently empty.', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                        Text('Scan items using the physical trolley scanner.', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        Text(
+                          'Your basket is currently empty.',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                        Text(
+                          'Scan items using the physical trolley scanner.',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
                       ],
                     ),
                   )
                 : ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     itemCount: basket.items.length,
                     separatorBuilder: (_, __) => const Divider(),
                     itemBuilder: (context, index) {
@@ -132,19 +161,36 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundColor: TrolleyTheme.mint,
-                          child: Text('${item.quantity}x', style: const TextStyle(color: TrolleyTheme.forest, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            '${item.quantity}x',
+                            style: const TextStyle(
+                              color: TrolleyTheme.forest,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        title: Text(item.productName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('Barcode: ${item.barcode} | KES ${item.unitPrice.toStringAsFixed(2)} each'),
+                        title: Text(
+                          item.productName,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          'Barcode: ${item.barcode} | KES ${item.unitPrice.toStringAsFixed(2)} each',
+                        ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               'KES ${item.lineTotal.toStringAsFixed(2)}',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete_outline, color: Colors.red),
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.red,
+                              ),
                               onPressed: () async {
                                 await provider.removeItem(item.itemId);
                               },
@@ -162,7 +208,11 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -4)),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -4),
+                ),
               ],
             ),
             child: Column(
@@ -170,7 +220,10 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Subtotal:', style: TextStyle(color: Colors.grey)),
+                    const Text(
+                      'Subtotal:',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                     Text('KES ${(basket?.subtotal ?? 0.0).toStringAsFixed(2)}'),
                   ],
                 ),
@@ -178,7 +231,10 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('VAT (16%):', style: TextStyle(color: Colors.grey)),
+                    const Text(
+                      'VAT (16%):',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                     Text('KES ${(basket?.taxes ?? 0.0).toStringAsFixed(2)}'),
                   ],
                 ),
@@ -186,18 +242,34 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Discounts:', style: TextStyle(color: Colors.grey)),
-                    Text('- KES ${(basket?.totalDiscounts ?? 0.0).toStringAsFixed(2)}', style: const TextStyle(color: Colors.green)),
+                    const Text(
+                      'Discounts:',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Text(
+                      '- KES ${(basket?.totalDiscounts ?? 0.0).toStringAsFixed(2)}',
+                      style: const TextStyle(color: Colors.green),
+                    ),
                   ],
                 ),
                 const Divider(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Estimated Total:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Estimated Total:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     Text(
                       'KES ${(basket?.estimatedTotal ?? 0.0).toStringAsFixed(2)}',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: TrolleyTheme.forest),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: TrolleyTheme.forest,
+                      ),
                     ),
                   ],
                 ),
@@ -209,9 +281,14 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                       backgroundColor: TrolleyTheme.emerald,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    onPressed: (basket == null || basket.items.isEmpty || provider.isLoading)
+                    onPressed:
+                        (basket == null ||
+                            basket.items.isEmpty ||
+                            provider.isLoading)
                         ? null
                         : () async {
                             bool success = await provider.createCheckout();
@@ -221,7 +298,13 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                           },
                     child: provider.isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Proceed to Checkout Snapshot', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        : const Text(
+                            'Proceed to Checkout Snapshot',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
               ],

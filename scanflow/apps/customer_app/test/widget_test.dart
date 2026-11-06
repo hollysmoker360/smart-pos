@@ -1,18 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trixx_smartpos/main.dart';
-import 'package:trixx_smartpos/providers/shopping_provider.dart';
 
 void main() {
-  testWidgets('App renders store selection screen initially', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (_) => ShoppingProvider(),
-        child: const TrixxApp(),
-      ),
-    );
+  testWidgets('App renders store selection screen initially',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const ProviderScope(child: TrixxApp()));
 
-    expect(find.text('TRIXX SmartPOS - Select Supermarket'), findsOneWidget);
+    expect(find.text('ScanFlow'), findsOneWidget);
   });
 }

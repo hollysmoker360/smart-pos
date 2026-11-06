@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static final String baseUrl = kIsWeb ? 'http://localhost:8080/api/v1' : 'http://10.0.2.2:8080/api/v1';
+  static final String baseUrl =
+      kIsWeb ? 'http://localhost:8080/api/v1' : 'http://10.0.2.2:8080/api/v1';
 
-  static Map<String, String> getHeaders({String? tenantId, String? branchId, String? token}) {
+  static Map<String, String> getHeaders(
+      {String? tenantId, String? branchId, String? token}) {
     final headers = {'Content-Type': 'application/json'};
     if (tenantId != null) headers['X-Tenant-ID'] = tenantId;
     if (branchId != null) headers['X-Branch-ID'] = branchId;
@@ -21,11 +23,16 @@ class ApiService {
     throw Exception('Failed to load branches');
   }
 
-  static Future<Map<String, dynamic>> createShoppingSession(String tenantId, String branchId, String? guestPhone) async {
+  static Future<Map<String, dynamic>> createShoppingSession(
+      String tenantId, String branchId, String? guestPhone) async {
     final response = await http.post(
       Uri.parse('$baseUrl/shopping-sessions'),
       headers: getHeaders(tenantId: tenantId, branchId: branchId),
-      body: jsonEncode({'tenantId': tenantId, 'branchId': branchId, 'guestPhone': guestPhone}),
+      body: jsonEncode({
+        'tenantId': tenantId,
+        'branchId': branchId,
+        'guestPhone': guestPhone
+      }),
     );
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -33,15 +40,18 @@ class ApiService {
     throw Exception('Failed to create shopping session');
   }
 
-  static Future<Map<String, dynamic>> resolveBarcode(String branchId, String barcode) async {
-    final response = await http.get(Uri.parse('$baseUrl/stores/$branchId/products/$barcode'));
+  static Future<Map<String, dynamic>> resolveBarcode(
+      String branchId, String barcode) async {
+    final response = await http
+        .get(Uri.parse('$baseUrl/stores/$branchId/products/$barcode'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     }
     throw Exception('Barcode not found: $barcode');
   }
 
-  static Future<Map<String, dynamic>> addItemToBasket(String sessionId, String barcode, int quantity) async {
+  static Future<Map<String, dynamic>> addItemToBasket(
+      String sessionId, String barcode, int quantity) async {
     final response = await http.post(
       Uri.parse('$baseUrl/shopping-sessions/$sessionId/items'),
       headers: getHeaders(),
@@ -53,7 +63,8 @@ class ApiService {
     throw Exception('Failed to add item to basket');
   }
 
-  static Future<Map<String, dynamic>> updateItemQuantity(String sessionId, String itemId, int quantity) async {
+  static Future<Map<String, dynamic>> updateItemQuantity(
+      String sessionId, String itemId, int quantity) async {
     final response = await http.put(
       Uri.parse('$baseUrl/shopping-sessions/$sessionId/items/$itemId'),
       headers: getHeaders(),
@@ -77,7 +88,8 @@ class ApiService {
     throw Exception('Checkout failed');
   }
 
-  static Future<Map<String, dynamic>> initiateMpesaPayment(String orderId, String phoneNumber) async {
+  static Future<Map<String, dynamic>> initiateMpesaPayment(
+      String orderId, String phoneNumber) async {
     final response = await http.post(
       Uri.parse('$baseUrl/orders/$orderId/payments/mpesa'),
       headers: getHeaders(),
@@ -90,7 +102,8 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> getReceipt(String orderId) async {
-    final response = await http.get(Uri.parse('$baseUrl/orders/$orderId/receipt'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/orders/$orderId/receipt'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     }
@@ -98,7 +111,8 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> getExitToken(String orderId) async {
-    final response = await http.get(Uri.parse('$baseUrl/orders/$orderId/exit-token'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/orders/$orderId/exit-token'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     }
@@ -117,7 +131,8 @@ class ApiService {
     throw Exception('Invalid or unrecognized Exit Pass token');
   }
 
-  static Future<Map<String, dynamic>> completeExit(String tokenHash, bool inspectionPerformed, String? notes) async {
+  static Future<Map<String, dynamic>> completeExit(
+      String tokenHash, bool inspectionPerformed, String? notes) async {
     final response = await http.post(
       Uri.parse('$baseUrl/exit/complete'),
       headers: getHeaders(),

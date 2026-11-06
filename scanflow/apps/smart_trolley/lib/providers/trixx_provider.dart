@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/trixx_models.dart';
 import '../services/trixx_api_service.dart';
+
+final trixxProvider = ChangeNotifierProvider<TrixxProvider>(
+  (ref) => TrixxProvider(),
+);
 
 class TrixxProvider with ChangeNotifier {
   final TrixxApiService apiService = TrixxApiService();
@@ -112,7 +117,9 @@ class TrixxProvider with ChangeNotifier {
     _setLoading(true);
     _errorMessage = null;
     try {
-      _currentCheckout = await apiService.createCheckout(_currentSession!.sessionId);
+      _currentCheckout = await apiService.createCheckout(
+        _currentSession!.sessionId,
+      );
       _setLoading(false);
       return true;
     } catch (e) {
@@ -143,9 +150,13 @@ class TrixxProvider with ChangeNotifier {
   Future<void> pollPaymentStatus() async {
     if (_currentCheckout == null) return;
     try {
-      _paymentStatus = await apiService.getPaymentStatus(_currentCheckout!.orderId);
+      _paymentStatus = await apiService.getPaymentStatus(
+        _currentCheckout!.orderId,
+      );
       if (_paymentStatus?.status == 'PAID') {
-        _currentReceipt = await apiService.getReceipt(_currentCheckout!.orderId);
+        _currentReceipt = await apiService.getReceipt(
+          _currentCheckout!.orderId,
+        );
       }
       notifyListeners();
     } catch (e) {

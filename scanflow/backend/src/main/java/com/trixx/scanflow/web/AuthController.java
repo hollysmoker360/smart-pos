@@ -14,6 +14,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -85,6 +87,20 @@ public class AuthController {
         return ResponseEntity.ok(toResponse(user.getBusiness(), user, jwtService.generateToken(user)));
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public CurrentUserResponse currentUser(@AuthenticationPrincipal CustomUserPrincipal principal) {
+        User user = principal.getUser();
+        return new CurrentUserResponse(
+                user.getBusiness() == null ? null : new BusinessSummary(
+                        user.getBusiness().getId().toString(),
+                        user.getBusiness().getName(),
+                        user.getBusiness().getEmail(),
+                        user.getBusiness().getPhone(),
+                        user.getBusiness().getStatus()),
+                new UserSummary(user.getId().toString(), user.getEmail(), user.getFullName(), user.getRole().name()));
+    }
+
     private AuthResponse toResponse(Business business, User user, String token) {
         BusinessSummary businessSummary = business == null ? null : new BusinessSummary(
                 business.getId().toString(), business.getName(), business.getEmail(), business.getPhone(), business.getStatus());
@@ -100,6 +116,7 @@ public class AuthController {
                                @NotBlank @Size(max = 72) String password) {}
     public record ErrorResponse(String message) {}
     public record AuthResponse(BusinessSummary business, UserSummary user, String token) {}
+    public record CurrentUserResponse(BusinessSummary business, UserSummary user) {}
     public record BusinessSummary(String id, String name, String email, String phone, String status) {}
     public record UserSummary(String id, String email, String fullName, String role) {}
 }

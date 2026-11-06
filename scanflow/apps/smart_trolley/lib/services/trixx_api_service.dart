@@ -154,10 +154,7 @@ class TrixxApiService {
     final response = await http.post(
       Uri.parse('$baseUrl/api/v1/exit/redeem'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'tokenCode': tokenCode,
-        'stationId': stationId,
-      }),
+      body: jsonEncode({'tokenCode': tokenCode, 'stationId': stationId}),
     );
 
     if (response.statusCode == 200) {

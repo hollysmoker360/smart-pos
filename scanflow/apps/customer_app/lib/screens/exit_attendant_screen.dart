@@ -44,9 +44,12 @@ class _ExitAttendantScreenState extends State<ExitAttendantScreen> {
     if (token.isEmpty) return;
 
     try {
-      await ApiService.completeExit(token, _inspectionPerformed, 'Inspection verified by attendant');
+      await ApiService.completeExit(
+          token, _inspectionPerformed, 'Inspection verified by attendant');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Exit Approved Successfully!'), backgroundColor: Colors.green),
+        const SnackBar(
+            content: Text('Exit Approved Successfully!'),
+            backgroundColor: Colors.green),
       );
       setState(() {
         _verificationResult = null;
@@ -54,7 +57,9 @@ class _ExitAttendantScreenState extends State<ExitAttendantScreen> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Exit Completion Error: ${e.toString()}'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Exit Completion Error: ${e.toString()}'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -76,7 +81,9 @@ class _ExitAttendantScreenState extends State<ExitAttendantScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Scan Customer Exit Pass QR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    const Text('Scan Customer Exit Pass QR',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16)),
                     const SizedBox(height: 12),
                     TextField(
                       controller: _tokenController,
@@ -103,12 +110,16 @@ class _ExitAttendantScreenState extends State<ExitAttendantScreen> {
                 color: Colors.red.shade50,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Text('Error: $_errorMessage', style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                  child: Text('Error: $_errorMessage',
+                      style: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold)),
                 ),
               ),
             if (_verificationResult != null) ...[
               Card(
-                color: (_verificationResult!['valid'] as bool) ? Colors.green.shade50 : Colors.red.shade50,
+                color: (_verificationResult!['valid'] as bool)
+                    ? Colors.green.shade50
+                    : Colors.red.shade50,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -117,24 +128,33 @@ class _ExitAttendantScreenState extends State<ExitAttendantScreen> {
                       Row(
                         children: [
                           Icon(
-                            (_verificationResult!['valid'] as bool) ? Icons.check_circle : Icons.cancel,
-                            color: (_verificationResult!['valid'] as bool) ? Colors.green : Colors.red,
+                            (_verificationResult!['valid'] as bool)
+                                ? Icons.check_circle
+                                : Icons.cancel,
+                            color: (_verificationResult!['valid'] as bool)
+                                ? Colors.green
+                                : Colors.red,
                             size: 32,
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            (_verificationResult!['valid'] as bool) ? 'VALID EXIT PASS' : 'INVALID / EXPIRED EXIT PASS',
+                            (_verificationResult!['valid'] as bool)
+                                ? 'VALID EXIT PASS'
+                                : 'INVALID / EXPIRED EXIT PASS',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
-                              color: (_verificationResult!['valid'] as bool) ? Colors.green : Colors.red,
+                              color: (_verificationResult!['valid'] as bool)
+                                  ? Colors.green
+                                  : Colors.red,
                             ),
                           ),
                         ],
                       ),
                       const Divider(),
                       Text('Order No: ${_verificationResult!['orderNumber']}'),
-                      Text('Total Paid: KES ${_verificationResult!['totalAmount']}'),
+                      Text(
+                          'Total Paid: KES ${_verificationResult!['totalAmount']}'),
                       Text('Status: ${_verificationResult!['status']}'),
                       const SizedBox(height: 12),
                       if (_verificationResult!['inspectionRequired'] == true)
@@ -145,13 +165,16 @@ class _ExitAttendantScreenState extends State<ExitAttendantScreen> {
                             children: [
                               Icon(Icons.warning, color: Colors.orange),
                               SizedBox(width: 8),
-                              Expanded(child: Text('Random Risk-Based Inspection Triggered for this basket!')),
+                              Expanded(
+                                  child: Text(
+                                      'Random Risk-Based Inspection Triggered for this basket!')),
                             ],
                           ),
                         ),
                       const SizedBox(height: 12),
                       CheckboxListTile(
-                        title: const Text('Random Basket Item Inspection Performed'),
+                        title: const Text(
+                            'Random Basket Item Inspection Performed'),
                         value: _inspectionPerformed,
                         onChanged: (val) {
                           setState(() {
@@ -163,7 +186,8 @@ class _ExitAttendantScreenState extends State<ExitAttendantScreen> {
                       if (_verificationResult!['valid'] as bool)
                         ElevatedButton(
                           onPressed: _completeExitPass,
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF16A34A)),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF16A34A)),
                           child: const Text('Approve Exit & Record Pass'),
                         )
                     ],

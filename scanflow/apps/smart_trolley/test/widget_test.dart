@@ -40,8 +40,8 @@ void main() {
             'unitPrice': 125.0,
             'discount': 0.0,
             'lineTotal': 250.0,
-          }
-        ]
+          },
+        ],
       };
 
       final basket = ShoppingBasketDto.fromJson(json);

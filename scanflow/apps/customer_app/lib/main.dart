@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme.dart';
-import 'providers/shopping_provider.dart';
 import 'screens/store_selection_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/scanner_screen.dart';
@@ -14,12 +13,7 @@ import 'screens/admin_dashboard_screen.dart';
 import 'screens/super_admin_screen.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => ShoppingProvider(),
-      child: const TrixxApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: TrixxApp()));
 }
 
 class TrixxApp extends StatelessWidget {
