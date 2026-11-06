@@ -35,7 +35,6 @@ public class PosCheckoutService {
             totalAmount = totalAmount.add(lineTotal);
             items.add(new PosCheckoutItemResponse(product.getSku(), product.getName(), itemRequest.quantity(), product.getStandardPrice(), lineTotal));
 
-            product.setStockQuantity(product.getStockQuantity() - itemRequest.quantity());
         }
 
         return new PosCheckoutResponse(items, totalAmount.doubleValue(), request.items().size());
