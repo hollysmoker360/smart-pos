@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface PaymentAttemptRepository extends JpaRepository<PaymentAttempt, UUID> {
     Optional<PaymentAttempt> findByOrderAndIdempotencyKey(RetailOrder order, String idempotencyKey);
+    Optional<PaymentAttempt> findTopByOrderOrderByCreatedAtDesc(RetailOrder order);
 }

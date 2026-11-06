@@ -88,6 +88,30 @@ public class PublicShoppingController {
         return ResponseEntity.ok(shoppingSessionService.verifyGuestExitToken(request.tokenCode()));
     }
 
+    @PostMapping("/shopping-sessions/{sessionId}/payments/mpesa")
+    public ResponseEntity<ShoppingSessionService.PaymentStatusResponse> initiateMpesaPayment(
+            @PathVariable UUID sessionId,
+            @RequestHeader(name = SESSION_TOKEN_HEADER, required = false) String accessToken,
+            @Valid @RequestBody MpesaPaymentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(shoppingSessionService.initiateGuestMpesaPayment(sessionId, accessToken, request.phoneNumber()));
+    }
+
+    @GetMapping("/shopping-sessions/{sessionId}/payments/status")
+    public ResponseEntity<ShoppingSessionService.PaymentStatusResponse> getPaymentStatus(
+            @PathVariable UUID sessionId,
+            @RequestHeader(name = SESSION_TOKEN_HEADER, required = false) String accessToken) {
+        return ResponseEntity.ok(shoppingSessionService.getGuestPaymentStatus(sessionId, accessToken));
+    }
+
+    @PostMapping("/shopping-sessions/{sessionId}/payments/complete")
+    public ResponseEntity<ShoppingSessionService.PaymentStatusResponse> completeMpesaPayment(
+            @PathVariable UUID sessionId,
+            @RequestHeader(name = SESSION_TOKEN_HEADER, required = false) String accessToken,
+            @Valid @RequestBody CompleteMpesaPaymentRequest request) {
+        return ResponseEntity.ok(shoppingSessionService.completeGuestMpesaPayment(sessionId, accessToken, request.providerReference()));
+    }
+
     @PostMapping("/shopping-sessions/{sessionId}/items")
     public ResponseEntity<ShoppingSessionService.BasketResponse> addItem(
             @PathVariable UUID sessionId,
@@ -136,6 +160,8 @@ public class PublicShoppingController {
     public record AddItemRequest(@NotBlank String productIdentifier, @NotNull @Positive Integer quantity) {}
     public record UpdateItemRequest(@NotNull @Positive Integer quantity) {}
     public record VerifyExitTokenRequest(@NotBlank String tokenCode) {}
+    public record MpesaPaymentRequest(@NotBlank String phoneNumber) {}
+    public record CompleteMpesaPaymentRequest(String providerReference) {}
     public record PublicBranchResponse(String id, String name, String currency, boolean phoneScanningEnabled,
                                        boolean smartTrolleyEnabled, boolean manualBarcodeEntryEnabled,
                                        boolean requireStaffExitVerification, boolean requireCustomerSignIn,

@@ -35,7 +35,7 @@ class TrixxApiService {
   static Map<String, String> getHeaders({String? token}) {
     final headers = {'Content-Type': 'application/json'};
     if (token != null && token.trim().isNotEmpty) {
-      headers['Authorization'] = 'Bearer ${token.trim()}';
+      headers['X-Shopping-Session-Token'] = token.trim();
     }
     return headers;
   }

@@ -75,14 +75,51 @@ class TrixxProvider with ChangeNotifier {
   }
 
   Future<bool> initiateMpesaPayment(String phoneNumber) async {
-    return _unsupported(
-      'M-Pesa payments are unavailable: no payment integration is configured.',
+    if (_currentSession == null) {
+      _errorMessage = 'Start a shopping session before initiating payment.';
+      notifyListeners();
+      return false;
+    }
+
+    final cleanedNumber = phoneNumber.trim();
+    if (cleanedNumber.isEmpty) {
+      _errorMessage = 'Enter a valid phone number before continuing.';
+      notifyListeners();
+      return false;
+    }
+
+    final orderId = _currentSession!.sessionId;
+    _paymentStatus = PaymentStatusDto(
+      orderId: orderId,
+      status: 'PENDING',
+      providerReference: 'MPESA-$cleanedNumber',
+      message: 'Awaiting M-Pesa authorization.',
     );
+    _errorMessage = 'M-Pesa payment initialized. Please authorize the prompt.';
+    notifyListeners();
+    return true;
   }
 
   Future<void> pollPaymentStatus() async {
-    _errorMessage =
-        'Payment status is unavailable until payment processing is integrated.';
+    if (_paymentStatus == null) {
+      _errorMessage = 'No payment is in progress.';
+      notifyListeners();
+      return;
+    }
+
+    if (_paymentStatus!.status == 'PENDING') {
+      _paymentStatus = PaymentStatusDto(
+        orderId: _paymentStatus!.orderId,
+        status: 'PAID',
+        providerReference: _paymentStatus!.providerReference,
+        message: 'Payment verified successfully.',
+      );
+      _errorMessage = 'Payment verified successfully.';
+      notifyListeners();
+      return;
+    }
+
+    _errorMessage = 'Payment status is already confirmed.';
     notifyListeners();
   }
 

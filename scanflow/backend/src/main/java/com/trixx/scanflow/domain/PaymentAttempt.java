@@ -67,7 +67,15 @@ public class PaymentAttempt {
     public UUID getId() { return id; }
     public RetailOrder getOrder() { return order; }
     public String getProvider() { return provider; }
+    public String getProviderReference() { return providerReference; }
     public BigDecimal getAmount() { return amount; }
+    public String getCurrency() { return currency; }
     public String getStatus() { return status; }
+    public String getIdempotencyKey() { return idempotencyKey; }
     public BigDecimal getCashReceived() { return cashReceived; }
+    public Instant getCreatedAt() { return createdAt; }
+    public Instant getUpdatedAt() { return updatedAt; }
+    public void setStatus(String status) { this.status = status; }
+    public void setProviderReference(String providerReference) { this.providerReference = providerReference; }
+    public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
 }

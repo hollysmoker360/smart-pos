@@ -62,7 +62,7 @@
 </td>
 <td>
 <div class="infoBox duration">
-<div class="counter">17.723s</div>
+<div class="counter">5.701s</div>
 <p>duration</p>
 </div>
 </td>
@@ -98,18 +98,16 @@
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td data-sort-value="228">0.228s</td>
+<td data-sort-value="196">0.196s</td>
 <td class="success" data-sort-value="100">100%</td>
 </tr>
 <tr>
-<td class="success">
-<a href="platformAdminInvitesOwnerAndOwnerCreatesBranch().html">platformAdminInvitesOwnerAndOwnerCreatesBranch()</a>
-</td>
+<td class="success">platformAdminInvitesOwnerAndOwnerCreatesBranch()</td>
 <td class="path" hidden="">platformAdminInvitesOwnerAndOwnerCreatesBranch()</td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td data-sort-value="2816">2.816s</td>
+<td data-sort-value="2125">2.125s</td>
 <td class="success" data-sort-value="100">100%</td>
 </tr>
 <tr>
@@ -118,7 +116,7 @@
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td data-sort-value="778">0.778s</td>
+<td data-sort-value="407">0.407s</td>
 <td class="success" data-sort-value="100">100%</td>
 </tr>
 <tr>
@@ -127,7 +125,7 @@
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td data-sort-value="45">0.045s</td>
+<td data-sort-value="33">0.033s</td>
 <td class="success" data-sort-value="100">100%</td>
 </tr>
 </tbody>
@@ -137,8 +135,8 @@
 <div class="tab">
 <h2>standard output</h2>
 <span class="code">
-<pre id="root-0-test-stdout-com.trixx.scanflow.auth.AuthAndBusinessFlowTests">23:18:45.986 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.trixx.scanflow.auth.AuthAndBusinessFlowTests]: AuthAndBusinessFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-23:18:46.212 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.auth.AuthAndBusinessFlowTests
+<pre id="root-0-test-stdout-com.trixx.scanflow.auth.AuthAndBusinessFlowTests">2026-11-06T23:27:57.023Z  INFO 69536 --- [scanflow-backend] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.trixx.scanflow.auth.AuthAndBusinessFlowTests]: AuthAndBusinessFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-06T23:27:57.051Z  INFO 69536 --- [scanflow-backend] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.auth.AuthAndBusinessFlowTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -149,27 +147,25 @@
 
  :: Spring Boot ::                (v3.3.5)
 
-2026-11-06T23:18:47.106Z  INFO 63048 --- [scanflow-backend] [    Test worker] c.t.s.auth.AuthAndBusinessFlowTests      : Starting AuthAndBusinessFlowTests using Java 21.0.13.0.2 with PID 63048 (started by codespace in /workspaces/smart-pos/scanflow/backend)
-2026-11-06T23:18:47.112Z  INFO 63048 --- [scanflow-backend] [    Test worker] c.t.s.auth.AuthAndBusinessFlowTests      : The following 1 profile is active: &quot;test&quot;
-2026-11-06T23:18:49.444Z  INFO 63048 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-11-06T23:18:49.579Z  INFO 63048 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 123 ms. Found 14 JPA repository interfaces.
-2026-11-06T23:18:50.852Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-11-06T23:18:50.961Z  INFO 63048 --- [scanflow-backend] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2026-11-06T23:18:51.021Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-11-06T23:18:51.442Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-11-06T23:18:51.479Z  INFO 63048 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-11-06T23:18:51.755Z  INFO 63048 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:scanflow_test user=SA
-2026-11-06T23:18:51.757Z  INFO 63048 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-11-06T23:18:51.827Z  WARN 63048 --- [scanflow-backend] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-11-06T23:18:53.835Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-11-06T23:18:54.001Z  INFO 63048 --- [scanflow-backend] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-11-06T23:18:55.100Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-11-06T23:18:56.930Z  INFO 63048 --- [scanflow-backend] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
-2026-11-06T23:18:57.787Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
-2026-11-06T23:18:58.956Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-11-06T23:18:58.957Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-11-06T23:18:58.960Z  INFO 63048 --- [scanflow-backend] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 3 ms
-2026-11-06T23:18:59.122Z  INFO 63048 --- [scanflow-backend] [    Test worker] c.t.s.auth.AuthAndBusinessFlowTests      : Started AuthAndBusinessFlowTests in 12.695 seconds (process running for 15.71)
+2026-11-06T23:27:57.129Z  INFO 69536 --- [scanflow-backend] [    Test worker] c.t.s.auth.AuthAndBusinessFlowTests      : Starting AuthAndBusinessFlowTests using Java 21.0.13.0.2 with PID 69536 (started by codespace in /workspaces/smart-pos/scanflow/backend)
+2026-11-06T23:27:57.130Z  INFO 69536 --- [scanflow-backend] [    Test worker] c.t.s.auth.AuthAndBusinessFlowTests      : The following 1 profile is active: &quot;test&quot;
+2026-11-06T23:27:57.625Z  INFO 69536 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-06T23:27:57.681Z  INFO 69536 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 55 ms. Found 14 JPA repository interfaces.
+2026-11-06T23:27:57.915Z  INFO 69536 --- [scanflow-backend] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-11-06T23:27:57.918Z  INFO 69536 --- [scanflow-backend] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-11-06T23:27:57.928Z  INFO 69536 --- [scanflow-backend] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-06T23:27:57.929Z  INFO 69536 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-11-06T23:27:57.933Z  INFO 69536 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:scanflow_test user=SA
+2026-11-06T23:27:57.934Z  INFO 69536 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-11-06T23:27:57.937Z  WARN 69536 --- [scanflow-backend] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-11-06T23:27:58.320Z  INFO 69536 --- [scanflow-backend] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-06T23:27:58.388Z  INFO 69536 --- [scanflow-backend] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-06T23:27:59.107Z  INFO 69536 --- [scanflow-backend] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-11-06T23:27:59.380Z  INFO 69536 --- [scanflow-backend] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-11-06T23:27:59.888Z  INFO 69536 --- [scanflow-backend] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-06T23:27:59.889Z  INFO 69536 --- [scanflow-backend] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-06T23:27:59.891Z  INFO 69536 --- [scanflow-backend] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-11-06T23:27:59.939Z  INFO 69536 --- [scanflow-backend] [    Test worker] c.t.s.auth.AuthAndBusinessFlowTests      : Started AuthAndBusinessFlowTests in 2.883 seconds (process running for 21.049)
 </pre>
 <button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-com.trixx.scanflow.auth.AuthAndBusinessFlowTests">Copy</button>
 </span>
@@ -184,7 +180,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 11:19:04 PM</p>
+<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 11:28:05 PM</p>
 </div>
 </div>
 </body>

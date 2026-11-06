@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-06T23:19:03.370Z" hostname="codespaces-2368b7" time="1.061">
+<testsuite name="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-06T23:28:02.720Z" hostname="codespaces-2368b7" time="0.827">
   <properties/>
-  <testcase name="duplicateBarcodeAndSkuAreRejectedCaseInsensitivelyBeforePersistingProduct()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.167"/>
-  <testcase name="guestCheckoutCreatesReceiptAndExitToken()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.363"/>
-  <testcase name="registerBusinessCreateProductAndCompleteCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.342"/>
-  <testcase name="customerCannotUseCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.133"/>
-  <system-out><![CDATA[2026-11-06T23:19:03.376Z  INFO 63048 --- [scanflow-backend] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.trixx.scanflow.catalogue.ProductAndCashierFlowTests]: ProductAndCashierFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-11-06T23:19:03.405Z  INFO 63048 --- [scanflow-backend] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.catalogue.ProductAndCashierFlowTests
-2026-11-06T23:19:04.274Z  WARN 63048 --- [scanflow-backend] [    Test worker] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+  <testcase name="duplicateBarcodeAndSkuAreRejectedCaseInsensitivelyBeforePersistingProduct()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.2"/>
+  <testcase name="guestCheckoutCreatesReceiptAndExitToken()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.306"/>
+  <testcase name="registerBusinessCreateProductAndCompleteCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.268"/>
+  <testcase name="customerCannotUseCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.018"/>
+  <system-out><![CDATA[2026-11-06T23:28:02.724Z  INFO 69536 --- [scanflow-backend] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.trixx.scanflow.catalogue.ProductAndCashierFlowTests]: ProductAndCashierFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-06T23:28:02.741Z  INFO 69536 --- [scanflow-backend] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.catalogue.ProductAndCashierFlowTests
+2026-11-06T23:28:03.519Z  WARN 69536 --- [scanflow-backend] [    Test worker] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
 	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
 	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
 
