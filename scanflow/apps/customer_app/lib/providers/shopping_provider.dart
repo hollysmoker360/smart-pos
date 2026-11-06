@@ -75,8 +75,7 @@ class ShoppingProvider extends ChangeNotifier {
   String? get branchName => _branchName;
   String get currency => _currency ?? 'KES';
   String? get sessionId => _sessionId;
-  List<Map<String, dynamic>> get basketItems =>
-      List.unmodifiable(_basketItems);
+  List<Map<String, dynamic>> get basketItems => List.unmodifiable(_basketItems);
   double get basketTotal => _basketTotal;
   int get basketItemCount => _basketItems.fold<int>(
         0,
@@ -111,7 +110,8 @@ class ShoppingProvider extends ChangeNotifier {
     try {
       final branch = await ApiService.getPublicBranch(branchId.trim());
       if (branch['phoneScanningEnabled'] != true) {
-        throw const ApiException(403, 'Phone scanning is not enabled at this store.');
+        throw const ApiException(
+            403, 'Phone scanning is not enabled at this store.');
       }
       final session = await ApiService.createGuestSession(branchId.trim());
       final sessionId = _stringValue(session, 'sessionId');
@@ -257,7 +257,8 @@ class ShoppingProvider extends ChangeNotifier {
     }
     _basketItems = items.map((item) {
       if (item is! Map<String, dynamic>) {
-        throw const FormatException('The server returned an invalid basket item.');
+        throw const FormatException(
+            'The server returned an invalid basket item.');
       }
       return <String, dynamic>{
         'id': _stringValue(item, 'id'),

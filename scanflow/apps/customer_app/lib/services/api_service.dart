@@ -19,9 +19,8 @@ class ApiService {
     String? configuredBaseUrl,
   }) {
     final configured = configuredBaseUrl?.trim() ?? '';
-    final fallback = isWeb
-        ? 'http://localhost:8080/api/v1'
-        : 'http://10.0.2.2:8080/api/v1';
+    final fallback =
+        isWeb ? 'http://localhost:8080/api/v1' : 'http://10.0.2.2:8080/api/v1';
     final url = (configured.isEmpty ? fallback : configured).replaceFirst(
       RegExp(r'/+$'),
       '',
@@ -143,8 +142,8 @@ class ApiService {
       ..headers.addAll(_headers(sessionToken: sessionToken))
       ..headers['Accept'] = 'text/event-stream';
     final response = await client.send(request).timeout(
-      const Duration(seconds: 15),
-    );
+          const Duration(seconds: 15),
+        );
     if (response.statusCode < 200 || response.statusCode >= 300) {
       final body = await response.stream.bytesToString();
       throw ApiException(response.statusCode, _errorMessage(body));
@@ -180,14 +179,16 @@ class ApiService {
       ..headers.addAll(_headers(sessionToken: sessionToken));
     if (body != null) request.body = jsonEncode(body);
     final stream = await client.send(request).timeout(
-      const Duration(seconds: 15),
-    );
+          const Duration(seconds: 15),
+        );
     final response = await http.Response.fromStream(stream).timeout(
       const Duration(seconds: 15),
     );
     dynamic decoded;
     try {
-      decoded = response.body.isEmpty ? <String, dynamic>{} : jsonDecode(response.body);
+      decoded = response.body.isEmpty
+          ? <String, dynamic>{}
+          : jsonDecode(response.body);
     } on FormatException {
       throw ApiException(response.statusCode, response.body);
     }

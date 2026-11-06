@@ -148,7 +148,8 @@ class HomeScreen extends ConsumerWidget {
                                   style: const TextStyle(
                                       color: Color(0xFF72827B), fontSize: 13))
                             ])),
-                        Text('KES ${provider.basketTotal.toStringAsFixed(2)}',
+                        Text(
+                            '${provider.currency} ${provider.basketTotal.toStringAsFixed(2)}',
                             style: const TextStyle(
                                 fontWeight: FontWeight.w800,
                                 color: Color(0xFF17352C))),
@@ -168,7 +169,7 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(width: 8),
                   Expanded(
                       child: Text(
-                          'Secure checkout at ${provider.branchName ?? 'your selected store'}',
+                          'Prices confirmed by ${provider.branchName ?? 'your selected store'}',
                           style: const TextStyle(
                               color: Color(0xFF72827B), fontSize: 12))),
                 ],

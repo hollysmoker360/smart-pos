@@ -88,7 +88,8 @@ class _StoreSelectionScreenState extends ConsumerState<StoreSelectionScreen> {
                         ),
                       )
                     : const Icon(Icons.storefront),
-                label: Text(provider.isLoading ? 'Connecting...' : 'Join store'),
+                label:
+                    Text(provider.isLoading ? 'Connecting...' : 'Join store'),
               ),
               if (provider.errorMessage != null) ...[
                 const SizedBox(height: 16),
