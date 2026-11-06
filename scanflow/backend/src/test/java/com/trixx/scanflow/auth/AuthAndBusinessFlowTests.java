@@ -64,6 +64,7 @@ class AuthAndBusinessFlowTests {
 
     @Test
     void registerBusinessThenLoginAndFetchCurrentBusiness() throws Exception {
+        long auditLogCount = auditLogRepository.count();
         String registerRequest = """
             {
               "businessName": "Acme Groceries",
@@ -84,6 +85,12 @@ class AuthAndBusinessFlowTests {
 
         String response = registerResult.getResponse().getContentAsString();
         String token = objectMapper.readTree(response).path("token").asText();
+
+        org.junit.jupiter.api.Assertions.assertEquals(auditLogCount + 2, auditLogRepository.count());
+        mockMvc.perform(get("/api/v1/businesses/me/branches")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].name").value("Main Branch"));
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/auth/login")
             .contentType(MediaType.APPLICATION_JSON)

@@ -24,17 +24,20 @@ public class BusinessRegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AuditLogService auditLogService;
 
     public BusinessRegistrationService(BusinessRepository businessRepository,
                                       BranchRepository branchRepository,
                                       UserRepository userRepository,
                                       PasswordEncoder passwordEncoder,
-                                      JwtService jwtService) {
+                                      JwtService jwtService,
+                                      AuditLogService auditLogService) {
         this.businessRepository = businessRepository;
         this.branchRepository = branchRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.auditLogService = auditLogService;
     }
 
     @Transactional
@@ -53,6 +56,11 @@ public class BusinessRegistrationService {
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = new User(business, email, request.phone().trim(), request.ownerName().trim(), encodedPassword, UserRole.OWNER);
         user = userRepository.save(user);
+
+        auditLogService.record(business, user, "BUSINESS_REGISTERED", "Business",
+                business.getId().toString(), "Business owner registered");
+        auditLogService.record(business, user, "BRANCH_CREATED", "Branch",
+                branch.getId().toString(), "Initial branch created during business registration");
 
         String token = jwtService.generateToken(user);
 

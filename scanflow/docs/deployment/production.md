@@ -5,6 +5,29 @@ Flutter clients issue authenticated HTTPS requests; realtime event delivery is
 documented alongside the API once enabled. Do not treat cached or locally
 entered values as authoritative for price, inventory, payment, or access.
 
+## Local development
+
+For a local-only run, start the backend with its default in-memory H2 database:
+
+```sh
+cd scanflow/backend
+CORS_ALLOWED_ORIGINS=http://localhost:3000 APP_PUBLIC_URL=http://localhost:3000 ./gradlew bootRun
+```
+
+In another terminal, run the Business app as a Flutter web server:
+
+```sh
+cd scanflow/apps/business_app
+flutter pub get
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3000 \
+  --dart-define=SCANFLOW_API_BASE_URL=http://localhost:8080/api/v1
+```
+
+The H2 database is disposable and is not suitable for production data. For
+PostgreSQL-backed schema verification, run
+`cd scanflow/backend && ./gradlew test --tests '*PostgreSqlMigrationTests'`
+with Docker available.
+
 ## Backend and database
 
 The repository includes a production-profile API image and a PostgreSQL Compose
