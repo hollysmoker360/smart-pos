@@ -66,8 +66,7 @@ class _PosSignInScreenState extends ConsumerState<PosSignInScreen> {
                           controller: _email,
                           keyboardType: TextInputType.emailAddress,
                           autofillHints: const [AutofillHints.username],
-                          decoration:
-                              const InputDecoration(labelText: 'Email'),
+                          decoration: const InputDecoration(labelText: 'Email'),
                           validator: (value) => value == null ||
                                   value.trim().isEmpty ||
                                   !value.contains('@')
@@ -80,8 +79,9 @@ class _PosSignInScreenState extends ConsumerState<PosSignInScreen> {
                           controller: _password,
                           obscureText: true,
                           autofillHints: const [AutofillHints.password],
-                          decoration:
-                              const InputDecoration(labelText: 'Password'),
+                          decoration: const InputDecoration(
+                            labelText: 'Password',
+                          ),
                           validator: (value) => value == null || value.isEmpty
                               ? 'Password is required.'
                               : null,
@@ -166,7 +166,9 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
             Text('Receipt ${receipt.orderNumber}'),
             const SizedBox(height: 8),
             Text('Total: ${_money(receipt.currency, receipt.total)}'),
-            Text('Cash received: ${_money(receipt.currency, receipt.cashReceived)}'),
+            Text(
+              'Cash received: ${_money(receipt.currency, receipt.cashReceived)}',
+            ),
             Text('Change due: ${_money(receipt.currency, receipt.changeDue)}'),
           ],
         ),
@@ -227,7 +229,7 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       key: const Key('posBranch'),
-                      value: controller.selectedBranchId,
+                      initialValue: controller.selectedBranchId,
                       decoration: const InputDecoration(
                         labelText: 'Authorized branch',
                         isDense: true,
@@ -256,9 +258,8 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
                     tooltip: 'Refresh catalogue',
                     onPressed: controller.isBusy
                         ? null
-                        : () => ref
-                            .read(posControllerProvider)
-                            .refreshProducts(),
+                        : () =>
+                            ref.read(posControllerProvider).refreshProducts(),
                     icon: const Icon(Icons.refresh),
                   ),
                 ],
@@ -271,10 +272,7 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(
-                            flex: 5,
-                            child: _cataloguePanel(controller),
-                          ),
+                          Expanded(flex: 5, child: _cataloguePanel(controller)),
                           const SizedBox(width: 16),
                           Expanded(
                             flex: 4,
@@ -290,7 +288,10 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
                           child: _cataloguePanel(controller),
                         ),
                         const SizedBox(height: 16),
-                        _basketPanel(controller, branch),
+                        SizedBox(
+                          height: 560,
+                          child: _basketPanel(controller, branch),
+                        ),
                       ],
                     );
                   },
@@ -317,7 +318,10 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Scan or search', style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              'Scan or search',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 12),
             TextField(
               key: const Key('posScanInput'),
@@ -325,11 +329,14 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
               focusNode: _scanFocus,
               autofocus: true,
               textInputAction: TextInputAction.done,
-              inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
+              inputFormatters: [
+                FilteringTextInputFormatter.deny(RegExp(r'\s')),
+              ],
               decoration: const InputDecoration(
                 labelText: 'Scan barcode or enter SKU',
                 prefixIcon: Icon(Icons.qr_code_scanner),
-                helperText: 'USB barcode scanners can type here and press Enter.',
+                helperText:
+                    'USB barcode scanners can type here and press Enter.',
               ),
               onSubmitted: _addIdentifier,
             ),
@@ -353,7 +360,8 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
                         )
                       : ListView.separated(
                           itemCount: products.length,
-                          separatorBuilder: (_, _) => const Divider(height: 1),
+                          separatorBuilder: (context, index) =>
+                              const Divider(height: 1),
                           itemBuilder: (context, index) {
                             final product = products[index];
                             return ListTile(
@@ -366,18 +374,21 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(_money(
-                                    controller.selectedBranch?.currency ?? 'KES',
-                                    product.price,
-                                  )),
+                                  Text(
+                                    _money(
+                                      controller.selectedBranch?.currency ??
+                                          'KES',
+                                      product.price,
+                                    ),
+                                  ),
                                   IconButton(
                                     key: Key('add-${product.sku}'),
                                     visualDensity: VisualDensity.compact,
                                     tooltip: 'Add ${product.name}',
-                                    onPressed: controller.isBusy ||
-                                            product.stock <= 0
-                                        ? null
-                                        : () => _addIdentifier(product.sku),
+                                    onPressed:
+                                        controller.isBusy || product.stock <= 0
+                                            ? null
+                                            : () => _addIdentifier(product.sku),
                                     icon: const Icon(Icons.add_circle_outline),
                                   ),
                                 ],
@@ -469,8 +480,9 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
               TextField(
                 key: const Key('cashReceived'),
                 controller: _cashController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Cash received',
                   prefixIcon: Icon(Icons.payments_outlined),
@@ -479,9 +491,8 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
               const SizedBox(height: 8),
               FilledButton.icon(
                 key: const Key('completeCashSale'),
-                onPressed: controller.isBusy || branch == null
-                    ? null
-                    : _checkout,
+                onPressed:
+                    controller.isBusy || branch == null ? null : _checkout,
                 icon: const Icon(Icons.receipt_long),
                 label: Text(
                   controller.isBusy ? 'Processing…' : 'Complete cash sale',
@@ -492,9 +503,7 @@ class _PosCheckoutScreenState extends ConsumerState<PosCheckoutScreen> {
               FilledButton.tonal(
                 onPressed: controller.isBusy
                     ? null
-                    : () => ref
-                        .read(posControllerProvider)
-                        .refreshQuote(),
+                    : () => ref.read(posControllerProvider).refreshQuote(),
                 child: const Text('Refresh server quote'),
               ),
               const Text(
@@ -531,17 +540,17 @@ class _AmountRow extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: emphasize
-                    ? Theme.of(context).textTheme.titleMedium
-                    : null,
+                style:
+                    emphasize ? Theme.of(context).textTheme.titleMedium : null,
               ),
             ),
             Text(
               amount,
               style: emphasize
-                  ? Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      )
+                  ? Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w800)
                   : null,
             ),
           ],
@@ -562,7 +571,8 @@ class _ErrorBanner extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Text(
             message,
-            style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onErrorContainer),
           ),
         ),
       );

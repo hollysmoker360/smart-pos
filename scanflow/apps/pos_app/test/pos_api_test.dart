@@ -27,11 +27,7 @@ void main() {
       }),
     );
 
-    final quote = await api.quote(
-      'staff-token',
-      'branch-1',
-      {'SKU-1': 1},
-    );
+    final quote = await api.quote('staff-token', 'branch-1', {'SKU-1': 1});
 
     expect(captured.url.path, '/api/v1/pos/quotes');
     expect(captured.headers['Authorization'], 'Bearer staff-token');

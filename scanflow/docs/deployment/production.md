@@ -23,6 +23,22 @@ flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3000 \
   --dart-define=SCANFLOW_API_BASE_URL=http://localhost:8080/api/v1
 ```
 
+For the cashier app, use its own forwarded/local port and include that origin
+in `CORS_ALLOWED_ORIGINS` when starting the API:
+
+```sh
+cd scanflow/apps/pos_app
+flutter pub get
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3001 \
+  --dart-define=SCANFLOW_API_BASE_URL=http://localhost:8080/api/v1
+```
+
+The POS currently supports authenticated cash sales only. The server calculates
+tax and totals, checks stock, persists the order and inventory movement, and
+uses an idempotency key to make retries safe. Digital payments and
+network-authenticated trolley/exit devices are not implemented. A USB barcode
+scanner can be used as keyboard input; see `hardware/README.md`.
+
 The H2 database is disposable and is not suitable for production data. For
 PostgreSQL-backed schema verification, run
 `cd scanflow/backend && ./gradlew test --tests '*PostgreSqlMigrationTests'`
@@ -56,7 +72,7 @@ credentials after first use.
 
 ## Flutter web clients
 
-Build `admin_app` and `business_app` with the API's public HTTPS URL:
+Build `admin_app`, `business_app`, and `pos_app` with the API's public HTTPS URL:
 
 ```sh
 cd apps/admin_app

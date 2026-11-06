@@ -31,22 +31,19 @@ class PosApiException implements Exception {
 }
 
 class HttpPosApi implements PosApi {
-  HttpPosApi({
-    http.Client? client,
-    String? baseUrl,
-  })  : _client = client ?? http.Client(),
+  HttpPosApi({http.Client? client, String? baseUrl})
+      : _client = client ?? http.Client(),
         _baseUrl = resolveBaseUrl(baseUrl);
 
   final http.Client _client;
   final String _baseUrl;
 
   static String resolveBaseUrl(String? configured) {
-    final value = (configured ??
-            const String.fromEnvironment('SCANFLOW_API_BASE_URL'))
-        .trim();
-    final fallback = kIsWeb
-        ? 'http://localhost:8080/api/v1'
-        : 'http://10.0.2.2:8080/api/v1';
+    final value =
+        (configured ?? const String.fromEnvironment('SCANFLOW_API_BASE_URL'))
+            .trim();
+    final fallback =
+        kIsWeb ? 'http://localhost:8080/api/v1' : 'http://10.0.2.2:8080/api/v1';
     final base = (value.isEmpty ? fallback : value).replaceFirst(
       RegExp(r'/+$'),
       '',
@@ -74,11 +71,15 @@ class HttpPosApi implements PosApi {
 
   @override
   Future<PosAuthSession> login(String email, String password) async =>
-      PosAuthSession.fromJson(_object(await _send(
-        'POST',
-        '/auth/login',
-        body: {'email': email.trim(), 'password': password},
-      )));
+      PosAuthSession.fromJson(
+        _object(
+          await _send(
+            'POST',
+            '/auth/login',
+            body: {'email': email.trim(), 'password': password},
+          ),
+        ),
+      );
 
   @override
   Future<List<PosBranch>> getBranches(String token) async {
@@ -94,11 +95,9 @@ class HttpPosApi implements PosApi {
 
   @override
   Future<List<PosProduct>> getProducts(String token) async {
-    final response = _object(await _send(
-      'GET',
-      '/products?page=0&size=100',
-      token: token,
-    ));
+    final response = _object(
+      await _send('GET', '/products?page=0&size=100', token: token),
+    );
     final content = response['content'];
     if (content is! List) {
       throw const FormatException('Product response must contain a page.');
@@ -110,12 +109,19 @@ class HttpPosApi implements PosApi {
   }
 
   @override
-  Future<PosProduct> lookupProduct(String token, String identifier) async =>
-      PosProduct.fromJson(_object(await _send(
-        'GET',
-        '/products/lookup?identifier=${Uri.encodeQueryComponent(identifier)}',
-        token: token,
-      )));
+  Future<PosProduct> lookupProduct(
+    String token,
+    String identifier,
+  ) async =>
+      PosProduct.fromJson(
+        _object(
+          await _send(
+            'GET',
+            '/products/lookup?identifier=${Uri.encodeQueryComponent(identifier)}',
+            token: token,
+          ),
+        ),
+      );
 
   @override
   Future<PosQuote> quote(
@@ -123,17 +129,22 @@ class HttpPosApi implements PosApi {
     String branchId,
     Map<String, int> items,
   ) async =>
-      PosQuote.fromJson(_object(await _send(
-        'POST',
-        '/pos/quotes',
-        token: token,
-        body: {
-          'branchId': branchId,
-          'items': items.entries
-              .map((entry) => {'productId': entry.key, 'quantity': entry.value})
-              .toList(growable: false),
-        },
-      )));
+      PosQuote.fromJson(
+        _object(
+          await _send(
+            'POST',
+            '/pos/quotes',
+            token: token,
+            body: {
+              'branchId': branchId,
+              'items': items.entries
+                  .map((entry) =>
+                      {'productId': entry.key, 'quantity': entry.value})
+                  .toList(growable: false),
+            },
+          ),
+        ),
+      );
 
   @override
   Future<PosReceipt> checkout({
@@ -143,20 +154,25 @@ class HttpPosApi implements PosApi {
     required String idempotencyKey,
     required String cashReceived,
   }) async =>
-      PosReceipt.fromJson(_object(await _send(
-        'POST',
-        '/pos/checkouts',
-        token: token,
-        body: {
-          'branchId': branchId,
-          'idempotencyKey': idempotencyKey,
-          'paymentMethod': 'CASH',
-          'cashReceived': cashReceived,
-          'items': items.entries
-              .map((entry) => {'productId': entry.key, 'quantity': entry.value})
-              .toList(growable: false),
-        },
-      )));
+      PosReceipt.fromJson(
+        _object(
+          await _send(
+            'POST',
+            '/pos/checkouts',
+            token: token,
+            body: {
+              'branchId': branchId,
+              'idempotencyKey': idempotencyKey,
+              'paymentMethod': 'CASH',
+              'cashReceived': cashReceived,
+              'items': items.entries
+                  .map((entry) =>
+                      {'productId': entry.key, 'quantity': entry.value})
+                  .toList(growable: false),
+            },
+          ),
+        ),
+      );
 
   Future<dynamic> _send(
     String method,
@@ -170,14 +186,15 @@ class HttpPosApi implements PosApi {
     if (token != null) request.headers['Authorization'] = 'Bearer $token';
     if (body != null) request.body = jsonEncode(body);
 
-    final stream = await _client.send(request).timeout(
-          const Duration(seconds: 15),
-        );
-    final response =
-        await http.Response.fromStream(stream).timeout(const Duration(seconds: 15));
-    final decoded = response.body.isEmpty ? <String, dynamic>{} : jsonDecode(response.body);
+    final stream =
+        await _client.send(request).timeout(const Duration(seconds: 15));
+    final response = await http.Response.fromStream(stream)
+        .timeout(const Duration(seconds: 15));
+    final decoded =
+        response.body.isEmpty ? <String, dynamic>{} : jsonDecode(response.body);
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      final message = decoded is Map<String, dynamic> ? decoded['message'] : null;
+      final message =
+          decoded is Map<String, dynamic> ? decoded['message'] : null;
       throw PosApiException(
         response.statusCode,
         message is String && message.isNotEmpty

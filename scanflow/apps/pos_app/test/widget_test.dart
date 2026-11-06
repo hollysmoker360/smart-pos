@@ -8,8 +8,9 @@ import 'package:scanflow_pos/src/pos_models.dart';
 import 'package:scanflow_pos/src/pos_session_store.dart';
 
 void main() {
-  testWidgets('cashier signs in, scans an item, and completes a cash sale',
-      (tester) async {
+  testWidgets('cashier signs in, scans an item, and completes a cash sale', (
+    tester,
+  ) async {
     final api = _FakePosApi();
     final controller = PosController(
       api: api,
@@ -19,9 +20,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          posControllerProvider.overrideWith((ref) => controller),
-        ],
+        overrides: [posControllerProvider.overrideWith((ref) => controller)],
         child: const ScanFlowPosApp(),
       ),
     );
@@ -70,7 +69,6 @@ class _MemoryPosSessionStore implements PosSessionStore {
 }
 
 class _FakePosApi implements PosApi {
-
   int checkoutCount = 0;
   String? lastCheckoutCashReceived;
 

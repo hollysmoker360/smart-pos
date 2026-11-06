@@ -1,6 +1,8 @@
 package com.trixx.scanflow.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -27,6 +29,7 @@ public class PaymentAttempt {
     @Column(nullable = false)
     private BigDecimal amount;
 
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(nullable = false, length = 3, columnDefinition = "CHAR(3)")
     private String currency;
 

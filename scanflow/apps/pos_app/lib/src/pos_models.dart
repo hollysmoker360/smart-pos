@@ -112,9 +112,10 @@ class PosQuote {
 
   factory PosQuote.fromJson(Map<String, dynamic> json) => PosQuote(
         currency: _string(json, 'currency'),
-        items: _list(json, 'items')
-            .map((item) => PosQuoteItem.fromJson(item))
-            .toList(growable: false),
+        items: _list(
+          json,
+          'items',
+        ).map((item) => PosQuoteItem.fromJson(item)).toList(growable: false),
         subtotal: _number(json, 'subtotalAmount'),
         tax: _number(json, 'taxAmount'),
         total: _number(json, 'totalAmount'),

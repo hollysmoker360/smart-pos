@@ -2,7 +2,6 @@ package com.trixx.scanflow.web;
 
 import com.trixx.scanflow.domain.Branch;
 import com.trixx.scanflow.domain.Business;
-import com.trixx.scanflow.domain.UserRole;
 import com.trixx.scanflow.repository.BranchRepository;
 import com.trixx.scanflow.repository.UserBranchAccessRepository;
 import com.trixx.scanflow.security.CustomUserPrincipal;

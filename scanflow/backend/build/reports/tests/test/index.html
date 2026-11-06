@@ -14,7 +14,7 @@
 <div class="tab-container">
 <ul class="tabLinks">
 <li>
-<a class="failureGroup" href="#">Gradle Test Run :test</a>
+<a class="successGroup" href="#">Gradle Test Run :test</a>
 </li>
 </ul>
 <div class="tab">
@@ -47,7 +47,7 @@
 </td>
 <td>
 <div class="infoBox">
-<div class="counter">3</div>
+<div class="counter">0</div>
 <p>failures</p>
 </div>
 </td>
@@ -59,7 +59,7 @@
 </td>
 <td>
 <div class="infoBox duration">
-<div class="counter">1m5.81s</div>
+<div class="counter">1m22.52s</div>
 <p>duration</p>
 </div>
 </td>
@@ -68,25 +68,14 @@
 </div>
 </td>
 <td>
-<div class="infoBox failures successRate">
-<div class="percent">50%</div>
+<div class="infoBox success successRate">
+<div class="percent">100%</div>
 <p>successful</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="tab-container">
-<ul class="tabLinks">
-<li>
-<a class="" href="#">Failed</a>
-</li>
-<li>
-<a class="" href="#">All</a>
-</li>
-</ul>
-<div class="tab">
-<h2>Failed</h2>
 <table class="test-results sortable">
 <thead>
 <tr>
@@ -101,114 +90,61 @@
 </thead>
 <tbody>
 <tr>
-<td class="failures">
+<td class="success">
 <a href="com.trixx.scanflow.auth.AuthAndBusinessFlowTests/index.html">AuthAndBusinessFlowTests</a>
 </td>
 <td class="path">com.trixx.scanflow.auth.AuthAndBusinessFlowTests</td>
 <td>3</td>
-<td>1</td>
 <td>0</td>
-<td data-sort-value="38853">38.853s</td>
-<td class="failures" data-sort-value="66">66%</td>
+<td>0</td>
+<td data-sort-value="18266">18.266s</td>
+<td class="success" data-sort-value="100">100%</td>
 </tr>
 <tr>
-<td class="failures">
+<td class="success">
 <a href="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests/index.html">ProductAndCashierFlowTests</a>
 </td>
 <td class="path">com.trixx.scanflow.catalogue.ProductAndCashierFlowTests</td>
 <td>2</td>
-<td>1</td>
 <td>0</td>
-<td data-sort-value="1868">1.868s</td>
-<td class="failures" data-sort-value="50">50%</td>
+<td>0</td>
+<td data-sort-value="1022">1.022s</td>
+<td class="success" data-sort-value="100">100%</td>
 </tr>
 <tr>
-<td class="failures">
+<td class="success">
 <a href="com.trixx.scanflow.database.PostgreSqlMigrationTests/index.html">PostgreSqlMigrationTests</a>
 </td>
 <td class="path">com.trixx.scanflow.database.PostgreSqlMigrationTests</td>
 <td>1</td>
-<td>1</td>
 <td>0</td>
-<td data-sort-value="14670">14.670s</td>
-<td class="failures" data-sort-value="0">0%</td>
+<td>0</td>
+<td data-sort-value="52568">52.568s</td>
+<td class="success" data-sort-value="100">100%</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="tab">
-<h2>All</h2>
-<table class="test-results sortable">
-<thead>
-<tr>
-<th>Child</th>
-<th>Name</th>
-<th data-sort-default="desc">Tests</th>
-<th data-sort-default="desc">Failures</th>
-<th data-sort-default="desc">Skipped</th>
-<th data-sort-default="desc">Duration</th>
-<th>Success rate</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="failures">
-<a href="com.trixx.scanflow.auth.AuthAndBusinessFlowTests/index.html">AuthAndBusinessFlowTests</a>
-</td>
-<td class="path">com.trixx.scanflow.auth.AuthAndBusinessFlowTests</td>
-<td>3</td>
-<td>1</td>
-<td>0</td>
-<td data-sort-value="38853">38.853s</td>
-<td class="failures" data-sort-value="66">66%</td>
-</tr>
-<tr>
-<td class="failures">
-<a href="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests/index.html">ProductAndCashierFlowTests</a>
-</td>
-<td class="path">com.trixx.scanflow.catalogue.ProductAndCashierFlowTests</td>
-<td>2</td>
-<td>1</td>
-<td>0</td>
-<td data-sort-value="1868">1.868s</td>
-<td class="failures" data-sort-value="50">50%</td>
-</tr>
-<tr>
-<td class="failures">
-<a href="com.trixx.scanflow.database.PostgreSqlMigrationTests/index.html">PostgreSqlMigrationTests</a>
-</td>
-<td class="path">com.trixx.scanflow.database.PostgreSqlMigrationTests</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td data-sort-value="14670">14.670s</td>
-<td class="failures" data-sort-value="0">0%</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 </div>
 <div class="tab">
 <h2>standard output</h2>
 <span class="code">
-<pre id="root-0-test-stdout-Gradle Test Run :test">2026-11-06T16:17:02.745Z  INFO 38102 --- [scanflow-backend] [    Test worker] o.t.d.DockerClientProviderStrategy       : Loaded org.testcontainers.dockerclient.UnixSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
-2026-11-06T16:17:04.588Z  INFO 38102 --- [scanflow-backend] [    Test worker] o.t.d.DockerClientProviderStrategy       : Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
-2026-11-06T16:17:04.762Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.DockerClientFactory   : Docker host IP address is 172.17.0.1
-2026-11-06T16:17:04.795Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.DockerClientFactory   : Connected to docker: 
+<pre id="root-0-test-stdout-Gradle Test Run :test">16:22:49.648 [Test worker] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.UnixSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+16:22:50.476 [Test worker] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+16:22:50.554 [Test worker] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is 172.17.0.1
+16:22:50.607 [Test worker] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
   Server Version: 29.9.2-2
   API Version: 1.56
   Operating System: Ubuntu 24.04.5 LTS (containerized)
   Total Memory: 7942 MB
-2026-11-06T16:17:04.822Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.images.PullPolicy     : Image pull policy will be performed by: DefaultPullPolicy()
-2026-11-06T16:17:04.825Z  INFO 38102 --- [scanflow-backend] [    Test worker] o.t.utility.ImageNameSubstitutor         : Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
-2026-11-06T16:17:05.299Z  INFO 38102 --- [scanflow-backend] [    Test worker] tc.testcontainers/ryuk:0.7.0             : Creating container for image: testcontainers/ryuk:0.7.0
-2026-11-06T16:17:05.724Z  INFO 38102 --- [scanflow-backend] [    Test worker] tc.testcontainers/ryuk:0.7.0             : Container testcontainers/ryuk:0.7.0 is starting: 2f5d660c3e92457f68239c1cc85d1300ab51f9194664c13110369d97346e8467
-2026-11-06T16:17:06.785Z  INFO 38102 --- [scanflow-backend] [    Test worker] tc.testcontainers/ryuk:0.7.0             : Container testcontainers/ryuk:0.7.0 started in PT1.485984111S
-2026-11-06T16:17:06.812Z  INFO 38102 --- [scanflow-backend] [    Test worker] o.t.utility.RyukResourceReaper           : Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
-2026-11-06T16:17:06.813Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.DockerClientFactory   : Checking the system...
-2026-11-06T16:17:06.818Z  INFO 38102 --- [scanflow-backend] [    Test worker] org.testcontainers.DockerClientFactory   : ✔︎ Docker server version should be at least 1.6.0
+16:22:50.653 [Test worker] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+16:22:50.659 [Test worker] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+16:22:51.155 [Test worker] INFO tc.testcontainers/ryuk:0.7.0 -- Creating container for image: testcontainers/ryuk:0.7.0
+16:22:52.213 [Test worker] INFO tc.testcontainers/ryuk:0.7.0 -- Container testcontainers/ryuk:0.7.0 is starting: 2952f70204f77d906d6354d3f5c3f837718ef9a136edaac181cb0e42b2029b87
+16:22:53.231 [Test worker] INFO tc.testcontainers/ryuk:0.7.0 -- Container testcontainers/ryuk:0.7.0 started in PT2.075870632S
+16:22:53.263 [Test worker] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+16:22:53.263 [Test worker] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+16:22:53.264 [Test worker] INFO org.testcontainers.DockerClientFactory -- ✔︎ Docker server version should be at least 1.6.0
 </pre>
 <button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-Gradle Test Run :test">Copy</button>
 </span>
@@ -223,7 +159,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 4:17:21 PM</p>
+<a href="https://www.gradle.org">Gradle 9.7.1</a> at Nov 6, 2026, 4:24:05 PM</p>
 </div>
 </div>
 </body>

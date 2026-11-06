@@ -47,6 +47,7 @@ class PosController extends ChangeNotifier {
     }
     return null;
   }
+
   String? _token;
   bool _isBusy = false;
   bool get isBusy => _isBusy;
@@ -274,23 +275,29 @@ class PosController extends ChangeNotifier {
   String _requireToken() {
     final token = _token;
     if (token == null || token.isEmpty) {
-      throw const PosApiException(401, 'Your session has ended. Sign in again.');
+      throw const PosApiException(
+        401,
+        'Your session has ended. Sign in again.',
+      );
     }
     return token;
   }
 
   String _readableError(Object error) {
     if (error is PosApiException) return error.message;
-    if (error is FormatException) return 'The server returned an invalid response.';
+    if (error is FormatException) {
+      return 'The server returned an invalid response.';
+    }
     if (error is StateError) return error.message;
     return 'Could not reach ScanFlow. Check your connection and retry.';
   }
 
   String _newIdempotencyKey() {
     final random = Random.secure();
-    final suffix = List.generate(4, (_) => random.nextInt(256))
-        .map((value) => value.toRadixString(16).padLeft(2, '0'))
-        .join();
+    final suffix = List.generate(
+      4,
+      (_) => random.nextInt(256),
+    ).map((value) => value.toRadixString(16).padLeft(2, '0')).join();
     return 'pos-${DateTime.now().microsecondsSinceEpoch}-$suffix';
   }
 

@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: ScanFlow API
   version: 1.0.0
-  description: Versioned contract for implemented ScanFlow onboarding, catalogue, shopping, and cashier endpoints. Payment and hardware APIs are not yet implemented.
+  description: Versioned contract for implemented ScanFlow onboarding, catalogue, shopping, and cash POS endpoints. Digital payment and networked hardware APIs are not yet implemented.
 servers:
   - url: http://localhost:8080
     description: Local development
@@ -205,6 +205,25 @@ paths:
       responses:
         '201':
           description: Product created
+  /api/v1/products/lookup:
+    get:
+      summary: Look up a product by SKU or barcode in the authenticated business
+      parameters:
+        - in: query
+          name: identifier
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Active product
+        '400':
+          description: Product not found or inactive
+  /api/v1/pos/branches:
+    get:
+      summary: List active branches the authenticated cashier may use
+      responses:
+        '200':
+          description: Authorized active branches
   /api/v1/shopping-sessions:
     post:
       summary: Start an authenticated shopping session
@@ -357,8 +376,8 @@ paths:
               schema: { type: string }
   /api/v1/pos/checkouts:
     post:
-      summary: Calculate a cashier checkout snapshot
-      description: Requires OWNER, BRANCH_MANAGER, or CASHIER. Current implementation does not persist an order or payment.
+      summary: Complete an idempotent cash POS sale
+      description: Requires OWNER, BRANCH_MANAGER, or CASHIER. The server validates current prices and stock, records the order/payment/inventory movement, and updates stock. Digital payment methods are rejected.
       requestBody:
         required: true
         content:
@@ -374,6 +393,24 @@ paths:
                 $ref: '#/components/schemas/PosCheckoutResponse'
         '403':
           description: Caller is not authorized for cashier checkout
+        '400':
+          description: Invalid checkout, insufficient stock, or conflicting idempotency key
+  /api/v1/pos/quotes:
+    post:
+      summary: Quote a cashier basket using current server prices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PosQuoteRequest'
+      responses:
+        '200':
+          description: Server-calculated subtotal, tax, and total
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PosQuoteResponse'
 components:
   securitySchemes:
     bearerAuth:
@@ -540,19 +577,54 @@ components:
               lineTotal: { type: number }
     PosCheckoutRequest:
       type: object
-      required: [items]
+      required: [branchId, items, idempotencyKey, paymentMethod, cashReceived]
       properties:
+        branchId: { type: string, format: uuid }
         items:
           type: array
           items:
             type: object
             required: [productId, quantity]
             properties:
-              productId: { type: string }
+              productId: { type: string, description: SKU or barcode }
               quantity: { type: integer, minimum: 1 }
+        idempotencyKey: { type: string, maxLength: 255 }
+        paymentMethod: { type: string, enum: [CASH] }
+        cashReceived: { type: number, minimum: 0 }
     PosCheckoutResponse:
       type: object
       properties:
+        orderId: { type: string, format: uuid }
+        orderNumber: { type: string }
+        orderStatus: { type: string }
+        paymentStatus: { type: string }
+        paymentMethod: { type: string, enum: [CASH] }
+        currency: { type: string }
         items: { type: array, items: { type: object } }
         totalAmount: { type: number, format: double }
         itemCount: { type: integer }
+        cashReceived: { type: number }
+        changeDue: { type: number }
+    PosQuoteRequest:
+      type: object
+      required: [branchId, items]
+      properties:
+        branchId: { type: string, format: uuid }
+        items:
+          type: array
+          items:
+            type: object
+            required: [productId, quantity]
+            properties:
+              productId: { type: string, description: SKU or barcode }
+              quantity: { type: integer, minimum: 1 }
+    PosQuoteResponse:
+      type: object
+      properties:
+        branchId: { type: string, format: uuid }
+        currency: { type: string }
+        subtotalAmount: { type: number }
+        taxAmount: { type: number }
+        totalAmount: { type: number }
+        itemCount: { type: integer }
+        items: { type: array, items: { type: object } }

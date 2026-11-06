@@ -71,6 +71,11 @@ public class PosCheckoutService {
         }
 
         List<PreparedLine> lines = prepareLines(business, request.items(), true, true);
+        existing = orderRepository.findByBusinessAndIdempotencyKeyForUpdate(
+                business, request.idempotencyKey().trim());
+        if (existing.isPresent()) {
+            return replay(existing.get(), fingerprint);
+        }
         PosQuoteResponse quote = quoteResponse(branch, lines);
         if (request.cashReceived().compareTo(quote.totalAmount()) < 0) {
             throw new IllegalArgumentException("Cash received is less than the amount due");
