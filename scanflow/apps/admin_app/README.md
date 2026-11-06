@@ -1,17 +1,31 @@
-# scanflow_admin
+# ScanFlow Admin
 
-A new Flutter project.
+The ScanFlow platform administration interface is a Flutter web app. It
+provides a platform-admin-only sign-in and creates business-owner invitations
+through the authenticated backend API. The business and branch listing API is
+not yet available, so the app does not display placeholder tenant metrics.
 
-## Getting Started
+Run locally:
 
-This project is a starting point for a Flutter application.
+```sh
+flutter pub get
+flutter run -d web-server --web-port 5173 \
+  --dart-define=SCANFLOW_API_BASE_URL=http://localhost:8080/api/v1
+```
 
-A few resources to get you started if this is your first Flutter project:
+Deploy to static hosting:
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```sh
+flutter build web \
+  --dart-define=SCANFLOW_API_BASE_URL=https://api.example.com/api/v1
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The API must allow requests from the deployed admin origin. Platform
+administrator accounts are provisioned by trusted operators; business owners
+are onboarded using invitation links created in the app. Link delivery is not
+automatic and must use an approved channel.
+
+Sections without an implemented backend endpoint are explicitly marked
+unavailable rather than populated with demo or fabricated business data.
+
+Validate with `flutter analyze` and `flutter test`.

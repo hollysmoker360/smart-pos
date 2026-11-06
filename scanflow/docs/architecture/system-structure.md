@@ -68,10 +68,10 @@ The repository is being migrated toward the target layout incrementally. Existin
 | Customer and shared customer experience | `apps/customer_app/` | Flutter application with shopping, scanning, basket, and checkout flows |
 | Business owner/admin experience | `apps/business_app/` | Flutter sign-in, invitation acceptance, live branch management, and scoped employee invitations |
 | SmartTrolley | `apps/smart_trolley/` | Flutter application with trolley, basket, checkout, and receipt flows |
-| Admin web | `apps/admin_web/` | Existing web interface |
+| Platform admin | `apps/admin_app/` | Flutter web app with platform-admin-only sign-in and business-owner invitations through the authenticated API |
 | POS application | `apps/pos_app/` | Reserved; implementation not yet present |
 | Staff application | Not yet present | Planned inventory, finance, procurement, and exit-attendant experience |
-| Flutter design system | `apps/shared/design_system/` | Shared theme, design tokens, and reusable empty-state widget used by customer, business, and SmartTrolley apps |
+| Flutter design system | `apps/shared/design_system/` | Shared theme, design tokens, and reusable empty-state widget used by customer, business, platform admin, and SmartTrolley apps |
 | Flutter state management | `flutter_riverpod` in `apps/*` | Riverpod is the single frontend state-management approach |
 | Flutter networking/authentication packages | Not yet extracted | Business API client is currently app-scoped; extract shared API/session behavior with the next authenticated customer/device workflows |
 | Spring Boot API | `backend/` | Existing API, domain, security, service, repository, and database migration code |
