@@ -1,192 +1,136 @@
 import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import '../models/trixx_models.dart';
 
 class TrixxApiService {
+  TrixxApiService({String? baseUrl, http.Client? client})
+    : baseUrl = resolveBaseUrl(
+        configuredBaseUrl: baseUrl ?? _configuredBaseUrl,
+        isWeb: kIsWeb,
+      ),
+      client = client ?? http.Client();
+
+  static const _configuredBaseUrl = String.fromEnvironment(
+    'SCANFLOW_API_BASE_URL',
+  );
+
   final String baseUrl;
+  final http.Client client;
 
-  TrixxApiService({this.baseUrl = 'http://localhost:8080'});
+  static String resolveBaseUrl({
+    required bool isWeb,
+    String? configuredBaseUrl,
+  }) {
+    final configured = configuredBaseUrl?.trim() ?? '';
+    final fallback = isWeb
+        ? 'http://localhost:8080/api/v1'
+        : 'http://10.0.2.2:8080/api/v1';
+    return (configured.isEmpty ? fallback : configured).replaceFirst(
+      RegExp(r'/+$'),
+      '',
+    );
+  }
 
-  Future<ShoppingSessionDto> claimTrolley({
-    required String trolleyCode,
-    required String customerId,
+  static Map<String, String> getHeaders({String? token}) {
+    final headers = {'Content-Type': 'application/json'};
+    if (token != null && token.trim().isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${token.trim()}';
+    }
+    return headers;
+  }
+
+  Future<Map<String, dynamic>> createShoppingSession({
+    required String branchName,
+    required String sessionType,
+    required String token,
+  }) async {
+    return _request(
+      client.post(
+        Uri.parse('$baseUrl/shopping-sessions'),
+        headers: getHeaders(token: token),
+        body: jsonEncode({
+          'branchName': branchName,
+          'sessionType': sessionType,
+        }),
+      ),
+    );
+  }
+
+  Future<Map<String, dynamic>> addBasketItem({
+    required String sessionId,
+    required String productIdentifier,
+    required int quantity,
+    required String token,
+  }) async {
+    return _request(
+      client.post(
+        Uri.parse('$baseUrl/shopping-sessions/$sessionId/items'),
+        headers: getHeaders(token: token),
+        body: jsonEncode({
+          'productIdentifier': productIdentifier,
+          'quantity': quantity,
+        }),
+      ),
+    );
+  }
+
+  Future<Map<String, dynamic>> getBasket({
+    required String sessionId,
+    required String token,
+  }) async {
+    return _request(
+      client.get(
+        Uri.parse('$baseUrl/shopping-sessions/$sessionId/basket'),
+        headers: getHeaders(token: token),
+      ),
+    );
+  }
+
+  Future<Map<String, dynamic>> checkout({
     required String branchId,
+    required List<Map<String, dynamic>> items,
+    required String token,
   }) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/v1/trolleys/claim'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'trolleyCode': trolleyCode,
-        'customerId': customerId,
-        'branchId': branchId,
-      }),
+    return _request(
+      client.post(
+        Uri.parse('$baseUrl/pos/checkouts'),
+        headers: getHeaders(token: token),
+        body: jsonEncode({'branchId': branchId, 'items': items}),
+      ),
     );
-
-    if (response.statusCode == 200) {
-      return ShoppingSessionDto.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to claim trolley: ${response.body}');
-    }
   }
 
-  Future<ShoppingBasketDto> sendScanEvent({
-    required String deviceId,
-    required String sessionId,
-    required String barcode,
-  }) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/v1/device-events/scans'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'eventId': 'evt_${DateTime.now().millisecondsSinceEpoch}',
-        'deviceId': deviceId,
-        'sessionId': sessionId,
-        'barcode': barcode,
-        'timestamp': DateTime.now().toIso8601String(),
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      return ShoppingBasketDto.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to process scan: ${response.body}');
+  Future<Map<String, dynamic>> _request(Future<http.Response> pending) async {
+    final response = await pending;
+    final dynamic decoded;
+    try {
+      decoded = response.body.isEmpty ? <String, dynamic>{} : jsonDecode(response.body);
+    } on FormatException {
+      throw TrixxApiException(response.statusCode, response.body);
     }
-  }
-
-  Future<ShoppingBasketDto> getBasket(String sessionId) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/v1/shopping-sessions/$sessionId/basket'),
-    );
-
-    if (response.statusCode == 200) {
-      return ShoppingBasketDto.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to retrieve basket: ${response.body}');
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      final message = decoded is Map<String, dynamic>
+          ? decoded['message']?.toString()
+          : null;
+      throw TrixxApiException(
+        response.statusCode,
+        message?.isNotEmpty == true ? message! : response.body,
+      );
     }
-  }
-
-  Future<ShoppingBasketDto> removeItem({
-    required String sessionId,
-    required String itemId,
-  }) async {
-    final response = await http.delete(
-      Uri.parse('$baseUrl/api/v1/shopping-sessions/$sessionId/items/$itemId'),
-    );
-
-    if (response.statusCode == 200) {
-      return ShoppingBasketDto.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to remove item: ${response.body}');
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException('Expected an object response');
     }
+    return decoded;
   }
+}
 
-  Future<CheckoutSnapshotDto> createCheckout(String sessionId) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/v1/shopping-sessions/$sessionId/checkout'),
-    );
+class TrixxApiException implements Exception {
+  const TrixxApiException(this.statusCode, this.message);
 
-    if (response.statusCode == 200) {
-      return CheckoutSnapshotDto.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to freeze checkout: ${response.body}');
-    }
-  }
+  final int statusCode;
+  final String message;
 
-  Future<PaymentStatusDto> initiateMpesaPayment({
-    required String orderId,
-    required String phoneNumber,
-  }) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/v1/orders/$orderId/payments/mpesa'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'phoneNumber': phoneNumber}),
-    );
-
-    if (response.statusCode == 200) {
-      return PaymentStatusDto.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to initiate payment: ${response.body}');
-    }
-  }
-
-  Future<PaymentStatusDto> getPaymentStatus(String orderId) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/v1/orders/$orderId/payment-status'),
-    );
-
-    if (response.statusCode == 200) {
-      return PaymentStatusDto.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to fetch payment status: ${response.body}');
-    }
-  }
-
-  Future<ReceiptDto> getReceipt(String orderId) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/v1/orders/$orderId/receipt'),
-    );
-
-    if (response.statusCode == 200) {
-      return ReceiptDto.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to fetch receipt: ${response.body}');
-    }
-  }
-
-  Future<Map<String, dynamic>> verifyExitToken(String tokenCode) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/v1/exit/verify'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'tokenCode': tokenCode}),
-    );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to verify token: ${response.body}');
-    }
-  }
-
-  Future<Map<String, dynamic>> redeemExitToken({
-    required String tokenCode,
-    required String stationId,
-  }) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/v1/exit/redeem'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'tokenCode': tokenCode, 'stationId': stationId}),
-    );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to redeem token: ${response.body}');
-    }
-  }
-
-  Future<List<TrolleyDeviceDto>> getAdminTrolleys() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/v1/admin/trolleys'),
-    );
-
-    if (response.statusCode == 200) {
-      List data = jsonDecode(response.body);
-      return data.map((d) => TrolleyDeviceDto.fromJson(d)).toList();
-    } else {
-      throw Exception('Failed to list trolleys: ${response.body}');
-    }
-  }
-
-  Future<List<DiscrepancyDto>> getAdminDiscrepancies() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/v1/admin/discrepancies'),
-    );
-
-    if (response.statusCode == 200) {
-      List data = jsonDecode(response.body);
-      return data.map((d) => DiscrepancyDto.fromJson(d)).toList();
-    } else {
-      throw Exception('Failed to list discrepancies: ${response.body}');
-    }
-  }
+  @override
+  String toString() => 'API request failed ($statusCode): $message';
 }

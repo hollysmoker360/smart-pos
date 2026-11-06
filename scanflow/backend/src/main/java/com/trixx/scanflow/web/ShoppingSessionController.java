@@ -4,6 +4,7 @@ import com.trixx.scanflow.domain.Business;
 import com.trixx.scanflow.domain.ShoppingSession;
 import com.trixx.scanflow.security.CustomUserPrincipal;
 import com.trixx.scanflow.service.ShoppingSessionService;
+import com.trixx.scanflow.service.BasketEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -24,9 +26,12 @@ import java.util.UUID;
 @RequestMapping("/api/v1/shopping-sessions")
 public class ShoppingSessionController {
     private final ShoppingSessionService shoppingSessionService;
+    private final BasketEventPublisher basketEventPublisher;
 
-    public ShoppingSessionController(ShoppingSessionService shoppingSessionService) {
+    public ShoppingSessionController(ShoppingSessionService shoppingSessionService,
+                                     BasketEventPublisher basketEventPublisher) {
         this.shoppingSessionService = shoppingSessionService;
+        this.basketEventPublisher = basketEventPublisher;
     }
 
     @PostMapping
@@ -57,6 +62,16 @@ public class ShoppingSessionController {
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @PathVariable UUID sessionId) {
         return ResponseEntity.ok(shoppingSessionService.getBasket(principal.getUser().getBusiness(), principal.getUser(), sessionId));
+    }
+
+    @GetMapping(value = "/{sessionId}/events", produces = "text/event-stream")
+    @PreAuthorize("hasAnyRole('OWNER', 'BUSINESS_ADMIN', 'BRANCH_MANAGER', 'CASHIER', 'CUSTOMER')")
+    public SseEmitter subscribeToBasket(
+            @AuthenticationPrincipal CustomUserPrincipal principal,
+            @PathVariable UUID sessionId) {
+        ShoppingSessionService.BasketResponse snapshot = shoppingSessionService.getBasket(
+                principal.getUser().getBusiness(), principal.getUser(), sessionId);
+        return basketEventPublisher.subscribe(sessionId, snapshot);
     }
 
     public record SessionResponse(String id, String sessionType, String status, BigDecimal totalAmount,

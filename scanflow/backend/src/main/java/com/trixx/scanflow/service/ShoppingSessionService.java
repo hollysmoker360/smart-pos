@@ -9,8 +9,12 @@ import com.trixx.scanflow.domain.User;
 import com.trixx.scanflow.repository.BasketItemRepository;
 import com.trixx.scanflow.repository.BranchRepository;
 import com.trixx.scanflow.repository.ShoppingSessionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -19,22 +23,27 @@ import java.util.UUID;
 
 @Service
 public class ShoppingSessionService {
+    private static final Logger log = LoggerFactory.getLogger(ShoppingSessionService.class);
+
     private final ShoppingSessionRepository sessionRepository;
     private final BasketItemRepository basketItemRepository;
     private final BranchRepository branchRepository;
     private final ProductCatalogService productCatalogService;
     private final BranchAccessService branchAccessService;
+    private final BasketEventPublisher basketEventPublisher;
 
     public ShoppingSessionService(ShoppingSessionRepository sessionRepository,
                                   BasketItemRepository basketItemRepository,
                                   BranchRepository branchRepository,
                                   ProductCatalogService productCatalogService,
-                                  BranchAccessService branchAccessService) {
+                                  BranchAccessService branchAccessService,
+                                  BasketEventPublisher basketEventPublisher) {
         this.sessionRepository = sessionRepository;
         this.basketItemRepository = basketItemRepository;
         this.branchRepository = branchRepository;
         this.productCatalogService = productCatalogService;
         this.branchAccessService = branchAccessService;
+        this.basketEventPublisher = basketEventPublisher;
     }
 
     @Transactional
@@ -50,7 +59,9 @@ public class ShoppingSessionService {
             throw new IllegalArgumentException("Session type is required");
         }
 
-        return sessionRepository.save(new ShoppingSession(business, branch, user, request.sessionType()));
+        ShoppingSession session = sessionRepository.save(new ShoppingSession(business, branch, user, request.sessionType()));
+        publishAfterCommit(session.getId(), buildBasketSnapshot(session));
+        return session;
     }
 
     @Transactional
@@ -75,12 +86,18 @@ public class ShoppingSessionService {
         item.setUpdatedAt(Instant.now());
         basketItemRepository.save(item);
 
-        return getBasket(business, user, sessionId);
+        BasketResponse snapshot = buildBasketSnapshot(session);
+        publishAfterCommit(sessionId, snapshot);
+        return snapshot;
     }
 
     @Transactional(readOnly = true)
     public BasketResponse getBasket(Business business, User user, UUID sessionId) {
         ShoppingSession session = getActiveSession(business, user, sessionId);
+        return buildBasketSnapshot(session);
+    }
+
+    private BasketResponse buildBasketSnapshot(ShoppingSession session) {
         List<BasketLine> items = basketItemRepository.findBySession(session).stream()
                 .map(item -> new BasketLine(
                         item.getId().toString(),
@@ -96,6 +113,26 @@ public class ShoppingSessionService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         session.setTotalAmount(totalAmount);
         return new BasketResponse(session.getId().toString(), items, totalAmount);
+    }
+
+    private void publishAfterCommit(UUID sessionId, BasketResponse snapshot) {
+        Runnable publish = () -> {
+            try {
+                basketEventPublisher.publish(sessionId, snapshot);
+            } catch (RuntimeException exception) {
+                log.error("Failed to publish basket snapshot for session {}", sessionId, exception);
+            }
+        };
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    publish.run();
+                }
+            });
+        } else {
+            publish.run();
+        }
     }
 
     private ShoppingSession getActiveSession(Business business, User user, UUID sessionId) {
