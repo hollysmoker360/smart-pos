@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/trixx_provider.dart';
+import '../theme.dart';
 
 class StaffDashboardScreen extends StatefulWidget {
   const StaffDashboardScreen({super.key});
@@ -37,7 +38,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
     return Scaffold(
       appBar: AppBar(
         title: const Text('Staff & Management Dashboard'),
-        backgroundColor: Colors.teal,
+        backgroundColor: TrolleyTheme.forest,
         foregroundColor: Colors.white,
         bottom: TabBar(
           controller: _tabController,
@@ -82,7 +83,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
+                    backgroundColor: TrolleyTheme.emerald,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
@@ -109,9 +110,9 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.teal.shade50,
+                      color: TrolleyTheme.mint,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.teal),
+                      border: Border.all(color: TrolleyTheme.emerald),
                     ),
                     child: Text(_verificationResult!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
@@ -122,7 +123,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
 
           // Trolley Fleet Status Tab
           provider.isLoading
-              ? const Center(child: CircularProgressIndicator(color: Colors.teal))
+              ? const Center(child: CircularProgressIndicator(color: TrolleyTheme.emerald))
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: provider.trolleys.length,
@@ -131,7 +132,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
                     final t = provider.trolleys[index];
                     return ListTile(
                       leading: const CircleAvatar(
-                        backgroundColor: Colors.teal,
+                        backgroundColor: TrolleyTheme.forest,
                         child: Icon(Icons.shopping_cart, color: Colors.white),
                       ),
                       title: Text('Trolley ${t.deviceId} (${t.serialNumber})'),
@@ -146,7 +147,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> with Single
 
           // Loss Prevention Discrepancies Tab
           provider.isLoading
-              ? const Center(child: CircularProgressIndicator(color: Colors.teal))
+              ? const Center(child: CircularProgressIndicator(color: TrolleyTheme.emerald))
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: provider.discrepancies.length,

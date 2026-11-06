@@ -1,0 +1,2 @@
+ALTER TABLE branches
+    ALTER COLUMN currency TYPE VARCHAR(3);

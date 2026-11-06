@@ -1,5 +1,5 @@
 CREATE TABLE businesses (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255),
     phone VARCHAR(50),
@@ -9,10 +9,10 @@ CREATE TABLE businesses (
 );
 
 CREATE TABLE branches (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID NOT NULL REFERENCES businesses(id),
     name VARCHAR(255) NOT NULL,
-    currency CHAR(3) NOT NULL DEFAULT 'KES',
+    currency VARCHAR(3) NOT NULL DEFAULT 'KES',
     timezone VARCHAR(64) NOT NULL DEFAULT 'Africa/Nairobi',
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     phone_scanning_enabled BOOLEAN NOT NULL DEFAULT TRUE,
@@ -24,7 +24,7 @@ CREATE TABLE branches (
 );
 
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID REFERENCES businesses(id),
     email VARCHAR(255),
     phone VARCHAR(50),
@@ -40,7 +40,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE refresh_tokens (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id),
     token_hash VARCHAR(255) NOT NULL,
     expires_at TIMESTAMP NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE refresh_tokens (
 );
 
 CREATE TABLE business_onboarding_checklist (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID NOT NULL REFERENCES businesses(id),
     owner_user_id UUID NOT NULL REFERENCES users(id),
     step_name VARCHAR(120) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE business_onboarding_checklist (
 );
 
 CREATE TABLE products (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID NOT NULL REFERENCES businesses(id),
     sku VARCHAR(128) NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE products (
 );
 
 CREATE TABLE shopping_sessions (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID NOT NULL REFERENCES businesses(id),
     branch_id UUID NOT NULL REFERENCES branches(id),
     user_id UUID REFERENCES users(id),
@@ -92,7 +92,7 @@ CREATE TABLE shopping_sessions (
 );
 
 CREATE TABLE basket_items (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     session_id UUID NOT NULL REFERENCES shopping_sessions(id),
     product_id UUID NOT NULL REFERENCES products(id),
     quantity INTEGER NOT NULL CHECK (quantity > 0),
@@ -104,7 +104,7 @@ CREATE TABLE basket_items (
 );
 
 CREATE TABLE orders (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID NOT NULL REFERENCES businesses(id),
     branch_id UUID NOT NULL REFERENCES branches(id),
     session_id UUID REFERENCES shopping_sessions(id),
@@ -118,7 +118,7 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE order_items (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_id UUID NOT NULL REFERENCES orders(id),
     product_id UUID NOT NULL REFERENCES products(id),
     quantity INTEGER NOT NULL CHECK (quantity > 0),
@@ -130,7 +130,7 @@ CREATE TABLE order_items (
 );
 
 CREATE TABLE payment_attempts (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_id UUID NOT NULL REFERENCES orders(id),
     provider VARCHAR(32) NOT NULL,
     provider_reference VARCHAR(255),
@@ -145,7 +145,7 @@ CREATE TABLE payment_attempts (
 );
 
 CREATE TABLE audit_logs (
-    id UUID PRIMARY KEY DEFAULT RANDOM_UUID(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     business_id UUID REFERENCES businesses(id),
     user_id UUID REFERENCES users(id),
     action VARCHAR(255) NOT NULL,

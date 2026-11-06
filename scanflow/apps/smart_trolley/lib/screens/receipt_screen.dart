@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../providers/trixx_provider.dart';
+import '../theme.dart';
 
 class ReceiptScreen extends StatefulWidget {
   final VoidCallback onNewShoppingSession;
@@ -23,11 +24,11 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Digital Receipt & Exit Pass'),
-        backgroundColor: Colors.teal,
+        backgroundColor: TrolleyTheme.forest,
         foregroundColor: Colors.white,
       ),
       body: receipt == null
-          ? const Center(child: CircularProgressIndicator(color: Colors.teal))
+          ? const Center(child: CircularProgressIndicator(color: TrolleyTheme.emerald))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(24.0),
               child: Column(
@@ -40,7 +41,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
                         children: [
-                          const Icon(Icons.receipt_long, size: 56, color: Colors.teal),
+                          const Icon(Icons.receipt_long, size: 56, color: TrolleyTheme.emerald),
                           const SizedBox(height: 8),
                           Text(receipt.branchName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                           Text('Receipt #${receipt.receiptNumber}', style: const TextStyle(color: Colors.grey)),
@@ -64,7 +65,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text('Total Paid:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                              Text('KES ${receipt.totalPaid.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.teal)),
+                              Text('KES ${receipt.totalPaid.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: TrolleyTheme.forest)),
                             ],
                           ),
                         ],
@@ -75,10 +76,10 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
 
                   // Exit Pass QR Box
                   Card(
-                    color: _isRedeemed ? Colors.grey.shade200 : Colors.teal.shade50,
+                    color: _isRedeemed ? Colors.grey.shade200 : TrolleyTheme.mint,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: _isRedeemed ? Colors.grey : Colors.teal, width: 2),
+                      side: BorderSide(color: _isRedeemed ? Colors.grey : TrolleyTheme.emerald, width: 2),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -89,7 +90,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: _isRedeemed ? Colors.grey.shade700 : Colors.teal.shade900,
+                              color: _isRedeemed ? Colors.grey.shade700 : TrolleyTheme.forest,
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -111,7 +112,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: _isRedeemed ? Colors.grey : Colors.teal,
+                              backgroundColor: _isRedeemed ? Colors.grey : TrolleyTheme.emerald,
                               foregroundColor: Colors.white,
                             ),
                             onPressed: _isRedeemed || provider.isLoading
@@ -136,11 +137,11 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      side: const BorderSide(color: Colors.teal),
+                      side: const BorderSide(color: TrolleyTheme.emerald),
                     ),
                     onPressed: widget.onNewShoppingSession,
-                    icon: const Icon(Icons.shopping_cart, color: Colors.teal),
-                    label: const Text('Start New Shopping Session', style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold)),
+                    icon: const Icon(Icons.shopping_cart, color: TrolleyTheme.emerald),
+                    label: const Text('Start New Shopping Session', style: TextStyle(color: TrolleyTheme.forest, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),

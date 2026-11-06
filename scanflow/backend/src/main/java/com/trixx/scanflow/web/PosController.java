@@ -6,6 +6,7 @@ import com.trixx.scanflow.service.PosCheckoutService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class PosController {
     }
 
     @PostMapping("/pos/checkouts")
+    @PreAuthorize("hasAnyRole('OWNER', 'BRANCH_MANAGER', 'CASHIER')")
     public ResponseEntity<CheckoutResponse> checkout(@AuthenticationPrincipal CustomUserPrincipal principal,
                                                     @RequestBody PosCheckoutService.PosCheckoutRequest request) {
         Business business = principal.getUser().getBusiness();

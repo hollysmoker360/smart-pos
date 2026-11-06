@@ -11,6 +11,11 @@ import com.trixx.scanflow.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+import java.util.Locale;
 
 @Service
 public class BusinessRegistrationService {
@@ -34,18 +39,19 @@ public class BusinessRegistrationService {
 
     @Transactional
     public AuthenticatedBusinessRegistration registerBusiness(RegisterRequest request) {
-        if (userRepository.findByEmail(request.email()).isPresent()) {
+        String email = request.email().trim().toLowerCase(Locale.ROOT);
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("An account with that email already exists");
         }
 
-        Business business = new Business(request.businessName(), request.email(), request.phone());
+        Business business = new Business(request.businessName().trim(), email, request.phone().trim());
         business = businessRepository.save(business);
 
         Branch branch = new Branch(business, "Main Branch");
         branchRepository.save(branch);
 
         String encodedPassword = passwordEncoder.encode(request.password());
-        User user = new User(business, request.email(), request.phone(), request.ownerName(), encodedPassword, UserRole.OWNER);
+        User user = new User(business, email, request.phone().trim(), request.ownerName().trim(), encodedPassword, UserRole.OWNER);
         user = userRepository.save(user);
 
         String token = jwtService.generateToken(user);
@@ -57,7 +63,11 @@ public class BusinessRegistrationService {
         );
     }
 
-    public record RegisterRequest(String businessName, String email, String phone, String ownerName, String password) {}
+    public record RegisterRequest(@NotBlank @Size(max = 255) String businessName,
+                                  @NotBlank @Email @Size(max = 255) String email,
+                                  @NotBlank @Size(max = 50) String phone,
+                                  @NotBlank @Size(max = 255) String ownerName,
+                                  @NotBlank @Size(min = 12, max = 72) String password) {}
 
     public record AuthenticatedBusinessRegistration(Business business, User user, String token) {}
 }

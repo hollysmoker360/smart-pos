@@ -14,7 +14,6 @@ spring:
         format_sql: true
         jdbc:
           time_zone: UTC
-        dialect: org.hibernate.dialect.H2Dialect
     open-in-view: false
   flyway:
     enabled: ${FLYWAY_ENABLED:false}
@@ -29,6 +28,9 @@ server:
   port: 8080
 
 app:
+  public-url: ${APP_PUBLIC_URL:http://localhost:3000}
+  registration:
+    open: ${APP_OPEN_REGISTRATION:true}
   jwt:
     secret: ${APP_JWT_SECRET:change-this-secret-for-local-development}
     expiration-ms: ${APP_JWT_EXPIRY_MS:3600000}

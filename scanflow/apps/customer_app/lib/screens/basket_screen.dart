@@ -14,44 +14,47 @@ class BasketScreen extends StatelessWidget {
         title: const Text('Shopping Basket'),
       ),
       body: provider.basketItems.isEmpty
-          ? const Center(
-              child: Text(
-                'Your basket is empty.\nScan products to add them.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
+          ? Center(
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(width: 68, height: 68, decoration: BoxDecoration(color: const Color(0xFFE6F4ED), borderRadius: BorderRadius.circular(12)), child: const Icon(Icons.shopping_basket_outlined, size: 34, color: Color(0xFF087F5B))),
+                const SizedBox(height: 14),
+                const Text('Your basket is empty', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF17352C))),
+                const SizedBox(height: 5),
+                const Text('Scan your first item to get started.', style: TextStyle(color: Color(0xFF72827B))),
+                const SizedBox(height: 16),
+                FilledButton.icon(onPressed: () => Navigator.pushNamed(context, '/scanner'), icon: const Icon(Icons.center_focus_strong), label: const Text('Scan an item')),
+              ]),
             )
           : Column(
               children: [
                 Expanded(
                   child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
                     itemCount: provider.basketItems.length,
                     itemBuilder: (context, index) {
                       final item = provider.basketItems[index];
                       return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: Padding(
                           padding: const EdgeInsets.all(12),
                           child: Row(
                             children: [
                               Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF12372A).withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(Icons.shopping_bag, color: Color(0xFF12372A)),
+                                width: 54,
+                                height: 54,
+                                decoration: BoxDecoration(color: const Color(0xFFE6F4ED), borderRadius: BorderRadius.circular(8)),
+                                child: const Icon(Icons.inventory_2_outlined, color: Color(0xFF087F5B)),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Barcode: ${item['barcode']}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    Text('Unit: KES ${item['unitPrice']}'),
-                                    Text('Total: KES ${item['totalPrice']}', style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF12372A))),
+                                    Text(item['productName'] ?? item['productSku'] ?? 'Scanned product', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF17352C))),
+                                    const SizedBox(height: 3),
+                                    Text('KES ${item['unitPrice']} each', style: const TextStyle(color: Color(0xFF72827B), fontSize: 12)),
+                                    const SizedBox(height: 3),
+                                    Text('KES ${item['totalPrice'] ?? item['lineTotal']}', style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF087F5B))),
                                   ],
                                 ),
                               ),
@@ -59,13 +62,17 @@ class BasketScreen extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     icon: const Icon(Icons.remove_circle_outline),
+                                    color: const Color(0xFF087F5B),
+                                    visualDensity: VisualDensity.compact,
                                     onPressed: () {
-                                      provider.updateItemQuantity(item['id'], item['quantity'] - 1);
+                                      if (item['quantity'] > 1) provider.updateItemQuantity(item['id'], item['quantity'] - 1);
                                     },
                                   ),
-                                  Text('${item['quantity']}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                  Text('${item['quantity']}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
                                   IconButton(
                                     icon: const Icon(Icons.add_circle_outline),
+                                    color: const Color(0xFF087F5B),
+                                    visualDensity: VisualDensity.compact,
                                     onPressed: () {
                                       provider.updateItemQuantity(item['id'], item['quantity'] + 1);
                                     },
@@ -80,29 +87,28 @@ class BasketScreen extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    border: Border(top: BorderSide(color: Color(0xFFDCE7E1))),
                   ),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Total Amount:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          const Text('Estimated total', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                           Text('KES ${provider.basketTotal.toStringAsFixed(2)}',
-                              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF12372A))),
+                              style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: Color(0xFF06382E))),
                         ],
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () async {
                           await provider.performCheckout();
-                          Navigator.pushNamed(context, '/checkout');
+                          if (context.mounted) Navigator.pushNamed(context, '/checkout');
                         },
-                        child: const Text('Proceed to Checkout'),
+                        child: const Text('Proceed to checkout  →'),
                       )
                     ],
                   ),

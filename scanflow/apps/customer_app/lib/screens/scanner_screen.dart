@@ -11,7 +11,12 @@ class ScannerScreen extends StatefulWidget {
 
 class _ScannerScreenState extends State<ScannerScreen> {
   final TextEditingController _barcodeController = TextEditingController();
-  bool _isFlashOn = false;
+
+  @override
+  void dispose() {
+    _barcodeController.dispose();
+    super.dispose();
+  }
 
   void _addManualBarcode() async {
     final barcode = _barcodeController.text.trim();
@@ -33,100 +38,52 @@ class _ScannerScreenState extends State<ScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Smart Barcode Scanner'),
-        actions: [
-          IconButton(
-            icon: Icon(_isFlashOn ? Icons.flash_on : Icons.flash_off),
-            onPressed: () {
-              setState(() {
-                _isFlashOn = !_isFlashOn;
-              });
-            },
+      appBar: AppBar(title: const Text('Scan a product')),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(18, 18, 18, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text('BARCODE SCANNER', style: TextStyle(color: Color(0xFF087F5B), fontSize: 11, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 5),
+              const Text('Line up the barcode', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: Color(0xFF17352C))),
+              const SizedBox(height: 14),
+              Container(
+                height: 285,
+                decoration: BoxDecoration(color: const Color(0xFF062B25), borderRadius: BorderRadius.circular(10)),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.center_focus_strong, color: Colors.white.withOpacity(0.7), size: 48),
+                        const SizedBox(height: 12),
+                        const Text('Camera scanning is not connected yet.\nEnter the barcode below.', textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 13)),
+                      ],
+                    ),
+                    Container(width: 230, height: 118, decoration: BoxDecoration(border: Border.all(color: const Color(0xFF44D895), width: 2), borderRadius: BorderRadius.circular(8))),
+                    Positioned(top: 14, left: 14, child: Container(padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6), decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(20)), child: const Row(children: [Icon(Icons.circle, size: 7, color: Color(0xFF44D895)), SizedBox(width: 6), Text('MANUAL MODE', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700))]))),
+                    const Positioned(bottom: 14, child: Text('EAN-13  ·  UPC-A  ·  CODE 128', style: TextStyle(color: Colors.white54, fontSize: 10, fontWeight: FontWeight.w600))),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text('Enter barcode', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: Color(0xFF17352C))),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _barcodeController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(hintText: 'Barcode number', prefixIcon: Icon(Icons.qr_code_2)),
+                onSubmitted: (_) => _addManualBarcode(),
+              ),
+              const SizedBox(height: 10),
+              FilledButton.icon(onPressed: _addManualBarcode, icon: const Icon(Icons.add), label: const Text('Add to basket')),
+              const SizedBox(height: 12),
+              const Row(children: [Icon(Icons.info_outline, color: Color(0xFF72827B), size: 17), SizedBox(width: 7), Expanded(child: Text('Prices and availability are confirmed by the store.', style: TextStyle(color: Color(0xFF72827B), fontSize: 12)))]),
+            ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Container(
-              height: 250,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.camera_alt, color: Colors.white.withOpacity(0.6), size: 64),
-                      const SizedBox(height: 12),
-                      const Text(
-                        'Point Camera at Product Barcode\n(EAN-13, UPC-A, UPC-E)',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: 200,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFFE8B04A), width: 3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text('Manual Barcode Entry', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _barcodeController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter EAN / UPC Barcode (e.g. 6001234567890)',
-                        border: OutlineInputBorder(),
-                        suffixIcon: Icon(Icons.qr_code),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: _addManualBarcode,
-                      child: const Text('Add to Basket'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Icon(Icons.lightbulb_outline, color: Color(0xFFE8B04A)),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Duplicate Scan Warning: Scanning the same barcode twice will ask before incrementing quantity.',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
         ),
       ),
     );

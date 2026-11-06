@@ -6,6 +6,7 @@ import 'screens/live_basket_screen.dart';
 import 'screens/checkout_screen.dart';
 import 'screens/receipt_screen.dart';
 import 'screens/staff_dashboard_screen.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const TrixxApp());
@@ -23,10 +24,7 @@ class TrixxApp extends StatelessWidget {
       child: MaterialApp(
         title: 'TRIXX SmartTrolley',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-          useMaterial3: true,
-        ),
+        theme: TrolleyTheme.themeData,
         home: const MainNavigationWrapper(),
       ),
     );
@@ -52,12 +50,12 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.teal),
+              decoration: const BoxDecoration(color: Color(0xFF06382E)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.shopping_cart, size: 48, color: Colors.white),
+                  Icon(Icons.shopping_cart_checkout, size: 48, color: Color(0xFF44D895)),
                   SizedBox(height: 8),
                   Text('TRIXX SmartTrolley', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                   Text('Smart Retail Platform', style: TextStyle(color: Colors.white70, fontSize: 13)),
@@ -65,7 +63,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.person, color: Colors.teal),
+              leading: const Icon(Icons.person, color: Color(0xFF087F5B)),
               title: const Text('Customer App Flow'),
               selected: !_isStaffMode,
               onTap: () {
@@ -76,7 +74,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.dashboard, color: Colors.teal),
+              leading: const Icon(Icons.dashboard, color: Color(0xFF087F5B)),
               title: const Text('Staff & Admin Dashboard'),
               selected: _isStaffMode,
               onTap: () {

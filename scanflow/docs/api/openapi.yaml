@@ -1,0 +1,361 @@
+openapi: 3.0.3
+info:
+  title: ScanFlow API
+  version: 1.0.0
+  description: Versioned contract for implemented ScanFlow onboarding, catalogue, shopping, and cashier endpoints. Payment and hardware APIs are not yet implemented.
+servers:
+  - url: http://localhost:8080
+    description: Local development
+security:
+  - bearerAuth: []
+paths:
+  /api/v1/auth/register:
+    post:
+      security: []
+      deprecated: true
+      summary: Development-only direct business registration
+      description: Disabled when the prod Spring profile is active. Production businesses are created through a platform-admin invitation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DirectRegistrationRequest'
+      responses:
+        '201':
+          description: Business and owner account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '403':
+          description: Open registration is disabled
+  /api/v1/auth/login:
+    post:
+      security: []
+      summary: Authenticate a user and issue a short-lived access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid email or password
+  /api/v1/auth/invitations/accept:
+    post:
+      security: []
+      summary: Accept a single-use TRIXX business invitation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptInvitationRequest'
+      responses:
+        '201':
+          description: Business and owner created; no branch is created automatically
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid, expired, or already-used invitation
+  /api/v1/platform/business-invitations:
+    post:
+      summary: Create a one-time business-owner invitation
+      description: Requires PLATFORM_ADMIN. The returned invite URL is disclosed once for controlled delivery; the raw token is stored only as a hash.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBusinessInvitationRequest'
+      responses:
+        '201':
+          description: Invitation created; expires in seven days
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedInvitation'
+        '403':
+          description: Caller is not a platform administrator
+  /api/v1/businesses/me:
+    get:
+      summary: Read the authenticated user's business
+      responses:
+        '200':
+          description: Current business
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Business'
+  /api/v1/businesses/me/branches:
+    get:
+      summary: List branches belonging to the authenticated business
+      responses:
+        '200':
+          description: Branches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Branch'
+    post:
+      summary: Create a branch for the authenticated business
+      description: Requires OWNER. Business identity is derived from the authenticated principal, not the request body.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBranchRequest'
+      responses:
+        '201':
+          description: Branch created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branch'
+        '403':
+          description: Caller is not a business owner
+  /api/v1/products:
+    get:
+      summary: List products for the authenticated business
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 0, default: 0 }
+        - in: query
+          name: size
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+      responses:
+        '200':
+          description: Product page
+    post:
+      summary: Create a product in the authenticated business catalogue
+      description: Requires OWNER or BRANCH_MANAGER.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201':
+          description: Product created
+  /api/v1/shopping-sessions:
+    post:
+      summary: Start an authenticated shopping session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateShoppingSessionRequest'
+      responses:
+        '201':
+          description: Shopping session created
+  /api/v1/shopping-sessions/{sessionId}/items:
+    post:
+      summary: Add a product to a shopping session
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddBasketItemRequest'
+      responses:
+        '201':
+          description: Updated basket
+  /api/v1/shopping-sessions/{sessionId}/basket:
+    get:
+      summary: Read a shopping-session basket
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: Backend-calculated basket
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+  /api/v1/pos/checkouts:
+    post:
+      summary: Calculate a cashier checkout snapshot
+      description: Requires OWNER, BRANCH_MANAGER, or CASHIER. Current implementation does not persist an order or payment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PosCheckoutRequest'
+      responses:
+        '201':
+          description: Checkout calculation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PosCheckoutResponse'
+        '403':
+          description: Caller is not authorized for cashier checkout
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    SessionId:
+      in: path
+      name: sessionId
+      required: true
+      schema: { type: string, format: uuid }
+  schemas:
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email, maxLength: 255 }
+        password: { type: string, maxLength: 72 }
+    DirectRegistrationRequest:
+      type: object
+      required: [businessName, email, phone, ownerName, password]
+      properties:
+        businessName: { type: string, maxLength: 255 }
+        email: { type: string, format: email, maxLength: 255 }
+        phone: { type: string, maxLength: 50 }
+        ownerName: { type: string, maxLength: 255 }
+        password: { type: string, minLength: 12, maxLength: 72 }
+    AcceptInvitationRequest:
+      type: object
+      required: [token, password]
+      properties:
+        token: { type: string }
+        password: { type: string, minLength: 12, maxLength: 72 }
+    CreateBusinessInvitationRequest:
+      type: object
+      required: [businessName, ownerName, ownerEmail, ownerPhone]
+      properties:
+        businessName: { type: string, maxLength: 255 }
+        ownerName: { type: string, maxLength: 255 }
+        ownerEmail: { type: string, format: email, maxLength: 255 }
+        ownerPhone: { type: string, maxLength: 50 }
+    CreatedInvitation:
+      type: object
+      required: [invitationId, businessName, ownerEmail, invitationUrl, expiresAt]
+      properties:
+        invitationId: { type: string, format: uuid }
+        businessName: { type: string }
+        ownerEmail: { type: string, format: email }
+        invitationUrl: { type: string, format: uri }
+        expiresAt: { type: string, format: date-time }
+    AuthResponse:
+      type: object
+      required: [user, token]
+      properties:
+        business:
+          allOf:
+            - $ref: '#/components/schemas/Business'
+          nullable: true
+        user: { $ref: '#/components/schemas/UserSummary' }
+        token: { type: string }
+    UserSummary:
+      type: object
+      required: [id, email, fullName, role]
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        fullName: { type: string }
+        role: { type: string, enum: [PLATFORM_ADMIN, OWNER, BUSINESS_ADMIN, BRANCH_MANAGER, CASHIER, INVENTORY_OFFICER, FINANCE_OFFICER, AUDITOR, CUSTOMER] }
+    Business:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        email: { type: string, format: email, nullable: true }
+        phone: { type: string, nullable: true }
+        status: { type: string }
+    CreateBranchRequest:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, maxLength: 255 }
+        currency: { type: string, minLength: 3, maxLength: 3, default: KES }
+        timezone: { type: string, maxLength: 64, default: Africa/Nairobi }
+    Branch:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        currency: { type: string }
+        timezone: { type: string }
+        active: { type: boolean }
+    CreateProductRequest:
+      type: object
+      required: [sku, name]
+      properties:
+        sku: { type: string, maxLength: 128 }
+        name: { type: string, maxLength: 255 }
+        barcode: { type: string, maxLength: 128, nullable: true }
+        price: { type: number, format: double, minimum: 0 }
+        taxRate: { type: number, minimum: 0 }
+        stock: { type: integer, minimum: 0 }
+        category: { type: string, nullable: true }
+    CreateShoppingSessionRequest:
+      type: object
+      required: [sessionType]
+      properties:
+        sessionType: { type: string, enum: [PHONE_SCANNING, SMART_TROLLEY, CASHIER] }
+        branchName: { type: string }
+    AddBasketItemRequest:
+      type: object
+      required: [productIdentifier, quantity]
+      properties:
+        productIdentifier: { type: string }
+        quantity: { type: integer, minimum: 1 }
+    Basket:
+      type: object
+      properties:
+        sessionId: { type: string, format: uuid }
+        totalAmount: { type: number }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              productId: { type: string, format: uuid }
+              productSku: { type: string }
+              productName: { type: string }
+              quantity: { type: integer }
+              unitPrice: { type: number }
+              lineTotal: { type: number }
+    PosCheckoutRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [productId, quantity]
+            properties:
+              productId: { type: string }
+              quantity: { type: integer, minimum: 1 }
+    PosCheckoutResponse:
+      type: object
+      properties:
+        items: { type: array, items: { type: object } }
+        totalAmount: { type: number, format: double }
+        itemCount: { type: integer }

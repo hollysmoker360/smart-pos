@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
+    @PreAuthorize("hasAnyRole('OWNER', 'BRANCH_MANAGER')")
     public ResponseEntity<ProductResponse> createProduct(@AuthenticationPrincipal CustomUserPrincipal principal,
                                                         @RequestBody ProductCatalogService.CreateProductRequest request) {
         Business business = principal.getUser().getBusiness();
@@ -31,6 +33,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
+    @PreAuthorize("hasAnyRole('OWNER', 'BUSINESS_ADMIN', 'BRANCH_MANAGER', 'CASHIER', 'INVENTORY_OFFICER', 'FINANCE_OFFICER', 'AUDITOR')")
     public ResponseEntity<Page<ProductResponse>> listProducts(@AuthenticationPrincipal CustomUserPrincipal principal,
                                                              @RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "20") int size) {

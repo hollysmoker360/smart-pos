@@ -45,7 +45,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Checkout & Payment'),
+        title: const Text('Checkout'),
       ),
       body: order == null
           ? const Center(child: Text('No order snapshot found.'))
@@ -60,17 +60,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Order Snapshot Summary', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                          const Text('Order summary', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17, color: Color(0xFF17352C))),
                           const Divider(),
-                          Text('Order No: ${order['orderNumber']}'),
-                          Text('Status: ${order['status']}', style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                          Text('Order ${order['orderNumber'] ?? order['id'] ?? ''}', style: const TextStyle(color: Color(0xFF72827B), fontSize: 12)),
+                          const SizedBox(height: 8),
+                          const Row(children: [Icon(Icons.verified_user_outlined, size: 16, color: Color(0xFF087F5B)), SizedBox(width: 6), Text('Final total confirmed by store', style: TextStyle(color: Color(0xFF087F5B), fontSize: 12, fontWeight: FontWeight.w600))]),
                           const SizedBox(height: 12),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Total Payable:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              const Text('Total to pay', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                               Text('KES ${order['totalAmount']}',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Color(0xFF12372A))),
+                                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 22, color: Color(0xFF06382E))),
                             ],
                           )
                         ],
@@ -86,9 +87,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         children: [
                           const Row(
                             children: [
-                              Icon(Icons.phone_android, color: Color(0xFF16A34A)),
+                              Icon(Icons.phone_android, color: Color(0xFF087F5B)),
                               SizedBox(width: 8),
-                              Text('Safaricom M-Pesa Express', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              Text('M-Pesa Express', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: Color(0xFF17352C))),
                             ],
                           ),
                           const SizedBox(height: 12),
@@ -96,7 +97,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             controller: _phoneController,
                             keyboardType: TextInputType.phone,
                             decoration: const InputDecoration(
-                              labelText: 'M-Pesa Phone Number',
+                              labelText: 'Phone number',
                               hintText: 'e.g. 254700000000',
                               border: OutlineInputBorder(),
                             ),
@@ -114,9 +115,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 )
                               : ElevatedButton(
                                   onPressed: _initiateMpesaPayment,
-                                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF16A34A)),
-                                  child: const Text('Pay with M-Pesa'),
+                                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF08A66A)),
+                                    child: const Text('Pay securely with M-Pesa'),
                                 ),
+                                  const SizedBox(height: 12),
+                                  const Row(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.lock_outline, size: 14, color: Color(0xFF72827B)), SizedBox(width: 5), Text('Payment confirmation may take a few moments', style: TextStyle(color: Color(0xFF72827B), fontSize: 11))]),
                         ],
                       ),
                     ),

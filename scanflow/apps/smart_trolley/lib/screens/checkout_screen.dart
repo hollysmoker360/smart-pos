@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/trixx_provider.dart';
+import '../theme.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final VoidCallback onPaymentComplete;
@@ -44,7 +45,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout Snapshot'),
-        backgroundColor: Colors.teal,
+        backgroundColor: TrolleyTheme.forest,
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -59,7 +60,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    const Icon(Icons.lock_clock, size: 56, color: Colors.teal),
+                    const Icon(Icons.lock_clock, size: 56, color: TrolleyTheme.emerald),
                     const SizedBox(height: 8),
                     const Text('Authoritative Checkout Snapshot', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
@@ -71,7 +72,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         const Text('Final Confirmed Total:', style: TextStyle(fontSize: 16)),
                         Text(
                           'KES ${(checkout?.totalAmount ?? 0.0).toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.teal),
+                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: TrolleyTheme.forest),
                         ),
                       ],
                     ),
@@ -123,7 +124,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             ] else ...[
               Card(
-                color: Colors.teal.shade50,
+                color: TrolleyTheme.mint,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -135,7 +136,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         const SizedBox(
                           width: 48,
                           height: 48,
-                          child: CircularProgressIndicator(color: Colors.teal, strokeWidth: 4),
+                          child: CircularProgressIndicator(color: TrolleyTheme.emerald, strokeWidth: 4),
                         ),
                       const SizedBox(height: 16),
                       Text(
@@ -151,7 +152,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ],
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.teal, foregroundColor: Colors.white),
+                        style: ElevatedButton.styleFrom(backgroundColor: TrolleyTheme.emerald, foregroundColor: Colors.white),
                         onPressed: () => provider.pollPaymentStatus(),
                         child: const Text('Refresh Status Now'),
                       ),

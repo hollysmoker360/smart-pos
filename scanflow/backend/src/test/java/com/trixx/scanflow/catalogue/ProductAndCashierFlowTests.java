@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -26,6 +27,17 @@ class ProductAndCashierFlowTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Test
+    @WithMockUser(roles = "CUSTOMER")
+    void customerCannotUseCashierCheckout() throws Exception {
+      mockMvc.perform(post("/api/v1/pos/checkouts")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {"items": [{"productId": "SKU-1", "quantity": 1}]}
+            """))
+        .andExpect(status().isForbidden());
+    }
 
     @Test
     void registerBusinessCreateProductAndCompleteCashierCheckout() throws Exception {

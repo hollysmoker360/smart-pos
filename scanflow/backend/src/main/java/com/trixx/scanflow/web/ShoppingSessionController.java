@@ -7,6 +7,7 @@ import com.trixx.scanflow.service.ShoppingSessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ public class ShoppingSessionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('OWNER', 'BRANCH_MANAGER', 'CUSTOMER')")
     public ResponseEntity<SessionResponse> createSession(
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @RequestBody ShoppingSessionService.CreateSessionRequest request) {
@@ -40,6 +42,7 @@ public class ShoppingSessionController {
     }
 
     @PostMapping("/{sessionId}/items")
+    @PreAuthorize("hasAnyRole('OWNER', 'BRANCH_MANAGER', 'CUSTOMER')")
     public ResponseEntity<ShoppingSessionService.BasketResponse> addItem(
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @PathVariable UUID sessionId,
@@ -49,6 +52,7 @@ public class ShoppingSessionController {
     }
 
     @GetMapping("/{sessionId}/basket")
+    @PreAuthorize("hasAnyRole('OWNER', 'BRANCH_MANAGER', 'CUSTOMER')")
     public ResponseEntity<ShoppingSessionService.BasketResponse> getBasket(
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @PathVariable UUID sessionId) {

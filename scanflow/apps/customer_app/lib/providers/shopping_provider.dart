@@ -67,11 +67,12 @@ class ShoppingProvider extends ChangeNotifier {
   Future<void> payWithMpesa(String phone) async {
     if (currentOrder == null) return;
     final res = await ApiService.initiateMpesaPayment(currentOrder!['id'], phone);
-    // Fetch generated receipt and exit token after payment initiation/completion
-    final receipt = await ApiService.getReceipt(currentOrder!['id']);
-    final exitPass = await ApiService.getExitToken(currentOrder!['id']);
-    currentReceipt = receipt;
-    currentExitToken = exitPass;
+    final paymentStatus = res['status']?.toString().toUpperCase();
+    currentOrder = {...currentOrder!, 'paymentStatus': paymentStatus ?? 'PENDING'};
+    if (paymentStatus == 'PAID') {
+      currentReceipt = await ApiService.getReceipt(currentOrder!['id']);
+      currentExitToken = await ApiService.getExitToken(currentOrder!['id']);
+    }
     notifyListeners();
   }
 

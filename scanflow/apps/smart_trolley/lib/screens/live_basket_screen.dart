@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/trixx_provider.dart';
+import '../theme.dart';
 
 class LiveBasketScreen extends StatefulWidget {
   final VoidCallback onProceedToCheckout;
@@ -23,7 +24,7 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Connected: ${session?.trolleyId ?? "TRL-001"}'),
-        backgroundColor: Colors.teal,
+        backgroundColor: TrolleyTheme.forest,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -36,7 +37,7 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            color: Colors.teal.shade50,
+            color: TrolleyTheme.mint,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -46,7 +47,7 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                   backgroundColor: Colors.white,
                 ),
                 Chip(
-                  avatar: const Icon(Icons.battery_charging_full, color: Colors.teal, size: 18),
+                  avatar: const Icon(Icons.battery_charging_full, color: TrolleyTheme.emerald, size: 18),
                   label: const Text('Battery: 98%'),
                   backgroundColor: Colors.white,
                 ),
@@ -78,7 +79,7 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                     const SizedBox(width: 8),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal,
+                        backgroundColor: TrolleyTheme.emerald,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
                       ),
@@ -130,8 +131,8 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                       final item = basket.items[index];
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.teal.shade100,
-                          child: Text('${item.quantity}x', style: const TextStyle(color: Colors.teal, fontWeight: FontWeight.bold)),
+                          backgroundColor: TrolleyTheme.mint,
+                          child: Text('${item.quantity}x', style: const TextStyle(color: TrolleyTheme.forest, fontWeight: FontWeight.bold)),
                         ),
                         title: Text(item.productName, style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text('Barcode: ${item.barcode} | KES ${item.unitPrice.toStringAsFixed(2)} each'),
@@ -196,7 +197,7 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                     const Text('Estimated Total:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     Text(
                       'KES ${(basket?.estimatedTotal ?? 0.0).toStringAsFixed(2)}',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.teal),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: TrolleyTheme.forest),
                     ),
                   ],
                 ),
@@ -205,7 +206,7 @@ class _LiveBasketScreenState extends State<LiveBasketScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
+                      backgroundColor: TrolleyTheme.emerald,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
