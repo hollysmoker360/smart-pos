@@ -42,7 +42,13 @@ class ProductAndCashierFlowTests {
       mockMvc.perform(post("/api/v1/pos/checkouts")
           .contentType(MediaType.APPLICATION_JSON)
           .content("""
-            {"branchId": "00000000-0000-0000-0000-000000000001", "items": [{"productId": "SKU-1", "quantity": 1}]}
+            {
+              "branchId": "00000000-0000-0000-0000-000000000001",
+              "items": [{"productId": "SKU-1", "quantity": 1}],
+              "idempotencyKey": "unauthorized-checkout",
+              "paymentMethod": "CASH",
+              "cashReceived": 100
+            }
             """))
         .andExpect(status().isForbidden());
     }

@@ -27,7 +27,7 @@ public class PaymentAttempt {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 3, columnDefinition = "CHAR(3)")
     private String currency;
 
     @Column(nullable = false)
