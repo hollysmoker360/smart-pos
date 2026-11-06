@@ -122,7 +122,7 @@ class AuthAndBusinessFlowTests {
             .andExpect(jsonPath("$.business.id").isNotEmpty());
 
         mockMvc.perform(get("/api/v1/auth/me"))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isForbidden());
     }
 
             @Test
