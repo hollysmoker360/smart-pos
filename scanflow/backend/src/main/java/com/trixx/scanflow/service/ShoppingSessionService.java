@@ -203,6 +203,7 @@ public class ShoppingSessionService {
                 .map(BasketLine::lineTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         session.setTotalAmount(totalAmount);
+        sessionRepository.save(session);
         return new BasketResponse(session.getId().toString(), items, totalAmount);
     }
 

@@ -16,12 +16,14 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     Optional<Product> findByBusinessAndSku(Business business, String sku);
     Optional<Product> findByBusinessAndBarcode(Business business, String barcode);
+    Optional<Product> findByBusinessAndSkuIgnoreCase(Business business, String sku);
+    Optional<Product> findByBusinessAndBarcodeIgnoreCase(Business business, String barcode);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select product from Product product where product.business = :business and product.sku = :identifier")
+    @Query("select product from Product product where product.business = :business and lower(product.sku) = lower(:identifier)")
     Optional<Product> findByBusinessAndSkuForUpdate(@Param("business") Business business,
                                                     @Param("identifier") String identifier);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select product from Product product where product.business = :business and product.barcode = :identifier")
+    @Query("select product from Product product where product.business = :business and lower(product.barcode) = lower(:identifier)")
     Optional<Product> findByBusinessAndBarcodeForUpdate(@Param("business") Business business,
                                                         @Param("identifier") String identifier);
     Page<Product> findByBusiness(Business business, Pageable pageable);

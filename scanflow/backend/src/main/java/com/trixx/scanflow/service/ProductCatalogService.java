@@ -21,16 +21,32 @@ public class ProductCatalogService {
 
     @Transactional
     public Product createProduct(Business business, CreateProductRequest request) {
-        Optional<Product> bySku = productRepository.findByBusinessAndSku(business, request.sku());
-        if (bySku.isPresent()) {
+        String sku = normalizeRequired(request.sku(), "SKU");
+        String name = normalizeRequired(request.name(), "Product name");
+        String barcode = normalizeOptional(request.barcode());
+
+        if (request.price() != null && request.price().signum() < 0) {
+            throw new IllegalArgumentException("Product price cannot be negative");
+        }
+        if (request.taxRate() != null && request.taxRate().signum() < 0) {
+            throw new IllegalArgumentException("Tax rate cannot be negative");
+        }
+        if (request.stock() != null && request.stock() < 0) {
+            throw new IllegalArgumentException("Stock quantity cannot be negative");
+        }
+
+        if (productRepository.findByBusinessAndSkuIgnoreCase(business, sku).isPresent()) {
             throw new IllegalArgumentException("A product with this SKU already exists");
+        }
+        if (!barcode.isBlank() && productRepository.findByBusinessAndBarcodeIgnoreCase(business, barcode).isPresent()) {
+            throw new IllegalArgumentException("A product with this barcode already exists");
         }
 
         Product product = new Product(
                 business,
-                request.sku(),
-                request.name(),
-                request.barcode(),
+                sku,
+                name,
+                barcode,
                 request.price() == null ? BigDecimal.ZERO : request.price(),
                 request.taxRate() == null ? BigDecimal.ZERO : request.taxRate(),
                 request.stock() == null ? 0 : request.stock(),
@@ -40,6 +56,17 @@ public class ProductCatalogService {
         product.setBrand(request.brand());
         product.setActive(true);
         return productRepository.save(product);
+    }
+
+    private String normalizeRequired(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + " is required");
+        }
+        return value.trim();
+    }
+
+    private String normalizeOptional(String value) {
+        return value == null ? "" : value.trim();
     }
 
     public Page<Product> findProducts(Business business, Pageable pageable) {

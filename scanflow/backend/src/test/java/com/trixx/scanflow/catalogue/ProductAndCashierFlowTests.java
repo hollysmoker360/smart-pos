@@ -37,6 +37,62 @@ class ProductAndCashierFlowTests {
     private InventoryMovementRepository inventoryMovementRepository;
 
     @Test
+    void duplicateBarcodeIsRejectedBeforePersistingProduct() throws Exception {
+        String registerRequest = """
+            {
+              "businessName": "FreshMart Duplicate",
+              "email": "dup@freshmart.co.ke",
+              "phone": "254700000010",
+              "ownerName": "Alice Smith",
+              "password": "StrongPass123!"
+            }
+            """;
+
+        MvcResult registerResult = mockMvc.perform(post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(registerRequest))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        String token = objectMapper.readTree(registerResult.getResponse().getContentAsString()).path("token").asText();
+
+        String createProductRequest = """
+            {
+              "sku": "DUP-001",
+              "name": "Duplicate Product",
+              "barcode": "6401234500099",
+              "price": 120.00,
+              "taxRate": 0.16,
+              "stock": 5,
+              "category": "Groceries"
+            }
+            """;
+
+        mockMvc.perform(post("/api/v1/products")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createProductRequest))
+            .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/api/v1/products")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+            {
+              "sku": "DUP-002",
+              "name": "Duplicate Product 2",
+              "barcode": "6401234500099",
+              "price": 140.00,
+              "taxRate": 0.16,
+              "stock": 6,
+              "category": "Groceries"
+            }
+            """))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("A product with this barcode already exists"));
+    }
+
+    @Test
     @WithMockUser(roles = "CUSTOMER")
     void customerCannotUseCashierCheckout() throws Exception {
       mockMvc.perform(post("/api/v1/pos/checkouts")
