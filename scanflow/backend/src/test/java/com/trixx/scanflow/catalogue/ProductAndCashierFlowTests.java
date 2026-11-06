@@ -98,6 +98,7 @@ class ProductAndCashierFlowTests {
         mockMvc.perform(get("/api/v1/products")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
             .andExpect(status().isOk())
+          .andExpect(jsonPath("$.content[0].stock").value(25))
             .andExpect(jsonPath("$.content[0].sku").value("MZ-001"));
     }
 }

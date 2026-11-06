@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-06T13:13:02.634Z" hostname="codespaces-646e73" time="14.86">
+<testsuite name="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-06T13:24:55.284Z" hostname="codespaces-646e73" time="15.37">
   <properties/>
-  <testcase name="registerBusinessCreateProductAndCompleteCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="2.354"/>
-  <testcase name="customerCannotUseCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="0.032"/>
-  <system-out><![CDATA[13:13:03.027 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.trixx.scanflow.catalogue.ProductAndCashierFlowTests]: ProductAndCashierFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-13:13:03.204 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.catalogue.ProductAndCashierFlowTests
+  <testcase name="registerBusinessCreateProductAndCompleteCashierCheckout()" classname="com.trixx.scanflow.catalogue.ProductAndCashierFlowTests" time="2.333"/>
+  <system-out><![CDATA[13:24:55.636 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.trixx.scanflow.catalogue.ProductAndCashierFlowTests]: ProductAndCashierFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+13:24:55.817 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.trixx.scanflow.ScanFlowApplication for test class com.trixx.scanflow.catalogue.ProductAndCashierFlowTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -15,27 +14,27 @@
 
  :: Spring Boot ::                (v3.3.5)
 
-2026-11-06T13:13:04.204Z  INFO 5465 --- [scanflow-backend] [    Test worker] c.t.s.c.ProductAndCashierFlowTests       : Starting ProductAndCashierFlowTests using Java 21.0.13.0.2 with PID 5465 (started by codespace in /workspaces/smart-pos/scanflow/backend)
-2026-11-06T13:13:04.207Z  INFO 5465 --- [scanflow-backend] [    Test worker] c.t.s.c.ProductAndCashierFlowTests       : The following 1 profile is active: "test"
-2026-11-06T13:13:07.116Z  INFO 5465 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-11-06T13:13:07.246Z  INFO 5465 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 120 ms. Found 8 JPA repository interfaces.
-2026-11-06T13:13:08.627Z  INFO 5465 --- [scanflow-backend] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-11-06T13:13:08.846Z  INFO 5465 --- [scanflow-backend] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2026-11-06T13:13:08.891Z  INFO 5465 --- [scanflow-backend] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-11-06T13:13:09.479Z  INFO 5465 --- [scanflow-backend] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-11-06T13:13:09.523Z  INFO 5465 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-11-06T13:13:09.822Z  INFO 5465 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:scanflow_test user=SA
-2026-11-06T13:13:09.825Z  INFO 5465 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-11-06T13:13:09.862Z  WARN 5465 --- [scanflow-backend] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-11-06T13:13:11.379Z  INFO 5465 --- [scanflow-backend] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-11-06T13:13:11.462Z  INFO 5465 --- [scanflow-backend] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-11-06T13:13:12.823Z  INFO 5465 --- [scanflow-backend] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
-2026-11-06T13:13:13.750Z  INFO 5465 --- [scanflow-backend] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
-2026-11-06T13:13:14.745Z  INFO 5465 --- [scanflow-backend] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-11-06T13:13:14.745Z  INFO 5465 --- [scanflow-backend] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-11-06T13:13:14.747Z  INFO 5465 --- [scanflow-backend] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-11-06T13:13:14.825Z  INFO 5465 --- [scanflow-backend] [    Test worker] c.t.s.c.ProductAndCashierFlowTests       : Started ProductAndCashierFlowTests in 11.457 seconds (process running for 14.603)
-2026-11-06T13:13:17.415Z  WARN 5465 --- [scanflow-backend] [    Test worker] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+2026-11-06T13:24:56.853Z  INFO 6263 --- [scanflow-backend] [    Test worker] c.t.s.c.ProductAndCashierFlowTests       : Starting ProductAndCashierFlowTests using Java 21.0.13.0.2 with PID 6263 (started by codespace in /workspaces/smart-pos/scanflow/backend)
+2026-11-06T13:24:56.859Z  INFO 6263 --- [scanflow-backend] [    Test worker] c.t.s.c.ProductAndCashierFlowTests       : The following 1 profile is active: "test"
+2026-11-06T13:24:59.419Z  INFO 6263 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-06T13:24:59.575Z  INFO 6263 --- [scanflow-backend] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 147 ms. Found 8 JPA repository interfaces.
+2026-11-06T13:25:01.147Z  INFO 6263 --- [scanflow-backend] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-11-06T13:25:01.339Z  INFO 6263 --- [scanflow-backend] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-11-06T13:25:01.388Z  INFO 6263 --- [scanflow-backend] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-11-06T13:25:01.892Z  INFO 6263 --- [scanflow-backend] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-06T13:25:01.930Z  INFO 6263 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-06T13:25:02.173Z  INFO 6263 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:scanflow_test user=SA
+2026-11-06T13:25:02.175Z  INFO 6263 --- [scanflow-backend] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-06T13:25:02.208Z  WARN 6263 --- [scanflow-backend] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-11-06T13:25:03.855Z  INFO 6263 --- [scanflow-backend] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-06T13:25:03.934Z  INFO 6263 --- [scanflow-backend] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-06T13:25:05.408Z  INFO 6263 --- [scanflow-backend] [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-11-06T13:25:06.244Z  INFO 6263 --- [scanflow-backend] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-11-06T13:25:07.686Z  INFO 6263 --- [scanflow-backend] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-06T13:25:07.687Z  INFO 6263 --- [scanflow-backend] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-06T13:25:07.693Z  INFO 6263 --- [scanflow-backend] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 6 ms
+2026-11-06T13:25:07.894Z  INFO 6263 --- [scanflow-backend] [    Test worker] c.t.s.c.ProductAndCashierFlowTests       : Started ProductAndCashierFlowTests in 11.888 seconds (process running for 14.029)
+2026-11-06T13:25:10.611Z  WARN 6263 --- [scanflow-backend] [    Test worker] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
 	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
 	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
 
